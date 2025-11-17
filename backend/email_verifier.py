@@ -57,21 +57,29 @@ def calculate_confidence_score(
     return max(0.0, min(100.0, score))
 
 
-async def verify_single_email(email: str) -> Optional[EmailVerificationResult]:
-    """Verify a single email using the reacheremail API"""
-    try:
-        async with httpx.AsyncClient(timeout=30.0) as client:
-            response = await client.post(
-                f"{settings.EMAIL_VERIFIER_API}/v0/check_email",
-                json={"to_email": email},
-                headers={"Content-Type": "application/json"}
-            )
-            
-            if response.status_code != 200:
-                logger.error(f"Email verification failed for {email}: {response.text}")
-                return None
-            
-            data = response.json()
+async def verify_single_email(email: str, max_retries: int = 3) -> Optional[EmailVerificationResult]:
+    """Verify a single email using the reacheremail API with retry logic"""
+    last_error = None
+    
+    for attempt in range(max_retries):
+        try:
+            async with httpx.AsyncClient(timeout=30.0) as client:
+                response = await client.post(
+                    f"{settings.EMAIL_VERIFIER_API}/v0/check_email",
+                    json={"to_email": email},
+                    headers={"Content-Type": "application/json"}
+                )
+                
+                if response.status_code != 200:
+                    logger.error(f"Email verification failed for {email} (attempt {attempt + 1}): {response.text}")
+                    last_error = f"API returned status {response.status_code}"
+                    
+                    # Retry on 5xx errors or timeout
+                    if response.status_code >= 500 and attempt < max_retries - 1:
+                        continue
+                    return None
+                
+                data = response.json()
             
             # Parse the response
             is_reachable = data.get("is_reachable", "unknown")

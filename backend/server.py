@@ -1,11 +1,18 @@
 from fastapi import FastAPI, APIRouter
 from fastapi.responses import FileResponse
 from starlette.middleware.cors import CORSMiddleware
+from starlette.middleware.gzip import GZipMiddleware
 from pathlib import Path
 import logging
 
 from config import settings
 from database import connect_to_mongo, close_mongo_connection
+from middleware import (
+    RateLimitMiddleware,
+    SecurityHeadersMiddleware,
+    RequestLoggingMiddleware,
+    APIKeyRateLimitMiddleware
+)
 from routes_auth import router as auth_router
 from routes_verification import router as verification_router
 from routes_apikeys import router as apikeys_router

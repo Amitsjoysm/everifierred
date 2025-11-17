@@ -23,6 +23,8 @@ async def verify_email_endpoint(
     current_user: User = Depends(get_current_active_user)
 ):
     """Verify a single email address"""
+    from utils import record_credit_transaction
+    
     db = await get_db()
     
     if current_user.credits_used >= current_user.credits_limit:
@@ -37,9 +39,20 @@ async def verify_email_endpoint(
     result_dict['user_id'] = current_user.id
     await db.email_verifications.insert_one(result_dict)
     
+    # Update credits
     await db.users.update_one(
         {"id": current_user.id},
         {"$inc": {"credits_used": 1}}
+    )
+    
+    # Record transaction
+    await record_credit_transaction(
+        db=db,
+        user_id=current_user.id,
+        transaction_type="verification",
+        credits_change=1,
+        description=f"Single email verification: {request.email}",
+        reference_id=result_dict.get('id')
     )
     
     return result

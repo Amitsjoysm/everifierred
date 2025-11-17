@@ -35,14 +35,23 @@ app = FastAPI(title=settings.APP_NAME, version="1.0.0")
 # Create API router with /api prefix
 api_router = APIRouter(prefix="/api")
 
+# Security Middleware
+app.add_middleware(SecurityHeadersMiddleware)
+app.add_middleware(RequestLoggingMiddleware)
+app.add_middleware(RateLimitMiddleware, requests_per_minute=60)
+app.add_middleware(APIKeyRateLimitMiddleware, requests_per_minute=100)
+
 # CORS Middleware
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,
-    allow_origins=settings.CORS_ORIGINS.split(','),
+    allow_origins=settings.CORS_ORIGINS.split(',') if settings.CORS_ORIGINS != '*' else ['*'],
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# GZip Compression
+app.add_middleware(GZipMiddleware, minimum_size=1000)
 
 # Startup and shutdown events
 @app.on_event("startup")

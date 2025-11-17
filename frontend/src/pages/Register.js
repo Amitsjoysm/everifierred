@@ -66,6 +66,11 @@ const Register = () => {
 
   return (
     <div className="min-h-screen flex">
+      <SEO
+        title="Sign Up - MailGuard"
+        description="Create your free MailGuard account and start verifying emails today. 100 free verifications per month."
+        noindex={true}
+      />
       {/* Left Side - Form */}
       <div className="flex-1 flex items-center justify-center p-8 bg-white">
         <div className="w-full max-w-md">

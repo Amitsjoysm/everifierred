@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
+import SEO from '../components/SEO';
 
 const Login = () => {
   const navigate = useNavigate();

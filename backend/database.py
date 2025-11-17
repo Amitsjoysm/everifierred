@@ -67,6 +67,11 @@ async def create_indexes():
         await db.payments.create_index("user_id")
         await db.payments.create_index("razorpay_order_id")
         
+        # Credit Transactions
+        await db.credit_transactions.create_index("user_id")
+        await db.credit_transactions.create_index("created_at")
+        await db.credit_transactions.create_index("transaction_type")
+        
         logger.info("Database indexes created successfully")
     except Exception as e:
         logger.error(f"Error creating indexes: {e}")

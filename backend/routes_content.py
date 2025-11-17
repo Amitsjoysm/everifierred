@@ -6,7 +6,7 @@ from database import get_db
 from models import Blog, BlogCreate, FAQ, FAQCreate, User
 from auth import get_current_admin_user
 
-router = APIRouter(tags=["Content"])
+router = APIRouter(prefix="/content", tags=["Content"])
 
 
 # ============= Blog Management =============

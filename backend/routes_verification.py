@@ -236,6 +236,40 @@ async def get_verification_history(
 @router.get("/stats")
 async def get_verification_stats(current_user: User = Depends(get_current_active_user)):
     """Get user's verification statistics and credit usage"""
+
+
+
+@router.post("/job/{job_id}/cancel")
+async def cancel_verification_job(
+    job_id: str,
+    current_user: User = Depends(get_current_active_user)
+):
+    """Cancel a pending or processing bulk verification job"""
+    db = await get_db()
+    
+    job = await db.bulk_jobs.find_one({"id": job_id, "user_id": current_user.id})
+    if not job:
+        raise HTTPException(status_code=404, detail="Job not found")
+    
+    if job['status'] not in [VerificationStatus.PENDING, VerificationStatus.PROCESSING]:
+        raise HTTPException(
+            status_code=400, 
+            detail=f"Cannot cancel job with status: {job['status']}"
+        )
+    
+    # Update job status to cancelled
+    await db.bulk_jobs.update_one(
+        {"id": job_id},
+        {
+            "$set": {
+                "status": "cancelled",
+                "completed_at": datetime.now(timezone.utc).isoformat()
+            }
+        }
+    )
+    
+    return {"message": "Job cancelled successfully"}
+
     db = await get_db()
     
     # Get current user data

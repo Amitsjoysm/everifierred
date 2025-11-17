@@ -147,8 +147,23 @@ async def verify_single_email(email: str, max_retries: int = 3) -> Optional[Emai
                 normalized_email=normalized_email
             )
             
-            return result
-            
-    except Exception as e:
-        logger.error(f"Error verifying email {email}: {e}")
-        return None
+                return result
+                
+        except httpx.TimeoutException as e:
+            logger.warning(f"Timeout verifying email {email} (attempt {attempt + 1}): {e}")
+            last_error = f"Timeout: {str(e)}"
+            if attempt < max_retries - 1:
+                continue
+        except httpx.RequestError as e:
+            logger.warning(f"Network error verifying email {email} (attempt {attempt + 1}): {e}")
+            last_error = f"Network error: {str(e)}"
+            if attempt < max_retries - 1:
+                continue
+        except Exception as e:
+            logger.error(f"Unexpected error verifying email {email} (attempt {attempt + 1}): {e}")
+            last_error = f"Unexpected error: {str(e)}"
+            if attempt < max_retries - 1:
+                continue
+    
+    logger.error(f"Failed to verify {email} after {max_retries} attempts. Last error: {last_error}")
+    return None

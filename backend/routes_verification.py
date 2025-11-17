@@ -66,28 +66,72 @@ async def verify_bulk_emails_endpoint(
     """Upload file for bulk email verification"""
     db = await get_db()
     
+    # Validate file size (max 10MB)
     content = await file.read()
+    file_size_mb = len(content) / (1024 * 1024)
     
-    if file.filename.endswith('.csv'):
-        emails = extract_emails_from_csv(content)
-    elif file.filename.endswith(('.xlsx', '.xls')):
-        emails = extract_emails_from_excel(content)
-    elif file.filename.endswith('.txt'):
-        emails = extract_emails_from_text(content.decode('utf-8'))
-    else:
-        raise HTTPException(status_code=400, detail="Unsupported file type. Use CSV, Excel, or TXT")
+    if file_size_mb > 10:
+        raise HTTPException(
+            status_code=400, 
+            detail=f"File too large ({file_size_mb:.2f}MB). Maximum size is 10MB"
+        )
+    
+    # Validate file type
+    if not (file.filename.endswith('.csv') or 
+            file.filename.endswith(('.xlsx', '.xls')) or 
+            file.filename.endswith('.txt')):
+        raise HTTPException(
+            status_code=400, 
+            detail="Unsupported file type. Use CSV, Excel (.xlsx, .xls), or TXT"
+        )
+    
+    # Extract emails
+    try:
+        if file.filename.endswith('.csv'):
+            emails = extract_emails_from_csv(content)
+        elif file.filename.endswith(('.xlsx', '.xls')):
+            emails = extract_emails_from_excel(content)
+        elif file.filename.endswith('.txt'):
+            emails = extract_emails_from_text(content.decode('utf-8'))
+    except Exception as e:
+        raise HTTPException(
+            status_code=400, 
+            detail=f"Error reading file: {str(e)}"
+        )
     
     if not emails:
         raise HTTPException(status_code=400, detail="No valid emails found in file")
     
+    # Remove duplicates
     emails = list(set(emails))
     
+    # Validate email count
+    if len(emails) > 10000:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Too many emails ({len(emails)}). Maximum 10,000 emails per job"
+        )
+    
+    # Check if user has sufficient credits
     if current_user.credits_used + len(emails) > current_user.credits_limit:
         raise HTTPException(
             status_code=403,
-            detail=f"Insufficient credits. Need {len(emails)}, available {current_user.credits_limit - current_user.credits_used}"
+            detail=f"Insufficient credits. Need {len(emails)}, available {current_user.credits_limit - current_user.credits_used}. Please upgrade your plan."
         )
     
+    # Check for concurrent jobs
+    active_jobs = await db.bulk_jobs.count_documents({
+        "user_id": current_user.id,
+        "status": {"$in": [VerificationStatus.PENDING, VerificationStatus.PROCESSING]}
+    })
+    
+    if active_jobs >= 3:
+        raise HTTPException(
+            status_code=429,
+            detail="Too many active jobs. Please wait for existing jobs to complete."
+        )
+    
+    # Create job
     job = BulkVerificationJob(
         user_id=current_user.id,
         total_emails=len(emails),
@@ -97,6 +141,7 @@ async def verify_bulk_emails_endpoint(
     job_dict['created_at'] = job_dict['created_at'].isoformat()
     await db.bulk_jobs.insert_one(job_dict)
     
+    # Start background task
     verify_bulk_emails.delay(job.id, emails, current_user.id)
     
     return job

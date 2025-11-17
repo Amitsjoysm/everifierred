@@ -113,6 +113,17 @@ def verify_bulk_emails(self, job_id: str, emails: list, user_id: str):
                 {"$inc": {"credits_used": processed}}
             )
             
+            # Record credit transaction
+            from utils import record_credit_transaction
+            await record_credit_transaction(
+                db=db,
+                user_id=user_id,
+                transaction_type="bulk_job",
+                credits_change=processed,
+                description=f"Bulk email verification job ({processed} emails)",
+                reference_id=job_id
+            )
+            
             logger.info(f"Bulk verification job {job_id} completed. Processed: {processed}, Successful: {successful}, Failed: {failed}")
             
         except Exception as e:

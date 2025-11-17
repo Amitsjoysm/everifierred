@@ -101,8 +101,34 @@ const Pricing = () => {
     );
   }
 
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: 'MailGuard Email Verification',
+    description: 'Professional email verification service with flexible pricing plans',
+    offers: plans.map(plan => ({
+      '@type': 'Offer',
+      name: plan.name,
+      price: plan.price,
+      priceCurrency: 'USD',
+      description: `${plan.credits_limit} email verifications per month`,
+      seller: {
+        '@type': 'Organization',
+        name: 'MailGuard',
+      },
+    })),
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+      <SEO
+        title="Pricing Plans - Affordable Email Verification | MailGuard"
+        description="Flexible pricing plans for email verification. Start free with 100 verifications/month. Affordable paid plans from $4.99/month. No contracts, cancel anytime. Bulk discounts available."
+        keywords="email verification pricing, email validation cost, affordable email checker, free email verification, bulk email verification pricing, email verification plans"
+        canonicalUrl="https://app-sync-restart.preview.emergentagent.com/pricing"
+        structuredData={structuredData}
+      />
+      
       {/* Navigation */}
       <nav className="bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

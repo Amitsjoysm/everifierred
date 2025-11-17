@@ -63,12 +63,39 @@ async def create_payment_order(
     db = await get_db()
     
     # Get plan details
-    plan = await db.plans.find_one({"id": plan_id}, {"_id": 0})
+    plan = await db.plans.find_one({"id": plan_id, "is_active": True}, {"_id": 0})
     if not plan:
-        raise HTTPException(status_code=404, detail="Plan not found")
+        raise HTTPException(status_code=404, detail="Plan not found or inactive")
     
     if plan['price'] == 0:
         raise HTTPException(status_code=400, detail="Free plan doesn't require payment")
+    
+    # Check if user already has a pending payment for same plan
+    existing_pending = await db.payments.find_one({
+        "user_id": current_user.id,
+        "plan_id": plan_id,
+        "status": "pending"
+    })
+    
+    if existing_pending:
+        # Return existing order if created within last 10 minutes
+        created_at = datetime.fromisoformat(existing_pending['created_at']) if isinstance(existing_pending['created_at'], str) else existing_pending['created_at']
+        time_diff = (datetime.now(timezone.utc) - created_at).total_seconds()
+        
+        if time_diff < 600:  # 10 minutes
+            return {
+                'order_id': existing_pending['razorpay_order_id'],
+                'amount': int(plan['price'] * 100),
+                'currency': 'INR',
+                'razorpay_key': settings.RAZORPAY_KEY_ID,
+                'message': 'Using existing pending order'
+            }
+        else:
+            # Mark old order as expired
+            await db.payments.update_one(
+                {"id": existing_pending['id']},
+                {"$set": {"status": "expired"}}
+            )
     
     # Create Razorpay order
     try:

@@ -1,7 +1,7 @@
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Query
 from fastapi.responses import FileResponse
 from datetime import datetime, timezone
-from typing import List
+from typing import List, Optional
 from pathlib import Path
 
 from database import get_db

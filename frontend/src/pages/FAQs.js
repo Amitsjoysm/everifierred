@@ -65,6 +65,11 @@ const FAQs = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
       {/* SEO Meta Tags */}
       <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
+      <meta name="description" content="Frequently asked questions about MailGuard email verification service. Find answers about pricing, features, API integration, bulk verification, and more." />
+      <meta name="keywords" content="email verification FAQ, MailGuard help, email validation questions, API documentation, pricing information" />
+      <meta property="og:title" content="FAQs - MailGuard Email Verification" />
+      <meta property="og:description" content="Get answers to common questions about email verification and MailGuard services" />
+      <title>FAQs - MailGuard Email Verification | Common Questions Answered</title>
 
       {/* Navigation */}
       <nav className="bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50">

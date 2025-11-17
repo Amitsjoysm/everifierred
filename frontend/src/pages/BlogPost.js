@@ -52,20 +52,40 @@ const BlogPost = () => {
     '@type': 'BlogPosting',
     headline: blog.title,
     description: blog.meta_description,
+    image: 'https://app-sync-restart.preview.emergentagent.com/blog-default.png',
     author: {
       '@type': 'Person',
       name: blog.author,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'MailGuard',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://app-sync-restart.preview.emergentagent.com/logo.png',
+      },
     },
     datePublished: blog.published_at,
     dateModified: blog.updated_at,
     keywords: blog.keywords.join(', '),
     articleBody: blog.content,
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `https://app-sync-restart.preview.emergentagent.com/blog/${blog.slug}`,
+    },
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      {/* SEO Meta Tags */}
-      <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
+      <SEO
+        title={blog.meta_title || blog.title}
+        description={blog.meta_description || blog.excerpt}
+        keywords={blog.keywords.join(', ')}
+        canonicalUrl={`https://app-sync-restart.preview.emergentagent.com/blog/${blog.slug}`}
+        ogType="article"
+        author={blog.author}
+        structuredData={jsonLd}
+      />
 
       {/* Navigation */}
       <nav className="bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50">

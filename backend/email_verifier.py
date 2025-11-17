@@ -147,7 +147,7 @@ async def verify_single_email(email: str, max_retries: int = 3) -> Optional[Emai
                 normalized_email=normalized_email
             )
             
-                return result
+            return result
                 
         except httpx.TimeoutException as e:
             logger.warning(f"Timeout verifying email {email} (attempt {attempt + 1}): {e}")

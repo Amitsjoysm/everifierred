@@ -42,7 +42,7 @@ async def get_api_keys(current_user: User = Depends(get_current_active_user)):
     for key in keys:
         if isinstance(key.get('created_at'), str):
             key['created_at'] = datetime.fromisoformat(key['created_at'])
-        if key.get('last_used') and isinstance(key['last_used'), str):
+        if key.get('last_used') and isinstance(key.get('last_used'), str):
             key['last_used'] = datetime.fromisoformat(key['last_used'])
     
     return [APIKeyResponse(**key) for key in keys]

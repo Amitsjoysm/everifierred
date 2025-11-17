@@ -2,10 +2,43 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { CheckCircle, Shield, Zap, Users, TrendingUp, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import SEO from '../components/SEO';
 
 const Landing = () => {
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'MailGuard',
+    description: 'Professional email verification service for businesses',
+    url: 'https://app-sync-restart.preview.emergentagent.com',
+    logo: 'https://app-sync-restart.preview.emergentagent.com/logo.png',
+    sameAs: [
+      'https://twitter.com/mailguard',
+      'https://linkedin.com/company/mailguard',
+    ],
+    contactPoint: {
+      '@type': 'ContactPoint',
+      contactType: 'Customer Support',
+      email: 'support@mailguard.com',
+    },
+    offers: {
+      '@type': 'AggregateOffer',
+      priceCurrency: 'USD',
+      lowPrice: '0',
+      highPrice: '79.99',
+      offerCount: '4',
+    },
+  };
+
   return (
     <div className="min-h-screen">
+      <SEO
+        title="MailGuard - Professional Email Verification & Validation Service"
+        description="Verify email addresses in real-time with MailGuard. Reduce bounce rates by 98%, improve deliverability, and protect your sender reputation. Start free with 100 verifications/month."
+        keywords="email verification, email validation, email checker, verify email address, email list cleaning, bulk email verification, email deliverability, bounce rate reduction, SMTP verification, disposable email detection"
+        canonicalUrl="https://app-sync-restart.preview.emergentagent.com"
+        structuredData={structuredData}
+      />
       {/* Header */}
       <header className="fixed top-0 w-full bg-white/80 backdrop-blur-lg border-b border-gray-200 z-50">
         <nav className="container mx-auto px-6 py-4 flex items-center justify-between">

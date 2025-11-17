@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import { useAuth } from '../context/AuthContext';
 import { format } from 'date-fns';
 import ReactMarkdown from 'react-markdown';
+import SEO from '../components/SEO';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 

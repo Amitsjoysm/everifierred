@@ -150,6 +150,19 @@ async def verify_payment(
     
     db = await get_db()
     
+    # Check if payment record exists
+    payment_record = await db.payments.find_one({
+        "razorpay_order_id": razorpay_order_id,
+        "user_id": current_user.id
+    })
+    
+    if not payment_record:
+        raise HTTPException(status_code=404, detail="Payment record not found")
+    
+    # Check if payment already processed
+    if payment_record.get('status') == 'success':
+        raise HTTPException(status_code=400, detail="Payment already processed")
+    
     # Verify signature
     body = razorpay_order_id + "|" + razorpay_payment_id
     expected_signature = hmac.new(
@@ -159,7 +172,42 @@ async def verify_payment(
     ).hexdigest()
     
     if expected_signature != razorpay_signature:
+        # Mark payment as failed
+        await db.payments.update_one(
+            {"razorpay_order_id": razorpay_order_id},
+            {"$set": {"status": "failed", "error_message": "Invalid signature"}}
+        )
         raise HTTPException(status_code=400, detail="Invalid payment signature")
+    
+    # Verify payment status from Razorpay
+    try:
+        razorpay_payment = razorpay_client.payment.fetch(razorpay_payment_id)
+        
+        if razorpay_payment['status'] != 'captured' and razorpay_payment['status'] != 'authorized':
+            await db.payments.update_one(
+                {"razorpay_order_id": razorpay_order_id},
+                {"$set": {"status": "failed", "error_message": f"Payment status: {razorpay_payment['status']}"}}
+            )
+            raise HTTPException(status_code=400, detail=f"Payment not successful. Status: {razorpay_payment['status']}")
+    except Exception as e:
+        await db.payments.update_one(
+            {"razorpay_order_id": razorpay_order_id},
+            {"$set": {"status": "failed", "error_message": str(e)}}
+        )
+        raise HTTPException(status_code=500, detail=f"Failed to verify payment with Razorpay: {str(e)}")
+    
+    # Get plan details
+    plan = await db.plans.find_one({"id": plan_id, "is_active": True}, {"_id": 0})
+    if not plan:
+        await db.payments.update_one(
+            {"razorpay_order_id": razorpay_order_id},
+            {"$set": {"status": "failed", "error_message": "Plan not found"}}
+        )
+        raise HTTPException(status_code=404, detail="Plan not found or inactive")
+    
+    # Get current user data for credit transaction
+    user_data = await db.users.find_one({"id": current_user.id}, {"_id": 0})
+    current_credits_used = user_data.get('credits_used', 0)
     
     # Update payment record
     await db.payments.update_one(
@@ -168,13 +216,11 @@ async def verify_payment(
             "$set": {
                 "razorpay_payment_id": razorpay_payment_id,
                 "razorpay_signature": razorpay_signature,
-                "status": "success"
+                "status": "success",
+                "completed_at": datetime.now(timezone.utc).isoformat()
             }
         }
     )
-    
-    # Get plan details
-    plan = await db.plans.find_one({"id": plan_id}, {"_id": 0})
     
     # Update user plan and credits
     await db.users.update_one(
@@ -183,7 +229,8 @@ async def verify_payment(
             "$set": {
                 "plan": plan['type'],
                 "credits_limit": plan['credits_limit'],
-                "credits_used": 0
+                "credits_used": 0,
+                "updated_at": datetime.now(timezone.utc).isoformat()
             }
         }
     )
@@ -194,12 +241,16 @@ async def verify_payment(
         db=db,
         user_id=current_user.id,
         transaction_type="purchase",
-        credits_change=-current_user.credits_used,  # Reset used credits
+        credits_change=-current_credits_used,  # Reset used credits
         description=f"Plan upgraded to {plan['name']} - Credits reset to {plan['credits_limit']}",
         reference_id=razorpay_order_id
     )
     
-    return {"message": "Payment verified and plan upgraded successfully"}
+    return {
+        "message": "Payment verified and plan upgraded successfully",
+        "plan": plan['name'],
+        "credits_limit": plan['credits_limit']
+    }
 
 
 @router.get("/payments/history", response_model=List[Payment])

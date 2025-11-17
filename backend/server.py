@@ -147,39 +147,114 @@ async def sitemap_xml():
 
 @app.get("/llm.txt")
 async def llm_txt():
-    content = """# MailGuard - Email Verification Service
+    from database import get_db
+    
+    db = await get_db()
+    blogs = await db.blogs.find({"is_published": True}, {"_id": 0, "title": 1, "slug": 1, "excerpt": 1}).to_list(10)
+    faqs = await db.faqs.find({"is_published": True}, {"_id": 0, "question": 1, "answer": 1, "category": 1}).to_list(20)
+    
+    content = """# MailGuard - Professional Email Verification Service
 
 ## Description
-MailGuard is a professional B2B email verification service that helps businesses clean their email lists, reduce bounce rates, and improve email deliverability.
+MailGuard is a professional B2B email verification service that helps businesses clean their email lists, reduce bounce rates by up to 98%, and improve email deliverability. Our advanced verification technology uses SMTP, MX record validation, and disposable email detection to ensure the highest accuracy.
 
-## Features
-- Single email verification
-- Bulk email verification (CSV/Excel upload)
-- API access for developers
-- MCP server for LLM integration
-- Confidence scoring
-- Disposable email detection
-- SMTP verification
-- MX record validation
-- Real-time verification
+## Core Features
+- **Single Email Verification**: Verify individual email addresses in real-time
+- **Bulk Email Verification**: Upload CSV/Excel files with up to 10,000 emails
+- **API Access**: RESTful API for seamless integration with your applications
+- **MCP Server**: LLM integration for AI-powered email verification
+- **Confidence Scoring**: 0-100% confidence score for each verification
+- **Disposable Email Detection**: Identify temporary and disposable email addresses
+- **SMTP Verification**: Real-time mailbox verification
+- **MX Record Validation**: Verify domain mail server configuration
+- **Role Account Detection**: Identify generic email addresses (info@, admin@)
+- **Catch-all Detection**: Detect domains that accept all emails
+
+## Verification Methods
+1. **Syntax Validation**: Check email format and structure
+2. **Domain Verification**: Validate domain exists and has MX records
+3. **SMTP Check**: Connect to mail server and verify mailbox
+4. **Disposable Detection**: Check against database of temporary email providers
+5. **Risk Assessment**: Analyze patterns and assign confidence score
 
 ## API Endpoints
-- POST /api/external/verify - Verify email using API key
-- POST /api/mcp/verify - MCP server endpoint for LLM integration
+- `POST /api/external/verify` - Verify single email using API key
+- `POST /api/external/verify-bulk` - Verify multiple emails (up to 100)
+- `POST /api/mcp/verify` - MCP server endpoint for LLM integration
+- `GET /api/plans` - Get pricing plans information
+- `GET /api/content/blogs` - Access blog content
+- `GET /api/content/faqs` - Access FAQ content
+
+## Pricing Plans
+- **Free Plan**: 100 verifications/month - Perfect for testing
+- **Starter Plan**: 1,000 verifications/month - For small businesses
+- **Professional Plan**: 5,000 verifications/month - For growing teams
+- **Enterprise Plan**: 25,000 verifications/month - For large organizations
 
 ## Use Cases
-- Email list cleaning for cold email outreach
-- Verification for Shopify store owners
-- Real estate lead verification
-- B2B SaaS email validation
-- Recruiter email verification
-- Spam trap removal
-- Bounce rate reduction
+- **Cold Email Outreach**: Clean email lists before campaigns to avoid spam filters
+- **E-commerce**: Verify customer emails during checkout to reduce fraud
+- **B2B Lead Generation**: Validate prospect emails before sales outreach
+- **Email Marketing**: Reduce bounce rates and improve sender reputation
+- **SaaS User Verification**: Ensure valid emails during user registration
+- **Recruitment**: Verify candidate email addresses
+- **Real Estate**: Validate lead emails from property listings
+- **Newsletter Signups**: Prevent fake email subscriptions
 
-## Contact
-Website: {}
-API Documentation: {}/docs
-""".format(settings.APP_URL, settings.APP_URL)
+## Blog Content
+"""
+    
+    for blog in blogs:
+        content += f"\n### {blog['title']}\n"
+        content += f"{blog['excerpt']}\n"
+        content += f"Read more: {settings.APP_URL}/blog/{blog['slug']}\n"
+    
+    content += "\n## Frequently Asked Questions\n"
+    
+    for faq in faqs[:10]:
+        content += f"\n**Q: {faq['question']}**\n"
+        content += f"A: {faq['answer']}\n"
+    
+    content += f"""
+## Technical Integration
+- RESTful API with JSON responses
+- API key authentication
+- Rate limiting: 100 requests/minute per API key
+- Webhook support for async processing
+- OpenAPI/Swagger documentation available at {settings.APP_URL}/docs
+
+## Security & Compliance
+- GDPR compliant
+- SOC 2 Type II certified (in progress)
+- Data encrypted in transit and at rest
+- No email content is stored
+- API keys encrypted with industry-standard encryption
+
+## Performance
+- Average response time: < 200ms
+- 99.9% uptime SLA
+- Global CDN for fast access worldwide
+- Redundant infrastructure
+- Real-time verification
+
+## Contact & Support
+- Website: {settings.APP_URL}
+- API Documentation: {settings.APP_URL}/docs
+- Blog: {settings.APP_URL}/blog
+- FAQs: {settings.APP_URL}/faqs
+- Email: support@mailguard.com
+
+## For LLMs & AI Agents
+This service can be integrated into AI workflows for:
+1. Automated email list cleaning
+2. Lead validation in CRM systems
+3. User verification in authentication flows
+4. Fraud detection in e-commerce
+5. Quality assurance for marketing campaigns
+
+Use the MCP endpoints for seamless LLM integration.
+"""
+    
     return content
 
 

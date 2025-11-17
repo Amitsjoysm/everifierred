@@ -46,14 +46,42 @@ const Blog = () => {
     );
   }
 
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'Blog',
+    name: 'MailGuard Email Verification Blog',
+    description: 'Expert insights and guides on email verification best practices',
+    url: 'https://app-sync-restart.preview.emergentagent.com/blog',
+    publisher: {
+      '@type': 'Organization',
+      name: 'MailGuard',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://app-sync-restart.preview.emergentagent.com/logo.png',
+      },
+    },
+    blogPost: blogs.map(blog => ({
+      '@type': 'BlogPosting',
+      headline: blog.title,
+      description: blog.excerpt,
+      url: `https://app-sync-restart.preview.emergentagent.com/blog/${blog.slug}`,
+      datePublished: blog.published_at,
+      author: {
+        '@type': 'Person',
+        name: blog.author,
+      },
+    })),
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      {/* SEO Meta Tags */}
-      <meta name="description" content="Expert insights, guides, and best practices for email verification and deliverability. Learn about email validation, bounce reduction, and sender reputation." />
-      <meta name="keywords" content="email verification, email validation, deliverability, sender reputation, bounce rate, email marketing" />
-      <meta property="og:title" content="Email Verification Blog - MailGuard" />
-      <meta property="og:description" content="Expert insights and guides on email verification best practices" />
-      <title>Email Verification Blog - MailGuard | Expert Insights & Guides</title>
+      <SEO
+        title="Email Verification Blog - Expert Insights & Best Practices"
+        description="Expert insights, guides, and best practices for email verification and deliverability. Learn about email validation, bounce reduction, sender reputation, and cold email outreach."
+        keywords="email verification blog, email validation guide, deliverability tips, sender reputation, bounce rate reduction, cold email best practices, B2B email finder, email list cleaning"
+        canonicalUrl="https://app-sync-restart.preview.emergentagent.com/blog"
+        structuredData={structuredData}
+      />
       
       {/* Navigation */}
       <nav className="bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50">

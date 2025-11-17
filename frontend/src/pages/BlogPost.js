@@ -159,9 +159,8 @@ const BlogPost = () => {
           </div>
         </header>
 
-        <div className="prose prose-lg max-w-none">
+        <div className="prose prose-lg max-w-none text-gray-700 leading-relaxed">
           <ReactMarkdown
-            className="text-gray-700 leading-relaxed"
             components={{
               h1: ({ node, ...props }) => <h1 className="text-3xl font-bold text-gray-900 mt-8 mb-4" {...props} />,
               h2: ({ node, ...props }) => <h2 className="text-2xl font-bold text-gray-900 mt-6 mb-3" {...props} />,

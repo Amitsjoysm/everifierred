@@ -215,6 +215,31 @@ async def get_verification_stats(current_user: User = Depends(get_current_active
     
     # Calculate credit usage percentage
     credits_used = user_data.get('credits_used', 0)
+
+
+
+@router.get("/credit-history")
+async def get_credit_history(
+    current_user: User = Depends(get_current_active_user),
+    skip: int = Query(0, ge=0),
+    limit: int = Query(50, ge=1, le=100)
+):
+    """Get user's credit transaction history"""
+    from models import CreditTransaction
+    
+    db = await get_db()
+    
+    transactions = await db.credit_transactions.find(
+        {"user_id": current_user.id},
+        {"_id": 0}
+    ).sort("created_at", -1).skip(skip).limit(limit).to_list(limit)
+    
+    for transaction in transactions:
+        if isinstance(transaction.get('created_at'), str):
+            transaction['created_at'] = datetime.fromisoformat(transaction['created_at'])
+    
+    return transactions
+
     credits_limit = user_data.get('credits_limit', 100)
     credit_usage_percentage = (credits_used / credits_limit * 100) if credits_limit > 0 else 0
     

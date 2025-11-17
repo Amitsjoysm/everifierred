@@ -13,6 +13,7 @@ from routes_external import router as external_router
 from routes_admin import router as admin_router
 from routes_content import router as content_router
 from routes_payments import router as payments_router
+from routes_mcp import router as mcp_router
 
 # Configure logging
 logging.basicConfig(

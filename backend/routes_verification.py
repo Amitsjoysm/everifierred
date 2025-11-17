@@ -151,3 +151,68 @@ async def download_verification_results(
         filename=f"verification_results_{job_id}.xlsx",
         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
+
+
+
+@router.get("/history", response_model=List[EmailVerificationResult])
+async def get_verification_history(
+    current_user: User = Depends(get_current_active_user),
+    skip: int = Query(0, ge=0),
+    limit: int = Query(50, ge=1, le=100)
+):
+    """Get user's verification history with pagination"""
+    db = await get_db()
+    
+    verifications = await db.email_verifications.find(
+        {"user_id": current_user.id},
+        {"_id": 0}
+    ).sort("verified_at", -1).skip(skip).limit(limit).to_list(limit)
+    
+    for verification in verifications:
+        if isinstance(verification.get('verified_at'), str):
+            verification['verified_at'] = datetime.fromisoformat(verification['verified_at'])
+    
+    return [EmailVerificationResult(**v) for v in verifications]
+
+
+@router.get("/stats")
+async def get_verification_stats(current_user: User = Depends(get_current_active_user)):
+    """Get user's verification statistics and credit usage"""
+    db = await get_db()
+    
+    # Get current user data
+    user_data = await db.users.find_one({"id": current_user.id}, {"_id": 0})
+    
+    # Get total verifications
+    total_verifications = await db.email_verifications.count_documents({"user_id": current_user.id})
+    
+    # Get verifications this month
+    month_start = datetime.now(timezone.utc).replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+    verifications_this_month = await db.email_verifications.count_documents({
+        "user_id": current_user.id,
+        "verified_at": {"$gte": month_start.isoformat()}
+    })
+    
+    # Get bulk jobs count
+    total_bulk_jobs = await db.bulk_jobs.count_documents({"user_id": current_user.id})
+    completed_bulk_jobs = await db.bulk_jobs.count_documents({
+        "user_id": current_user.id,
+        "status": VerificationStatus.COMPLETED
+    })
+    
+    # Calculate credit usage percentage
+    credits_used = user_data.get('credits_used', 0)
+    credits_limit = user_data.get('credits_limit', 100)
+    credit_usage_percentage = (credits_used / credits_limit * 100) if credits_limit > 0 else 0
+    
+    return {
+        "credits_used": credits_used,
+        "credits_limit": credits_limit,
+        "credits_remaining": credits_limit - credits_used,
+        "credit_usage_percentage": round(credit_usage_percentage, 2),
+        "total_verifications": total_verifications,
+        "verifications_this_month": verifications_this_month,
+        "total_bulk_jobs": total_bulk_jobs,
+        "completed_bulk_jobs": completed_bulk_jobs,
+        "current_plan": user_data.get('plan', 'free')
+    }

@@ -161,6 +161,17 @@ async def verify_payment(
         }
     )
     
+    # Record credit reset transaction
+    from utils import record_credit_transaction
+    await record_credit_transaction(
+        db=db,
+        user_id=current_user.id,
+        transaction_type="purchase",
+        credits_change=-current_user.credits_used,  # Reset used credits
+        description=f"Plan upgraded to {plan['name']} - Credits reset to {plan['credits_limit']}",
+        reference_id=razorpay_order_id
+    )
+    
     return {"message": "Payment verified and plan upgraded successfully"}
 
 

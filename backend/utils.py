@@ -46,3 +46,43 @@ def extract_emails_from_text(text: str) -> List[str]:
     pattern = r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}'
     emails = re.findall(pattern, text)
     return list(set(emails))  # Remove duplicates
+
+
+
+
+async def record_credit_transaction(
+    db,
+    user_id: str,
+    transaction_type: str,
+    credits_change: int,
+    description: str,
+    reference_id: str = None
+):
+    """Record a credit transaction for audit trail"""
+    from models import CreditTransaction
+    from datetime import datetime, timezone
+    
+    # Get current user credits
+    user = await db.users.find_one({"id": user_id}, {"_id": 0, "credits_used": 1, "credits_limit": 1})
+    if not user:
+        return None
+    
+    credits_before = user.get('credits_used', 0)
+    credits_after = credits_before + credits_change
+    
+    transaction = CreditTransaction(
+        user_id=user_id,
+        transaction_type=transaction_type,
+        credits_change=credits_change,
+        credits_before=credits_before,
+        credits_after=credits_after,
+        description=description,
+        reference_id=reference_id
+    )
+    
+    transaction_dict = transaction.model_dump()
+    transaction_dict['created_at'] = transaction_dict['created_at'].isoformat()
+    
+    await db.credit_transactions.insert_one(transaction_dict)
+    
+    return transaction

@@ -236,7 +236,44 @@ async def get_verification_history(
 @router.get("/stats")
 async def get_verification_stats(current_user: User = Depends(get_current_active_user)):
     """Get user's verification statistics and credit usage"""
-
+    db = await get_db()
+    
+    # Get current user data
+    user_data = await db.users.find_one({"id": current_user.id}, {"_id": 0})
+    
+    # Get total verifications
+    total_verifications = await db.email_verifications.count_documents({"user_id": current_user.id})
+    
+    # Get verifications this month
+    month_start = datetime.now(timezone.utc).replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+    verifications_this_month = await db.email_verifications.count_documents({
+        "user_id": current_user.id,
+        "verified_at": {"$gte": month_start.isoformat()}
+    })
+    
+    # Get bulk jobs count
+    total_bulk_jobs = await db.bulk_jobs.count_documents({"user_id": current_user.id})
+    completed_bulk_jobs = await db.bulk_jobs.count_documents({
+        "user_id": current_user.id,
+        "status": VerificationStatus.COMPLETED
+    })
+    
+    # Calculate credit usage percentage
+    credits_used = user_data.get('credits_used', 0)
+    credits_limit = user_data.get('credits_limit', 100)
+    credit_usage_percentage = (credits_used / credits_limit * 100) if credits_limit > 0 else 0
+    
+    return {
+        "credits_used": credits_used,
+        "credits_limit": credits_limit,
+        "credits_remaining": credits_limit - credits_used,
+        "credit_usage_percentage": round(credit_usage_percentage, 2),
+        "total_verifications": total_verifications,
+        "verifications_this_month": verifications_this_month,
+        "total_bulk_jobs": total_bulk_jobs,
+        "completed_bulk_jobs": completed_bulk_jobs,
+        "current_plan": user_data.get('plan', 'free')
+    }
 
 
 @router.post("/job/{job_id}/cancel")
@@ -269,31 +306,6 @@ async def cancel_verification_job(
     )
     
     return {"message": "Job cancelled successfully"}
-
-    db = await get_db()
-    
-    # Get current user data
-    user_data = await db.users.find_one({"id": current_user.id}, {"_id": 0})
-    
-    # Get total verifications
-    total_verifications = await db.email_verifications.count_documents({"user_id": current_user.id})
-    
-    # Get verifications this month
-    month_start = datetime.now(timezone.utc).replace(day=1, hour=0, minute=0, second=0, microsecond=0)
-    verifications_this_month = await db.email_verifications.count_documents({
-        "user_id": current_user.id,
-        "verified_at": {"$gte": month_start.isoformat()}
-    })
-    
-    # Get bulk jobs count
-    total_bulk_jobs = await db.bulk_jobs.count_documents({"user_id": current_user.id})
-    completed_bulk_jobs = await db.bulk_jobs.count_documents({
-        "user_id": current_user.id,
-        "status": VerificationStatus.COMPLETED
-    })
-    
-    # Calculate credit usage percentage
-    credits_used = user_data.get('credits_used', 0)
 
 
 

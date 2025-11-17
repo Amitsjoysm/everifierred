@@ -175,6 +175,20 @@ async def get_published_faqs():
     return [FAQ(**faq) for faq in faqs]
 
 
+@router.get("/admin/faqs", response_model=List[FAQ])
+async def get_all_faqs_admin(current_user: User = Depends(get_current_admin_user)):
+    """Get all FAQs (Admin)"""
+    db = await get_db()
+    
+    faqs = await db.faqs.find({}, {"_id": 0}).sort("order", 1).to_list(1000)
+    
+    for faq in faqs:
+        if isinstance(faq.get('created_at'), str):
+            faq['created_at'] = datetime.fromisoformat(faq['created_at'])
+    
+    return [FAQ(**faq) for faq in faqs]
+
+
 @router.patch("/admin/faqs/{faq_id}")
 async def update_faq(
     faq_id: str,

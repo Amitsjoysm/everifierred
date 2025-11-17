@@ -262,3 +262,27 @@ class AnalyticsData(BaseModel):
     revenue_total: float
     revenue_month: float
     plan_distribution: Dict[str, int]
+
+
+
+
+class TransactionType(str, Enum):
+    VERIFICATION = "verification"
+    BULK_JOB = "bulk_job"
+    PURCHASE = "purchase"
+    REFUND = "refund"
+    RESET = "reset"
+
+
+class CreditTransaction(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str
+    transaction_type: TransactionType
+    credits_change: int  # Positive for credit, negative for debit
+    credits_before: int
+    credits_after: int
+    description: str
+    reference_id: Optional[str] = None  # Job ID, verification ID, payment ID etc
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))

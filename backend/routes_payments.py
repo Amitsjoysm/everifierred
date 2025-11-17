@@ -179,6 +179,107 @@ async def verify_payment(
         )
         raise HTTPException(status_code=400, detail="Invalid payment signature")
     
+
+
+
+@router.post("/payments/webhook")
+async def razorpay_webhook(request: dict):
+    """Handle Razorpay webhook events"""
+    if not razorpay_client:
+        raise HTTPException(status_code=503, detail="Payment service not configured")
+    
+    db = await get_db()
+    
+    # TODO: Verify webhook signature in production
+    # For now, just log the event
+    
+    event = request.get('event')
+    payload = request.get('payload', {})
+    
+    if event == 'payment.failed':
+        payment_entity = payload.get('payment', {}).get('entity', {})
+        order_id = payment_entity.get('order_id')
+        
+        if order_id:
+            await db.payments.update_one(
+                {"razorpay_order_id": order_id},
+                {
+                    "$set": {
+                        "status": "failed",
+                        "error_message": payment_entity.get('error_description', 'Payment failed'),
+                        "updated_at": datetime.now(timezone.utc).isoformat()
+                    }
+                }
+            )
+    
+    elif event == 'payment.captured':
+        payment_entity = payload.get('payment', {}).get('entity', {})
+        order_id = payment_entity.get('order_id')
+        payment_id = payment_entity.get('id')
+        
+        if order_id and payment_id:
+            # Get payment record
+            payment_record = await db.payments.find_one({"razorpay_order_id": order_id})
+            
+            if payment_record and payment_record.get('status') != 'success':
+                # Update payment status
+                await db.payments.update_one(
+                    {"razorpay_order_id": order_id},
+                    {
+                        "$set": {
+                            "razorpay_payment_id": payment_id,
+                            "status": "success",
+                            "completed_at": datetime.now(timezone.utc).isoformat()
+                        }
+                    }
+                )
+                
+                # Update user plan
+                plan = await db.plans.find_one({"id": payment_record['plan_id']}, {"_id": 0})
+                if plan:
+                    await db.users.update_one(
+                        {"id": payment_record['user_id']},
+                        {
+                            "$set": {
+                                "plan": plan['type'],
+                                "credits_limit": plan['credits_limit'],
+                                "credits_used": 0
+                            }
+                        }
+                    )
+    
+    return {"status": "ok"}
+
+
+@router.post("/payments/cancel/{order_id}")
+async def cancel_payment(
+    order_id: str,
+    current_user: User = Depends(get_current_user)
+):
+    """Cancel a pending payment"""
+    db = await get_db()
+    
+    payment = await db.payments.find_one({
+        "razorpay_order_id": order_id,
+        "user_id": current_user.id,
+        "status": "pending"
+    })
+    
+    if not payment:
+        raise HTTPException(status_code=404, detail="Pending payment not found")
+    
+    await db.payments.update_one(
+        {"razorpay_order_id": order_id},
+        {
+            "$set": {
+                "status": "cancelled",
+                "updated_at": datetime.now(timezone.utc).isoformat()
+            }
+        }
+    )
+    
+    return {"message": "Payment cancelled successfully"}
+
     # Verify payment status from Razorpay
     try:
         razorpay_payment = razorpay_client.payment.fetch(razorpay_payment_id)

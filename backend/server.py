@@ -104,26 +104,42 @@ Sitemap: {}/sitemap.xml
 @app.get("/sitemap.xml")
 async def sitemap_xml():
     from database import get_db
+    from datetime import datetime
     
     db = await get_db()
-    blogs = await db.blogs.find({"is_published": True}, {"_id": 0, "slug": 1}).to_list(1000)
+    blogs = await db.blogs.find({"is_published": True}, {"_id": 0, "slug": 1, "updated_at": 1}).to_list(1000)
     
-    urls = [
-        settings.APP_URL,
-        f"{settings.APP_URL}/pricing",
-        f"{settings.APP_URL}/features",
-        f"{settings.APP_URL}/blog",
-        f"{settings.APP_URL}/faqs",
+    # Static pages with priority
+    static_urls = [
+        {"loc": settings.APP_URL, "priority": "1.0", "changefreq": "daily"},
+        {"loc": f"{settings.APP_URL}/pricing", "priority": "0.9", "changefreq": "weekly"},
+        {"loc": f"{settings.APP_URL}/features", "priority": "0.8", "changefreq": "weekly"},
+        {"loc": f"{settings.APP_URL}/blog", "priority": "0.8", "changefreq": "daily"},
+        {"loc": f"{settings.APP_URL}/faqs", "priority": "0.7", "changefreq": "weekly"},
     ]
     
-    for blog in blogs:
-        urls.append(f"{settings.APP_URL}/blog/{blog['slug']}")
-    
     xml_content = '<?xml version="1.0" encoding="UTF-8"?>\n'
-    xml_content += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+    xml_content += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" '
+    xml_content += 'xmlns:xhtml="http://www.w3.org/1999/xhtml">\n'
     
-    for url in urls:
-        xml_content += f'  <url>\n    <loc>{url}</loc>\n    <changefreq>weekly</changefreq>\n  </url>\n'
+    # Add static pages
+    for url_data in static_urls:
+        xml_content += '  <url>\n'
+        xml_content += f'    <loc>{url_data["loc"]}</loc>\n'
+        xml_content += f'    <lastmod>{datetime.utcnow().strftime("%Y-%m-%d")}</lastmod>\n'
+        xml_content += f'    <changefreq>{url_data["changefreq"]}</changefreq>\n'
+        xml_content += f'    <priority>{url_data["priority"]}</priority>\n'
+        xml_content += '  </url>\n'
+    
+    # Add blog posts
+    for blog in blogs:
+        xml_content += '  <url>\n'
+        xml_content += f'    <loc>{settings.APP_URL}/blog/{blog["slug"]}</loc>\n'
+        lastmod = blog.get("updated_at", datetime.utcnow().isoformat())[:10]
+        xml_content += f'    <lastmod>{lastmod}</lastmod>\n'
+        xml_content += '    <changefreq>monthly</changefreq>\n'
+        xml_content += '    <priority>0.6</priority>\n'
+        xml_content += '  </url>\n'
     
     xml_content += '</urlset>'
     

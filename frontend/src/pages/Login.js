@@ -64,6 +64,11 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex">
+      <SEO
+        title="Login - MailGuard"
+        description="Sign in to your MailGuard account to access email verification dashboard"
+        noindex={true}
+      />
       <div className="flex-1 flex items-center justify-center p-8 bg-white">
         <div className="w-full max-w-md">
           <div className="mb-8">

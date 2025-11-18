@@ -96,6 +96,25 @@ const Dashboard = () => {
     }
   };
 
+  const handleTemplateDownload = async (format) => {
+    try {
+      const response = await api.get(`/verify/template?format=${format}`, {
+        responseType: 'blob',
+      });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      const fileExtensions = { xlsx: 'xlsx', csv: 'csv', txt: 'txt' };
+      link.setAttribute('download', `email_verification_template.${fileExtensions[format]}`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      toast.success('Template downloaded!');
+    } catch (error) {
+      toast.error('Template download failed');
+    }
+  };
+
   const getScoreColor = (score) => {
     if (score >= 80) return 'text-green-600';
     if (score >= 50) return 'text-yellow-600';

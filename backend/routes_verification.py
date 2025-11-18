@@ -212,55 +212,90 @@ async def download_verification_results(
 
 
 @router.get("/template")
-async def download_template():
-    """Download template file for bulk email verification"""
+async def download_template(format: str = Query("xlsx", regex="^(xlsx|csv|txt)$")):
+    """Download template file for bulk email verification in various formats"""
     import openpyxl
+    import csv
     from config import settings
     
-    # Create template file
-    wb = openpyxl.Workbook()
-    ws = wb.active
-    ws.title = "Email Template"
-    
-    # Add instructions
-    ws['A1'] = "MailGuard - Bulk Email Verification Template"
-    ws['A1'].font = openpyxl.styles.Font(bold=True, size=14)
-    
-    ws['A3'] = "Instructions:"
-    ws['A3'].font = openpyxl.styles.Font(bold=True)
-    ws['A4'] = "1. Add one email address per row in column A (starting from row 8)"
-    ws['A5'] = "2. You can add up to 10,000 email addresses"
-    ws['A6'] = "3. Save the file and upload it to MailGuard for verification"
-    
-    # Add header row
-    ws['A8'] = "Email Address"
-    ws['A8'].font = openpyxl.styles.Font(bold=True)
-    ws['A8'].fill = openpyxl.styles.PatternFill(start_color="4472C4", end_color="4472C4", fill_type="solid")
-    ws['A8'].font = openpyxl.styles.Font(bold=True, color="FFFFFF")
-    
-    # Add sample emails
     sample_emails = [
         "example1@domain.com",
         "example2@domain.com",
         "example3@domain.com"
     ]
     
-    for idx, email in enumerate(sample_emails, start=9):
-        ws[f'A{idx}'] = email
-        ws[f'A{idx}'].font = openpyxl.styles.Font(italic=True, color="999999")
+    if format == "xlsx":
+        # Create Excel template
+        wb = openpyxl.Workbook()
+        ws = wb.active
+        ws.title = "Email Template"
+        
+        # Add instructions
+        ws['A1'] = "MailGuard - Bulk Email Verification Template"
+        ws['A1'].font = openpyxl.styles.Font(bold=True, size=14)
+        
+        ws['A3'] = "Instructions:"
+        ws['A3'].font = openpyxl.styles.Font(bold=True)
+        ws['A4'] = "1. Add one email address per row in column A (starting from row 8)"
+        ws['A5'] = "2. You can add up to 10,000 email addresses"
+        ws['A6'] = "3. Save the file and upload it to MailGuard for verification"
+        
+        # Add header row
+        ws['A8'] = "Email Address"
+        ws['A8'].font = openpyxl.styles.Font(bold=True)
+        ws['A8'].fill = openpyxl.styles.PatternFill(start_color="4472C4", end_color="4472C4", fill_type="solid")
+        ws['A8'].font = openpyxl.styles.Font(bold=True, color="FFFFFF")
+        
+        # Add sample emails
+        for idx, email in enumerate(sample_emails, start=9):
+            ws[f'A{idx}'] = email
+            ws[f'A{idx}'].font = openpyxl.styles.Font(italic=True, color="999999")
+        
+        # Set column width
+        ws.column_dimensions['A'].width = 40
+        
+        # Save template
+        template_path = settings.RESULTS_DIR / "email_verification_template.xlsx"
+        wb.save(template_path)
+        
+        return FileResponse(
+            template_path,
+            filename="email_verification_template.xlsx",
+            media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
     
-    # Set column width
-    ws.column_dimensions['A'].width = 40
+    elif format == "csv":
+        # Create CSV template
+        template_path = settings.RESULTS_DIR / "email_verification_template.csv"
+        
+        with open(template_path, 'w', newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow(['Email Address'])
+            for email in sample_emails:
+                writer.writerow([email])
+        
+        return FileResponse(
+            template_path,
+            filename="email_verification_template.csv",
+            media_type="text/csv"
+        )
     
-    # Save template
-    template_path = settings.RESULTS_DIR / "email_verification_template.xlsx"
-    wb.save(template_path)
-    
-    return FileResponse(
-        template_path,
-        filename="email_verification_template.xlsx",
-        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    )
+    else:  # txt format
+        # Create TXT template
+        template_path = settings.RESULTS_DIR / "email_verification_template.txt"
+        
+        with open(template_path, 'w') as txtfile:
+            txtfile.write("# MailGuard - Bulk Email Verification Template\n")
+            txtfile.write("# Add one email address per line\n")
+            txtfile.write("# You can add up to 10,000 email addresses\n\n")
+            for email in sample_emails:
+                txtfile.write(f"{email}\n")
+        
+        return FileResponse(
+            template_path,
+            filename="email_verification_template.txt",
+            media_type="text/plain"
+        )
 
 
 

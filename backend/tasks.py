@@ -24,7 +24,7 @@ def extract_domain(email: str) -> str:
     """Extract domain from email address"""
     try:
         return email.split('@')[1].lower() if '@' in email else ''
-    except:
+    except Exception:
         return ''
 
 

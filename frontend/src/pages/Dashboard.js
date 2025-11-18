@@ -270,6 +270,44 @@ const Dashboard = () => {
                 <CardTitle>Bulk Email Verification</CardTitle>
               </CardHeader>
               <CardContent>
+                {/* Template Download Section */}
+                <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                  <h4 className="font-semibold text-sm text-blue-900 mb-2">Need a template?</h4>
+                  <p className="text-sm text-blue-700 mb-3">Download a template file to get started with bulk verification</p>
+                  <div className="flex gap-2">
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => handleTemplateDownload('xlsx')}
+                      data-testid="download-template-xlsx"
+                    >
+                      <Download className="h-4 w-4 mr-1" />
+                      Excel Template
+                    </Button>
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => handleTemplateDownload('csv')}
+                      data-testid="download-template-csv"
+                    >
+                      <Download className="h-4 w-4 mr-1" />
+                      CSV Template
+                    </Button>
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => handleTemplateDownload('txt')}
+                      data-testid="download-template-txt"
+                    >
+                      <Download className="h-4 w-4 mr-1" />
+                      TXT Template
+                    </Button>
+                  </div>
+                </div>
+
                 <form onSubmit={handleBulkUpload} className="space-y-4">
                   <div>
                     <Label htmlFor="file">Upload File (CSV, Excel, or TXT)</Label>

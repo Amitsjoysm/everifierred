@@ -8,6 +8,8 @@ import logging
 from datetime import datetime, timezone
 import openpyxl
 from pathlib import Path
+from collections import defaultdict
+from urllib.parse import urlparse
 
 logger = logging.getLogger(__name__)
 
@@ -18,9 +20,17 @@ def get_db_sync():
     return client[settings.DB_NAME]
 
 
+def extract_domain(email: str) -> str:
+    """Extract domain from email address"""
+    try:
+        return email.split('@')[1].lower() if '@' in email else ''
+    except:
+        return ''
+
+
 @celery_app.task(bind=True, name='tasks.verify_bulk_emails')
 def verify_bulk_emails(self, job_id: str, emails: list, user_id: str):
-    """Background task to verify bulk emails"""
+    """Background task to verify bulk emails with domain-based rate limiting"""
     logger.info(f"Starting bulk verification job: {job_id}")
     
     async def process_emails():
@@ -33,15 +43,33 @@ def verify_bulk_emails(self, job_id: str, emails: list, user_id: str):
                 {"$set": {"status": VerificationStatus.PROCESSING}}
             )
             
-            results = []
+            # Initialize results array with same length as emails to maintain order
+            results = [None] * len(emails)
             processed = 0
             successful = 0
             failed = 0
             
-            for email in emails:
+            # Track last verification time per domain for rate limiting
+            domain_last_verify = {}
+            
+            for index, email in enumerate(emails):
                 try:
+                    # Extract domain for rate limiting
+                    domain = extract_domain(email)
+                    
+                    # Add delay if same domain was recently verified
+                    if domain and domain in domain_last_verify:
+                        # Wait 2 seconds between requests to same domain
+                        time_since_last = asyncio.get_event_loop().time() - domain_last_verify[domain]
+                        if time_since_last < 2.0:
+                            await asyncio.sleep(2.0 - time_since_last)
+                    
                     # Verify email
                     result = await verify_single_email(email)
+                    
+                    # Record verification time for this domain
+                    if domain:
+                        domain_last_verify[domain] = asyncio.get_event_loop().time()
                     
                     if result:
                         # Store individual result
@@ -51,14 +79,14 @@ def verify_bulk_emails(self, job_id: str, emails: list, user_id: str):
                         result_dict['job_id'] = job_id
                         
                         await db.email_verifications.insert_one(result_dict)
-                        results.append(result_dict)
+                        results[index] = result_dict  # Store at original index
                         successful += 1
                     else:
                         failed += 1
-                        results.append({
+                        results[index] = {
                             "input": email,
                             "error": "Verification failed"
-                        })
+                        }
                     
                     processed += 1
                     
@@ -84,10 +112,10 @@ def verify_bulk_emails(self, job_id: str, emails: list, user_id: str):
                     logger.error(f"Error verifying email {email}: {e}")
                     failed += 1
                     processed += 1
-                    results.append({
+                    results[index] = {
                         "input": email,
                         "error": str(e)
-                    })
+                    }
             
             # Create Excel file with results
             result_file = create_result_excel(job_id, results)

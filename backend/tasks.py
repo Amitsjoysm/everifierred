@@ -176,7 +176,7 @@ def verify_bulk_emails(self, job_id: str, emails: list, user_id: str):
 
 
 def create_result_excel(job_id: str, results: list) -> str:
-    """Create Excel file with verification results"""
+    """Create Excel file with verification results maintaining original order"""
     try:
         wb = openpyxl.Workbook()
         ws = wb.active
@@ -192,11 +192,16 @@ def create_result_excel(job_id: str, results: list) -> str:
         ]
         ws.append(headers)
         
-        # Data
+        # Data - iterate through results in order (including None entries)
         for result in results:
-            if "error" in result:
-                ws.append([result.get("input", ""), "ERROR", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""])
+            if result is None:
+                # Handle case where verification didn't complete
+                ws.append(["", "PENDING", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""])
+            elif "error" in result:
+                # Handle error case
+                ws.append([result.get("input", ""), "ERROR", "", "", "", "", "", "", "", "", "", "", "", "", "", "", result.get("error", "")])
             else:
+                # Handle successful verification
                 ws.append([
                     result.get("input", ""),
                     result.get("is_reachable", ""),

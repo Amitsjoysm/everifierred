@@ -417,18 +417,3 @@ async def get_credit_history(
             transaction['created_at'] = datetime.fromisoformat(transaction['created_at'])
     
     return transactions
-
-    credits_limit = user_data.get('credits_limit', 100)
-    credit_usage_percentage = (credits_used / credits_limit * 100) if credits_limit > 0 else 0
-    
-    return {
-        "credits_used": credits_used,
-        "credits_limit": credits_limit,
-        "credits_remaining": credits_limit - credits_used,
-        "credit_usage_percentage": round(credit_usage_percentage, 2),
-        "total_verifications": total_verifications,
-        "verifications_this_month": verifications_this_month,
-        "total_bulk_jobs": total_bulk_jobs,
-        "completed_bulk_jobs": completed_bulk_jobs,
-        "current_plan": user_data.get('plan', 'free')
-    }

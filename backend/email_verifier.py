@@ -58,28 +58,38 @@ def calculate_confidence_score(
 
 
 async def verify_single_email(email: str, max_retries: int = 3) -> Optional[EmailVerificationResult]:
-    """Verify a single email using the reacheremail API with retry logic"""
-    last_error = None
+    """Verify a single email using the reacheremail API with retry logic and fallback"""
+    # Try primary API first, then fallback
+    apis = [
+        ("primary", settings.EMAIL_VERIFIER_API),
+        ("fallback", settings.EMAIL_VERIFIER_API_FALLBACK)
+    ]
     
-    for attempt in range(max_retries):
-        try:
-            async with httpx.AsyncClient(timeout=30.0) as client:
-                response = await client.post(
-                    f"{settings.EMAIL_VERIFIER_API}/v0/check_email",
-                    json={"to_email": email},
-                    headers={"Content-Type": "application/json"}
-                )
-                
-                if response.status_code != 200:
-                    logger.error(f"Email verification failed for {email} (attempt {attempt + 1}): {response.text}")
-                    last_error = f"API returned status {response.status_code}"
+    for api_name, api_url in apis:
+        last_error = None
+        logger.info(f"Attempting verification with {api_name} API: {api_url}")
+        
+        for attempt in range(max_retries):
+            try:
+                async with httpx.AsyncClient(timeout=30.0) as client:
+                    response = await client.post(
+                        f"{api_url}/v0/check_email",
+                        json={"to_email": email},
+                        headers={"Content-Type": "application/json"}
+                    )
                     
-                    # Retry on 5xx errors or timeout
-                    if response.status_code >= 500 and attempt < max_retries - 1:
-                        continue
-                    return None
-                
-                data = response.json()
+                    if response.status_code != 200:
+                        logger.error(f"Email verification failed for {email} using {api_name} API (attempt {attempt + 1}): {response.text}")
+                        last_error = f"API returned status {response.status_code}"
+                        
+                        # Retry on 5xx errors or timeout
+                        if response.status_code >= 500 and attempt < max_retries - 1:
+                            continue
+                        # If all retries failed, break to try next API
+                        break
+                    
+                    data = response.json()
+                    logger.info(f"Successfully verified {email} using {api_name} API")
             
             # Parse the response
             is_reachable = data.get("is_reachable", "unknown")

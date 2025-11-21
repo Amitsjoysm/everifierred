@@ -215,13 +215,11 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Blog and FAQ API endpoints"
-    - "Credit transaction tracking"
-    - "Verification history endpoint"
-    - "Payment edge case handling"
-    - "Bulk verification edge cases"
+    - "Email verification fallback mechanism"
+    - "MCP endpoints functionality"
+    - "External API endpoints"
   stuck_tasks: []
-  test_all: true
+  test_all: false
   test_priority: "high_first"
 
 agent_communication:

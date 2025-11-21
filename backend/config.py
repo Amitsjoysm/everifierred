@@ -25,6 +25,7 @@ class Settings(BaseSettings):
     
     # Email Verifier API
     EMAIL_VERIFIER_API: str = os.environ.get('EMAIL_VERIFIER_API', 'http://localhost:8080')
+    EMAIL_VERIFIER_API_FALLBACK: str = os.environ.get('EMAIL_VERIFIER_API_FALLBACK', 'http://158.69.113.127:8080')
     
     # Razorpay
     RAZORPAY_KEY_ID: str = os.environ.get('RAZORPAY_KEY_ID', '')

@@ -96,7 +96,7 @@ CORS_ORIGINS="*"
 
 ```bash
 # ✅ Already configured for preview environment
-REACT_APP_BACKEND_URL=https://app-sync-restart.preview.emergentagent.com
+REACT_APP_BACKEND_URL=https://email-verify-sync-1.preview.emergentagent.com
 
 # For production, update to:
 # REACT_APP_BACKEND_URL=https://api.yourdomain.com
@@ -173,9 +173,9 @@ Status:   Active & Email Verified
 ```
 
 ### Access URLs
-- **Login:** https://app-sync-restart.preview.emergentagent.com/login
-- **Admin Panel:** https://app-sync-restart.preview.emergentagent.com/admin
-- **Dashboard:** https://app-sync-restart.preview.emergentagent.com/dashboard
+- **Login:** https://email-verify-sync-1.preview.emergentagent.com/login
+- **Admin Panel:** https://email-verify-sync-1.preview.emergentagent.com/admin
+- **Dashboard:** https://email-verify-sync-1.preview.emergentagent.com/dashboard
 
 ---
 

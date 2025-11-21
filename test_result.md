@@ -195,6 +195,18 @@ backend:
         agent: "testing"
         comment: "✅ TESTED: Email verification working correctly through /verify/single endpoint. External email verification service responding properly with retry logic in place."
 
+  - task: "Email verification fallback mechanism"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/email_verifier.py, /app/backend/config.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implemented fallback to http://158.69.113.127:8080/v0/check_email. Primary API tries first, then automatically falls back to secondary API if primary fails. Both APIs use 3-retry logic. Added comprehensive logging."
+
 metadata:
   created_by: "main_agent"
   version: "2.0"

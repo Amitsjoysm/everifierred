@@ -90,90 +90,92 @@ async def verify_single_email(email: str, max_retries: int = 3) -> Optional[Emai
                     
                     data = response.json()
                     logger.info(f"Successfully verified {email} using {api_name} API")
-            
-            # Parse the response
-            is_reachable = data.get("is_reachable", "unknown")
-            misc = data.get("misc", {})
-            mx = data.get("mx", {})
-            smtp = data.get("smtp", {})
-            syntax = data.get("syntax", {})
-            
-            # Extract values with defaults
-            is_disposable = misc.get("is_disposable", False)
-            is_role_account = misc.get("is_role_account", False)
-            
-            accepts_mail = mx.get("accepts_mail", False)
-            mx_records = mx.get("records", [])
-            
-            can_connect_smtp = smtp.get("can_connect_smtp", False)
-            has_full_inbox = smtp.get("has_full_inbox", False)
-            is_catch_all = smtp.get("is_catch_all", False)
-            is_deliverable = smtp.get("is_deliverable", False)
-            is_disabled = smtp.get("is_disabled", False)
-            
-            is_valid_syntax = syntax.get("is_valid_syntax", False)
-            domain = syntax.get("domain", "")
-            username = syntax.get("username", "")
-            normalized_email = syntax.get("normalized_email", email)
-            
-            # Calculate confidence score
-            confidence_score = calculate_confidence_score(
-                is_reachable,
-                is_valid_syntax,
-                is_deliverable,
-                is_disposable,
-                is_disabled,
-                can_connect_smtp,
-                accepts_mail,
-                is_catch_all,
-                has_full_inbox
-            )
-            
-            # Map is_reachable to enum
-            reachability_map = {
-                "safe": ReachabilityStatus.SAFE,
-                "risky": ReachabilityStatus.RISKY,
-                "invalid": ReachabilityStatus.INVALID,
-                "unknown": ReachabilityStatus.UNKNOWN
-            }
-            reachability = reachability_map.get(is_reachable, ReachabilityStatus.UNKNOWN)
-            
-            result = EmailVerificationResult(
-                input=data.get("input", email),
-                is_reachable=reachability,
-                is_valid_syntax=is_valid_syntax,
-                is_disposable=is_disposable,
-                is_role_account=is_role_account,
-                can_connect_smtp=can_connect_smtp,
-                is_deliverable=is_deliverable,
-                has_full_inbox=has_full_inbox,
-                is_catch_all=is_catch_all,
-                is_disabled=is_disabled,
-                accepts_mail=accepts_mail,
-                mx_records=mx_records,
-                confidence_score=confidence_score,
-                domain=domain,
-                username=username,
-                normalized_email=normalized_email
-            )
-            
-            return result
                 
-        except httpx.TimeoutException as e:
-            logger.warning(f"Timeout verifying email {email} (attempt {attempt + 1}): {e}")
-            last_error = f"Timeout: {str(e)}"
-            if attempt < max_retries - 1:
-                continue
-        except httpx.RequestError as e:
-            logger.warning(f"Network error verifying email {email} (attempt {attempt + 1}): {e}")
-            last_error = f"Network error: {str(e)}"
-            if attempt < max_retries - 1:
-                continue
-        except Exception as e:
-            logger.error(f"Unexpected error verifying email {email} (attempt {attempt + 1}): {e}")
-            last_error = f"Unexpected error: {str(e)}"
-            if attempt < max_retries - 1:
-                continue
+                # Parse the response
+                is_reachable = data.get("is_reachable", "unknown")
+                misc = data.get("misc", {})
+                mx = data.get("mx", {})
+                smtp = data.get("smtp", {})
+                syntax = data.get("syntax", {})
+                
+                # Extract values with defaults
+                is_disposable = misc.get("is_disposable", False)
+                is_role_account = misc.get("is_role_account", False)
+                
+                accepts_mail = mx.get("accepts_mail", False)
+                mx_records = mx.get("records", [])
+                
+                can_connect_smtp = smtp.get("can_connect_smtp", False)
+                has_full_inbox = smtp.get("has_full_inbox", False)
+                is_catch_all = smtp.get("is_catch_all", False)
+                is_deliverable = smtp.get("is_deliverable", False)
+                is_disabled = smtp.get("is_disabled", False)
+                
+                is_valid_syntax = syntax.get("is_valid_syntax", False)
+                domain = syntax.get("domain", "")
+                username = syntax.get("username", "")
+                normalized_email = syntax.get("normalized_email", email)
+                
+                # Calculate confidence score
+                confidence_score = calculate_confidence_score(
+                    is_reachable,
+                    is_valid_syntax,
+                    is_deliverable,
+                    is_disposable,
+                    is_disabled,
+                    can_connect_smtp,
+                    accepts_mail,
+                    is_catch_all,
+                    has_full_inbox
+                )
+                
+                # Map is_reachable to enum
+                reachability_map = {
+                    "safe": ReachabilityStatus.SAFE,
+                    "risky": ReachabilityStatus.RISKY,
+                    "invalid": ReachabilityStatus.INVALID,
+                    "unknown": ReachabilityStatus.UNKNOWN
+                }
+                reachability = reachability_map.get(is_reachable, ReachabilityStatus.UNKNOWN)
+                
+                result = EmailVerificationResult(
+                    input=data.get("input", email),
+                    is_reachable=reachability,
+                    is_valid_syntax=is_valid_syntax,
+                    is_disposable=is_disposable,
+                    is_role_account=is_role_account,
+                    can_connect_smtp=can_connect_smtp,
+                    is_deliverable=is_deliverable,
+                    has_full_inbox=has_full_inbox,
+                    is_catch_all=is_catch_all,
+                    is_disabled=is_disabled,
+                    accepts_mail=accepts_mail,
+                    mx_records=mx_records,
+                    confidence_score=confidence_score,
+                    domain=domain,
+                    username=username,
+                    normalized_email=normalized_email
+                )
+                
+                return result
+                    
+            except httpx.TimeoutException as e:
+                logger.warning(f"Timeout verifying email {email} using {api_name} API (attempt {attempt + 1}): {e}")
+                last_error = f"Timeout: {str(e)}"
+                if attempt < max_retries - 1:
+                    continue
+            except httpx.RequestError as e:
+                logger.warning(f"Network error verifying email {email} using {api_name} API (attempt {attempt + 1}): {e}")
+                last_error = f"Network error: {str(e)}"
+                if attempt < max_retries - 1:
+                    continue
+            except Exception as e:
+                logger.error(f"Unexpected error verifying email {email} using {api_name} API (attempt {attempt + 1}): {e}")
+                last_error = f"Unexpected error: {str(e)}"
+                if attempt < max_retries - 1:
+                    continue
+        
+        logger.warning(f"Failed to verify {email} using {api_name} API after {max_retries} attempts. Last error: {last_error}")
     
-    logger.error(f"Failed to verify {email} after {max_retries} attempts. Last error: {last_error}")
+    logger.error(f"Failed to verify {email} with both primary and fallback APIs")
     return None

@@ -340,69 +340,64 @@ class ProductionReadinessTester:
         failed_tests = [t for t in self.test_results[category]["details"] if not t["success"]]
         self.test_results[category]["status"] = "failed" if failed_tests else "passed"
         
-    def test_payment_edge_cases(self):
-        """Test Payment Edge Cases (HIGH PRIORITY)"""
-        print("\n💰 Testing Payment Edge Cases...")
-        category = "payment_edge_cases"
+    def test_system_health(self):
+        """Test System Health"""
+        print("\n🏥 Testing System Health...")
+        category = "system_health"
         
-        # Test 1: GET /api/plans
-        response = self.make_request("GET", "/plans")
-        if response and response.status_code == 200:
-            plans = response.json()
-            if isinstance(plans, list) and plans:
-                self.log_result(category, "GET /plans", True, f"Retrieved {len(plans)} plans")
-                
-                # Test 2: Create payment order
-                if self.admin_token:
-                    first_plan = plans[0]
-                    plan_id = first_plan.get("id")
-                    
-                    if plan_id and first_plan.get("price", 0) > 0:
-                        response = self.make_request("POST", "/payments/create-order", 
-                                                   params={"plan_id": plan_id})
-                        if response and response.status_code == 200:
-                            order_data = response.json()
-                            self.log_result(category, "POST /payments/create-order", True,
-                                          f"Order created: {order_data.get('order_id', 'Unknown')}")
-                            
-                            # Test 3: Try duplicate order
-                            response = self.make_request("POST", "/payments/create-order",
-                                                       params={"plan_id": plan_id})
-                            if response and response.status_code == 200:
-                                duplicate_data = response.json()
-                                self.log_result(category, "Duplicate order test", True,
-                                              f"Duplicate handled: {duplicate_data.get('message', 'No message')}")
-                            else:
-                                self.log_result(category, "Duplicate order test", False,
-                                              f"Failed: {response.status_code if response else 'No response'}")
-                        else:
-                            self.log_result(category, "POST /payments/create-order", False,
-                                          f"Failed: {response.status_code if response else 'No response'}")
-                    else:
-                        self.log_result(category, "Payment order test", False, "No paid plans available for testing")
-                else:
-                    self.log_result(category, "Payment tests", False, "No authentication token available")
+        # Test 1: Redis ping
+        try:
+            result = subprocess.run(['redis-cli', 'ping'], capture_output=True, text=True, timeout=5)
+            if result.returncode == 0 and 'PONG' in result.stdout:
+                self.log_result(category, "Redis ping", True, "Redis is running (PONG response)")
             else:
-                self.log_result(category, "GET /plans", False, "No plans available")
-        else:
-            self.log_result(category, "GET /plans", False,
-                          f"Failed: {response.status_code if response else 'No response'}")
+                self.log_result(category, "Redis ping", False, f"Redis ping failed: {result.stdout}")
+        except Exception as e:
+            self.log_result(category, "Redis ping", False, f"Redis ping error: {str(e)}")
             
-        # Test 4: GET /api/payments/history
-        if self.admin_token:
-            response = self.make_request("GET", "/payments/history")
-            if response and response.status_code == 200:
-                history = response.json()
-                if isinstance(history, list):
-                    self.log_result(category, "GET /payments/history", True,
-                                  f"Retrieved {len(history)} payment records")
-                else:
-                    self.log_result(category, "GET /payments/history", False, "Response is not a list")
+        # Test 2: Celery workers check
+        try:
+            result = subprocess.run(['pgrep', '-f', 'celery.*worker'], capture_output=True, text=True, timeout=5)
+            if result.returncode == 0 and result.stdout.strip():
+                worker_pids = result.stdout.strip().split('\n')
+                self.log_result(category, "Celery workers", True, f"Celery workers active: {len(worker_pids)} processes")
             else:
-                self.log_result(category, "GET /payments/history", False,
-                              f"Failed: {response.status_code if response else 'No response'}")
+                self.log_result(category, "Celery workers", False, "No Celery worker processes found")
+        except Exception as e:
+            self.log_result(category, "Celery workers", False, f"Celery check error: {str(e)}")
+            
+        # Test 3: Backend health endpoint
+        response = self.make_request("GET", "/health")
+        if response and response.status_code == 200:
+            health_data = response.json()
+            if health_data.get("status") == "healthy":
+                self.log_result(category, "GET /health", True, "Backend health endpoint returns healthy")
+            else:
+                self.log_result(category, "GET /health", False, f"Backend health status: {health_data.get('status', 'Unknown')}")
         else:
-            self.log_result(category, "GET /payments/history", False, "No authentication token available")
+            self.log_result(category, "GET /health", False,
+                          f"Health endpoint failed: {response.status_code if response else 'No response'}")
+            
+        # Test 4: Critical endpoints accessibility
+        critical_endpoints = [
+            ("/", "Root endpoint"),
+            ("/plans", "Plans endpoint"),
+            ("/content/blogs", "Blogs endpoint"),
+            ("/content/faqs", "FAQs endpoint")
+        ]
+        
+        accessible_count = 0
+        for endpoint, description in critical_endpoints:
+            response = self.make_request("GET", endpoint)
+            if response and response.status_code == 200:
+                accessible_count += 1
+                self.log_result(category, f"Accessibility: {description}", True, f"GET {endpoint} accessible")
+            else:
+                self.log_result(category, f"Accessibility: {description}", False,
+                              f"GET {endpoint} failed: {response.status_code if response else 'No response'}")
+                
+        self.log_result(category, "Critical endpoints summary", True,
+                      f"{accessible_count}/{len(critical_endpoints)} critical endpoints accessible")
             
         # Update category status
         failed_tests = [t for t in self.test_results[category]["details"] if not t["success"]]

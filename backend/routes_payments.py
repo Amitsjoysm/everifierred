@@ -311,6 +311,29 @@ async def verify_payment(
         )
         raise HTTPException(status_code=404, detail="Plan not found or inactive")
     
+    # Validate payment amount matches plan price
+    if not await validate_payment_amount(db, plan_id, payment_record['amount']):
+        await db.payments.update_one(
+            {"razorpay_order_id": razorpay_order_id},
+            {"$set": {"status": "failed", "error_message": "Payment amount mismatch"}}
+        )
+        
+        await log_security_event(
+            db=db,
+            event_type="payment_amount_mismatch",
+            severity="critical",
+            description="Payment amount does not match plan price",
+            details={
+                "order_id": razorpay_order_id,
+                "payment_id": razorpay_payment_id,
+                "user_id": current_user.id,
+                "expected_amount": plan['price'],
+                "actual_amount": payment_record['amount']
+            }
+        )
+        
+        raise HTTPException(status_code=400, detail="Payment amount mismatch")
+    
     # Get current user data for credit transaction
     user_data = await db.users.find_one({"id": current_user.id}, {"_id": 0})
     current_credits_used = user_data.get('credits_used', 0)

@@ -21,6 +21,7 @@ from routes_admin import router as admin_router
 from routes_content import router as content_router
 from routes_payments import router as payments_router
 from routes_mcp import router as mcp_router
+from routes_assistant import router as assistant_router
 
 # Configure logging
 logging.basicConfig(

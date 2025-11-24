@@ -406,21 +406,18 @@ class ProductionReadinessTester:
     # Removed old test methods - replaced with production readiness tests
         
     def run_all_tests(self):
-        """Run all test suites"""
-        print("🚀 Starting MailGuard Backend API Tests")
+        """Run all production readiness test suites"""
+        print("🚀 Starting MailGuard Production Readiness Tests")
         print(f"📍 Base URL: {BASE_URL}")
         print(f"⏰ Test started at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        print(f"👤 SuperAdmin: {SUPERADMIN_EMAIL}")
         
-        # Authenticate first
-        self.authenticate_admin()
-        
-        # Run all test suites
-        self.test_blog_faq_apis()
-        self.test_authentication_flow()
-        self.test_credit_mechanism()
-        self.test_payment_edge_cases()
-        self.test_bulk_verification_edge_cases()
-        self.test_verification_history()
+        # Run all test suites in order
+        self.test_superadmin_login()
+        self.test_create_user_functionality()
+        self.test_plans_crud_operations()
+        self.test_payment_subscription_fix()
+        self.test_system_health()
         
         # Print summary
         self.print_summary()

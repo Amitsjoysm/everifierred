@@ -114,15 +114,23 @@ def verify_bulk_emails(self, job_id: str, emails: list, user_id: str):
             )
             
             # Record credit transaction
-            from utils import record_credit_transaction
-            await record_credit_transaction(
-                db=db,
-                user_id=user_id,
-                transaction_type="bulk_job",
-                credits_change=processed,
-                description=f"Bulk email verification job ({processed} emails)",
-                reference_id=job_id
-            )
+            credit_transaction = {
+                "id": str(__import__('uuid').uuid4()),
+                "user_id": user_id,
+                "transaction_type": "bulk_job",
+                "credits_change": processed,
+                "balance_after": 0,  # Will be updated in next query
+                "description": f"Bulk email verification job ({processed} emails)",
+                "reference_id": job_id,
+                "created_at": datetime.now(timezone.utc).isoformat()
+            }
+            
+            # Get updated balance
+            user = await db.users.find_one({"id": user_id})
+            if user:
+                credit_transaction["balance_after"] = user.get("credits_limit", 0) - user.get("credits_used", 0)
+            
+            await db.credit_transactions.insert_one(credit_transaction)
             
             logger.info(f"Bulk verification job {job_id} completed. Processed: {processed}, Successful: {successful}, Failed: {failed}")
             

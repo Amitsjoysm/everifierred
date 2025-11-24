@@ -8,6 +8,7 @@ import logging
 from datetime import datetime, timezone
 import openpyxl
 from pathlib import Path
+import uuid
 
 logger = logging.getLogger(__name__)
 

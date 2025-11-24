@@ -196,6 +196,11 @@ const Dashboard = () => {
           </Card>
         </div>
 
+        {/* Usage Analytics Widget */}
+        <div className="mb-8">
+          <UsageAnalytics />
+        </div>
+
         {/* Main Content */}
         <Tabs defaultValue="single" className="space-y-6">
           <TabsList className="grid w-full max-w-md grid-cols-2">

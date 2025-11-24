@@ -45,8 +45,8 @@ const Pricing = () => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.post(
-        `${API_URL}/api/payments/create-order`,
-        { plan_id: plan.id },
+        `${API_URL}/api/payments/create-order?plan_id=${plan.id}`,
+        {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
 

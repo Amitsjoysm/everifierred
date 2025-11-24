@@ -262,65 +262,79 @@ class ProductionReadinessTester:
         failed_tests = [t for t in self.test_results[category]["details"] if not t["success"]]
         self.test_results[category]["status"] = "failed" if failed_tests else "passed"
         
-    def test_credit_mechanism(self):
-        """Test Credit Mechanism (HIGH PRIORITY)"""
-        print("\n💳 Testing Credit Mechanism...")
-        category = "credit_mechanism"
+    def test_payment_subscription_fix(self):
+        """Test Payment Subscription Fix"""
+        print("\n💰 Testing Payment Subscription Fix...")
+        category = "payment_subscription_fix"
         
-        if not self.admin_token:
-            self.log_result(category, "Credit tests", False, "No authentication token available")
+        if not self.superadmin_token:
+            self.log_result(category, "Payment subscription tests", False, "No SuperAdmin authentication token available")
             self.test_results[category]["status"] = "failed"
             return
             
-        # Test 1: GET /api/verify/stats
-        response = self.make_request("GET", "/verify/stats")
+        # Test 1: GET /api/plans - Get available plans
+        response = self.make_request("GET", "/plans")
         if response and response.status_code == 200:
-            stats = response.json()
-            self.log_result(category, "GET /verify/stats", True,
-                          f"Retrieved stats: {stats.get('credits_used', 'N/A')} credits used")
-        else:
-            self.log_result(category, "GET /verify/stats", False,
-                          f"Failed: {response.status_code if response else 'No response'}")
-            
-        # Test 2: POST /api/verify/single
-        verify_data = {
-            "email": "test@example.com"
-        }
-        
-        response = self.make_request("POST", "/verify/single", json=verify_data)
-        if response and response.status_code == 200:
-            result = response.json()
-            self.log_result(category, "POST /verify/single", True,
-                          f"Email verified: {result.get('is_reachable', 'Unknown')} status")
-        else:
-            self.log_result(category, "POST /verify/single", False,
-                          f"Verification failed: {response.status_code if response else 'No response'}")
-            
-        # Test 3: GET /api/verify/credit-history
-        response = self.make_request("GET", "/verify/credit-history")
-        if response and response.status_code == 200:
-            history = response.json()
-            if isinstance(history, list):
-                self.log_result(category, "GET /verify/credit-history", True,
-                              f"Retrieved {len(history)} credit transactions")
+            plans = response.json()
+            if isinstance(plans, list) and plans:
+                self.log_result(category, "GET /plans", True, f"Retrieved {len(plans)} plans")
+                
+                # Find a paid plan for testing
+                paid_plan = None
+                for plan in plans:
+                    if plan.get("price", 0) > 0:
+                        paid_plan = plan
+                        break
+                
+                if paid_plan:
+                    plan_id = paid_plan.get("id")
+                    
+                    # Test 2: POST /api/payments/create-order?plan_id={plan_id}
+                    response = self.make_request("POST", "/payments/create-order", params={"plan_id": plan_id})
+                    if response and response.status_code == 200:
+                        order_data = response.json()
+                        
+                        # Verify response contains required fields
+                        required_fields = ["order_id", "amount", "currency", "razorpay_key"]
+                        missing_fields = [field for field in required_fields if field not in order_data]
+                        
+                        if not missing_fields:
+                            self.log_result(category, "POST /payments/create-order", True,
+                                          f"Order created successfully. Order ID: {order_data.get('order_id', 'Unknown')}")
+                            self.log_result(category, "Response fields verification", True,
+                                          f"All required fields present: {required_fields}")
+                            
+                            # Verify specific field values
+                            if order_data.get("currency") == "INR":
+                                self.log_result(category, "Currency verification", True, "Currency is INR")
+                            else:
+                                self.log_result(category, "Currency verification", False, 
+                                              f"Expected INR, got: {order_data.get('currency')}")
+                                
+                            if order_data.get("razorpay_key"):
+                                self.log_result(category, "Razorpay key verification", True, "Razorpay key present")
+                            else:
+                                self.log_result(category, "Razorpay key verification", False, "Razorpay key missing")
+                                
+                        else:
+                            self.log_result(category, "Response fields verification", False,
+                                          f"Missing required fields: {missing_fields}")
+                    else:
+                        self.log_result(category, "POST /payments/create-order", False,
+                                      f"Failed to create order: {response.status_code if response else 'No response'}")
+                        if response:
+                            try:
+                                error_detail = response.json()
+                                self.log_result(category, "Create order error details", False, f"Error: {error_detail}")
+                            except:
+                                pass
+                else:
+                    self.log_result(category, "Paid plan availability", False, "No paid plans available for testing")
             else:
-                self.log_result(category, "GET /verify/credit-history", False, "Response is not a list")
+                self.log_result(category, "GET /plans", False, "No plans available or response is not a list")
         else:
-            self.log_result(category, "GET /verify/credit-history", False,
-                          f"Failed: {response.status_code if response else 'No response'}")
-            
-        # Test 4: GET /api/verify/history
-        response = self.make_request("GET", "/verify/history")
-        if response and response.status_code == 200:
-            history = response.json()
-            if isinstance(history, list):
-                self.log_result(category, "GET /verify/history", True,
-                              f"Retrieved {len(history)} verification records")
-            else:
-                self.log_result(category, "GET /verify/history", False, "Response is not a list")
-        else:
-            self.log_result(category, "GET /verify/history", False,
-                          f"Failed: {response.status_code if response else 'No response'}")
+            self.log_result(category, "GET /plans", False,
+                          f"Failed to get plans: {response.status_code if response else 'No response'}")
             
         # Update category status
         failed_tests = [t for t in self.test_results[category]["details"] if not t["success"]]

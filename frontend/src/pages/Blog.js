@@ -51,20 +51,20 @@ const Blog = () => {
     '@type': 'Blog',
     name: 'MailGuard Email Verification Blog',
     description: 'Expert insights and guides on email verification best practices',
-    url: 'https://payment-guardian-4.preview.emergentagent.com/blog',
+    url: 'https://service-restarter.preview.emergentagent.com/blog',
     publisher: {
       '@type': 'Organization',
       name: 'MailGuard',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://payment-guardian-4.preview.emergentagent.com/logo.png',
+        url: 'https://service-restarter.preview.emergentagent.com/logo.png',
       },
     },
     blogPost: blogs.map(blog => ({
       '@type': 'BlogPosting',
       headline: blog.title,
       description: blog.excerpt,
-      url: `https://payment-guardian-4.preview.emergentagent.com/blog/${blog.slug}`,
+      url: `https://service-restarter.preview.emergentagent.com/blog/${blog.slug}`,
       datePublished: blog.published_at,
       author: {
         '@type': 'Person',
@@ -79,7 +79,7 @@ const Blog = () => {
         title="Email Verification Blog - Expert Insights & Best Practices"
         description="Expert insights, guides, and best practices for email verification and deliverability. Learn about email validation, bounce reduction, sender reputation, and cold email outreach."
         keywords="email verification blog, email validation guide, deliverability tips, sender reputation, bounce rate reduction, cold email best practices, B2B email finder, email list cleaning"
-        canonicalUrl="https://payment-guardian-4.preview.emergentagent.com/blog"
+        canonicalUrl="https://service-restarter.preview.emergentagent.com/blog"
         structuredData={structuredData}
       />
       

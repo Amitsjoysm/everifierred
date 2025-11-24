@@ -66,9 +66,9 @@ async def create_admin_user():
     print(f"Plan:     Enterprise")
     print("\n" + "="*50)
     print("\nYou can now login at:")
-    print("https://payment-guardian-4.preview.emergentagent.com/login")
+    print("https://service-restarter.preview.emergentagent.com/login")
     print("\nAccess Admin Panel at:")
-    print("https://payment-guardian-4.preview.emergentagent.com/admin")
+    print("https://service-restarter.preview.emergentagent.com/admin")
     print("="*50 + "\n")
     
     client.close()

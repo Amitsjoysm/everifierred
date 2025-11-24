@@ -579,54 +579,217 @@ const UsersTab = ({ users, fetchUsers }) => {
   );
 };
 
-// Plans Tab Component (stub - will implement full CRUD)
-const PlansTab = ({ plans }) => {
-  if (!plans || plans.length === 0) {
-    return (
-      <div>
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Plans Management</h1>
-          <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center gap-2">
-            <Plus className="w-4 h-4" />
-            Add Plan
-          </button>
-        </div>
-        <div className="bg-white rounded-lg shadow-md p-8 text-center">
-          <p className="text-gray-500">No plans found</p>
-        </div>
-      </div>
-    );
-  }
+// Plans Tab Component with full CRUD
+const PlansTab = ({ plans, fetchPlans, showModal, setShowModal, editing, setEditing, getAuthHeaders }) => {
+  const [formData, setFormData] = useState({
+    name: '',
+    type: 'free',
+    price: 0,
+    credits_limit: 100,
+    features: [],
+    is_active: true
+  });
+
+  useEffect(() => {
+    if (editing) {
+      setFormData({
+        name: editing.name || '',
+        type: editing.type || 'free',
+        price: editing.price || 0,
+        credits_limit: editing.credits_limit || 100,
+        features: editing.features || [],
+        is_active: editing.is_active !== undefined ? editing.is_active : true
+      });
+    } else {
+      setFormData({
+        name: '',
+        type: 'free',
+        price: 0,
+        credits_limit: 100,
+        features: [],
+        is_active: true
+      });
+    }
+  }, [editing]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (editing) {
+        await axios.patch(
+          `${API_URL}/api/admin/plans/${editing.id}`,
+          formData,
+          { headers: getAuthHeaders() }
+        );
+        toast.success('Plan updated successfully');
+      } else {
+        await axios.post(
+          `${API_URL}/api/admin/plans`,
+          {
+            ...formData,
+            id: `plan_${Date.now()}`,
+            created_at: new Date().toISOString()
+          },
+          { headers: getAuthHeaders() }
+        );
+        toast.success('Plan created successfully');
+      }
+      setShowModal(false);
+      setEditing(null);
+      fetchPlans();
+    } catch (error) {
+      toast.error(error.response?.data?.detail || 'Failed to save plan');
+    }
+  };
+
+  const handleDelete = async (planId) => {
+    if (!window.confirm('Are you sure you want to delete this plan?')) return;
+    try {
+      await axios.delete(`${API_URL}/api/admin/plans/${planId}`, {
+        headers: getAuthHeaders()
+      });
+      toast.success('Plan deleted successfully');
+      fetchPlans();
+    } catch (error) {
+      toast.error(error.response?.data?.detail || 'Failed to delete plan');
+    }
+  };
 
   return (
     <div>
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold text-gray-900">Plans Management</h1>
-        <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center gap-2">
+        <button
+          onClick={() => {
+            setEditing(null);
+            setShowModal(true);
+          }}
+          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center gap-2"
+        >
           <Plus className="w-4 h-4" />
           Add Plan
         </button>
       </div>
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {plans.map((plan) => (
-          <div key={plan.id} className="bg-white p-6 rounded-lg shadow-md">
-            <h3 className="text-xl font-bold text-gray-900 mb-2">{plan.name}</h3>
-            <p className="text-3xl font-bold text-blue-600 mb-4">
-              {plan.price === 0 ? 'Free' : `₹${plan.price}`}
-            </p>
-            <p className="text-gray-600 mb-4">{plan.credits_limit} credits</p>
-            <div className="flex gap-2">
-              <button className="flex-1 px-3 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition">
-                <Edit className="w-4 h-4 mx-auto" />
-              </button>
-              <button className="flex-1 px-3 py-2 bg-red-100 text-red-700 rounded hover:bg-red-200 transition">
-                <Trash2 className="w-4 h-4 mx-auto" />
+      {!plans || plans.length === 0 ? (
+        <div className="bg-white rounded-lg shadow-md p-8 text-center">
+          <p className="text-gray-500">No plans found</p>
+        </div>
+      ) : (
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {plans.map((plan) => (
+            <div key={plan.id} className="bg-white p-6 rounded-lg shadow-md">
+              <h3 className="text-xl font-bold text-gray-900 mb-2">{plan.name}</h3>
+              <p className="text-3xl font-bold text-blue-600 mb-4">
+                {plan.price === 0 ? 'Free' : `₹${plan.price}`}
+              </p>
+              <p className="text-gray-600 mb-4">{plan.credits_limit} credits</p>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => {
+                    setEditing(plan);
+                    setShowModal(true);
+                  }}
+                  className="flex-1 px-3 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition"
+                >
+                  <Edit className="w-4 h-4 mx-auto" />
+                </button>
+                <button
+                  onClick={() => handleDelete(plan.id)}
+                  className="flex-1 px-3 py-2 bg-red-100 text-red-700 rounded hover:bg-red-200 transition"
+                >
+                  <Trash2 className="w-4 h-4 mx-auto" />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Create/Edit Plan Modal */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold text-gray-900">
+                {editing ? 'Edit Plan' : 'Create New Plan'}
+              </h2>
+              <button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-gray-600">
+                <X className="w-6 h-6" />
               </button>
             </div>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Plan Name</label>
+                <input
+                  type="text"
+                  required
+                  value={formData.name}
+                  onChange={(e) => setFormData({...formData, name: e.target.value})}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Plan Type</label>
+                <select
+                  value={formData.type}
+                  onChange={(e) => setFormData({...formData, type: e.target.value})}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                >
+                  <option value="free">Free</option>
+                  <option value="starter">Starter</option>
+                  <option value="professional">Professional</option>
+                  <option value="enterprise">Enterprise</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Price (₹)</label>
+                <input
+                  type="number"
+                  required
+                  value={formData.price}
+                  onChange={(e) => setFormData({...formData, price: parseFloat(e.target.value)})}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Credits Limit</label>
+                <input
+                  type="number"
+                  required
+                  value={formData.credits_limit}
+                  onChange={(e) => setFormData({...formData, credits_limit: parseInt(e.target.value)})}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                />
+              </div>
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={formData.is_active}
+                  onChange={(e) => setFormData({...formData, is_active: e.target.checked})}
+                  className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                />
+                <label className="text-sm font-medium text-gray-700">Active</label>
+              </div>
+              <div className="flex gap-3 pt-4">
+                <button
+                  type="button"
+                  onClick={() => setShowModal(false)}
+                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                >
+                  {editing ? 'Update' : 'Create'}
+                </button>
+              </div>
+            </form>
           </div>
-        ))}
-      </div>
+        </div>
+      )}
     </div>
   );
 };

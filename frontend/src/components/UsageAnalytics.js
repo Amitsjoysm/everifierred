@@ -72,7 +72,7 @@ const UsageAnalytics = () => {
 
   const usagePercentage = (creditsUsed / creditsLimit) * 100;
   const getTrendIcon = () => {
-    switch (analytics.weekly_trend) {
+    switch (weeklyTrend) {
       case 'increasing':
         return <TrendingUp className="w-5 h-5 text-orange-500" />;
       case 'decreasing':
@@ -83,7 +83,7 @@ const UsageAnalytics = () => {
   };
 
   const getTrendColor = () => {
-    switch (analytics.weekly_trend) {
+    switch (weeklyTrend) {
       case 'increasing':
         return 'text-orange-600';
       case 'decreasing':

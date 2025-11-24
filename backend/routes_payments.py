@@ -375,6 +375,24 @@ async def verify_payment(
         reference_id=razorpay_order_id
     )
     
+    # Log successful payment
+    await log_payment_attempt(
+        db=db,
+        user_id=current_user.id,
+        plan_id=plan_id,
+        amount=plan['price'],
+        status='success',
+        details={
+            'order_id': razorpay_order_id,
+            'payment_id': razorpay_payment_id
+        }
+    )
+    
+    logger.info(
+        f"Payment verified successfully: Order {razorpay_order_id}, "
+        f"Payment {razorpay_payment_id}, User {current_user.id}"
+    )
+    
     return {
         "message": "Payment verified and plan upgraded successfully",
         "plan": plan['name'],

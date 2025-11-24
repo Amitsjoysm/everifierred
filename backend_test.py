@@ -50,22 +50,25 @@ class ProductionReadinessTester:
             print(f"Request failed: {e}")
             return None
             
-    def authenticate_admin(self):
-        """Authenticate as admin user"""
-        print("\n🔐 Authenticating as admin...")
+    def test_superadmin_login(self):
+        """Test SuperAdmin Login with specific credentials"""
+        print("\n🔐 Testing SuperAdmin Login...")
+        category = "superadmin_login"
         
         # Step 1: Login (get OTP)
         login_data = {
-            "email": ADMIN_EMAIL,
-            "password": ADMIN_PASSWORD
+            "email": SUPERADMIN_EMAIL,
+            "password": SUPERADMIN_PASSWORD
         }
         
         response = self.make_request("POST", "/auth/login", json=login_data)
         if not response or response.status_code != 200:
-            print(f"❌ Admin login failed: {response.status_code if response else 'No response'}")
+            self.log_result(category, "POST /auth/login", False, 
+                          f"SuperAdmin login failed: {response.status_code if response else 'No response'}")
+            self.test_results[category]["status"] = "failed"
             return False
             
-        print("📧 OTP sent to admin email")
+        self.log_result(category, "POST /auth/login", True, "SuperAdmin login OTP sent")
         
         # For testing, we'll use a mock OTP since we can't access email
         # In production, this would require actual OTP from email
@@ -73,34 +76,49 @@ class ProductionReadinessTester:
         
         # Step 2: Verify OTP
         verify_data = {
-            "email": ADMIN_EMAIL,
+            "email": SUPERADMIN_EMAIL,
             "otp": otp
         }
         
         response = self.make_request("POST", "/auth/verify-login", json=verify_data)
         if response and response.status_code == 200:
             data = response.json()
-            self.admin_token = data.get("access_token")
-            self.session.headers.update({"Authorization": f"Bearer {self.admin_token}"})
-            print("✅ Admin authentication successful")
+            self.superadmin_token = data.get("access_token")
+            self.session.headers.update({"Authorization": f"Bearer {self.superadmin_token}"})
+            
+            # Verify user details
+            user_data = data.get("user", {})
+            role = user_data.get("role")
+            plan = user_data.get("plan")
+            credits_limit = user_data.get("credits_limit")
+            
+            # Check expected values
+            if role == "super_admin":
+                self.log_result(category, "Role verification", True, f"Role is super_admin: {role}")
+            else:
+                self.log_result(category, "Role verification", False, f"Expected super_admin, got: {role}")
+                
+            if plan == "enterprise":
+                self.log_result(category, "Plan verification", True, f"Plan is enterprise: {plan}")
+            else:
+                self.log_result(category, "Plan verification", False, f"Expected enterprise, got: {plan}")
+                
+            if credits_limit == 25000:
+                self.log_result(category, "Credits verification", True, f"Credits limit is 25000: {credits_limit}")
+            else:
+                self.log_result(category, "Credits verification", False, f"Expected 25000, got: {credits_limit}")
+                
+            self.log_result(category, "SuperAdmin authentication", True, "SuperAdmin authentication successful")
+            
+            # Update category status
+            failed_tests = [t for t in self.test_results[category]["details"] if not t["success"]]
+            self.test_results[category]["status"] = "failed" if failed_tests else "passed"
             return True
         else:
-            print(f"❌ OTP verification failed: {response.status_code if response else 'No response'}")
-            # Try direct authentication bypass for testing
-            return self.try_direct_auth()
-            
-    def try_direct_auth(self):
-        """Try to get user info without OTP (for testing)"""
-        print("🔄 Attempting direct authentication...")
-        
-        # Check if there's an existing session or try to get user info
-        response = self.make_request("GET", "/auth/me")
-        if response and response.status_code == 200:
-            print("✅ Direct authentication successful")
-            return True
-            
-        print("❌ Authentication failed - continuing with unauthenticated tests")
-        return False
+            self.log_result(category, "POST /auth/verify-login", False,
+                          f"OTP verification failed: {response.status_code if response else 'No response'}")
+            self.test_results[category]["status"] = "failed"
+            return False
         
     def test_blog_faq_apis(self):
         """Test Blog and FAQ API endpoints (HIGH PRIORITY)"""

@@ -33,6 +33,7 @@ class UsageAnalysis(BaseModel):
     monthly_projection: int
     current_plan: str
     credits_used: int
+    credits_limit: int
     credits_remaining: int
     recommended_plan: Optional[str] = None
     cost_savings: Optional[float] = None

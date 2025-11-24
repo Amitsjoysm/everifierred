@@ -10,6 +10,8 @@ import { toast } from 'sonner';
 import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import ChatAssistant from '../components/ChatAssistant';
+import UsageAnalytics from '../components/UsageAnalytics';
 
 const Dashboard = () => {
   const { user, logout } = useAuth();

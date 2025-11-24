@@ -116,7 +116,7 @@ def verify_bulk_emails(self, job_id: str, emails: list, user_id: str):
             
             # Record credit transaction
             credit_transaction = {
-                "id": str(__import__('uuid').uuid4()),
+                "id": str(uuid.uuid4()),
                 "user_id": user_id,
                 "transaction_type": "bulk_job",
                 "credits_change": processed,

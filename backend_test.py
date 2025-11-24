@@ -1,19 +1,20 @@
 #!/usr/bin/env python3
 """
-MailGuard Backend API Testing Suite
-Tests all critical backend endpoints based on test_result.md requirements
+MailGuard Backend API Testing Suite - Production Readiness Testing
+Tests critical fixes and features as per review request
 """
 
 import requests
 import json
 import time
 import os
+import subprocess
 from datetime import datetime
 
-# Configuration
+# Configuration - Updated for review request
 BASE_URL = "https://redis-sync-restart.preview.emergentagent.com/api"
-ADMIN_EMAIL = "admin@mailguard.com"
-ADMIN_PASSWORD = "Admin@123456"
+SUPERADMIN_EMAIL = "amits.joys@gmail.com"
+SUPERADMIN_PASSWORD = "Admin@123"
 
 class MailGuardTester:
     def __init__(self):

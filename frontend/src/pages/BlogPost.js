@@ -52,7 +52,7 @@ const BlogPost = () => {
     '@type': 'BlogPosting',
     headline: blog.title,
     description: blog.meta_description,
-    image: 'https://service-restarter.preview.emergentagent.com/blog-default.png',
+    image: 'https://deploy-preview-15.preview.emergentagent.com/blog-default.png',
     author: {
       '@type': 'Person',
       name: blog.author,
@@ -62,7 +62,7 @@ const BlogPost = () => {
       name: 'MailGuard',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://service-restarter.preview.emergentagent.com/logo.png',
+        url: 'https://deploy-preview-15.preview.emergentagent.com/logo.png',
       },
     },
     datePublished: blog.published_at,
@@ -71,7 +71,7 @@ const BlogPost = () => {
     articleBody: blog.content,
     mainEntityOfPage: {
       '@type': 'WebPage',
-      '@id': `https://service-restarter.preview.emergentagent.com/blog/${blog.slug}`,
+      '@id': `https://deploy-preview-15.preview.emergentagent.com/blog/${blog.slug}`,
     },
   };
 
@@ -81,7 +81,7 @@ const BlogPost = () => {
         title={blog.meta_title || blog.title}
         description={blog.meta_description || blog.excerpt}
         keywords={blog.keywords.join(', ')}
-        canonicalUrl={`https://service-restarter.preview.emergentagent.com/blog/${blog.slug}`}
+        canonicalUrl={`https://deploy-preview-15.preview.emergentagent.com/blog/${blog.slug}`}
         ogType="article"
         author={blog.author}
         structuredData={jsonLd}

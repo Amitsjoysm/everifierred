@@ -10,7 +10,7 @@ import sys
 import os
 sys.path.append('/app/backend')
 
-BASE_URL = "https://service-restarter.preview.emergentagent.com/api"
+BASE_URL = "https://deploy-preview-15.preview.emergentagent.com/api"
 ADMIN_EMAIL = "admin@mailguard.com"
 ADMIN_PASSWORD = "Admin@123456"
 

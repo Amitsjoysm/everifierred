@@ -641,7 +641,7 @@ agent_communication:
       - Workers: ✓ CONNECTED TO BROKER
       
       🌐 PREVIEW URL:
-      https://service-restarter.preview.emergentagent.com
+      https://deploy-preview-15.preview.emergentagent.com
       
       All systems operational and ready for use!
 

@@ -10,8 +10,8 @@ const Landing = () => {
     '@type': 'Organization',
     name: 'MailGuard',
     description: 'Professional email verification service for businesses',
-    url: 'https://service-restarter.preview.emergentagent.com',
-    logo: 'https://service-restarter.preview.emergentagent.com/logo.png',
+    url: 'https://deploy-preview-15.preview.emergentagent.com',
+    logo: 'https://deploy-preview-15.preview.emergentagent.com/logo.png',
     sameAs: [
       'https://twitter.com/mailguard',
       'https://linkedin.com/company/mailguard',
@@ -36,7 +36,7 @@ const Landing = () => {
         title="MailGuard - Professional Email Verification & Validation Service"
         description="Verify email addresses in real-time with MailGuard. Reduce bounce rates by 98%, improve deliverability, and protect your sender reputation. Start free with 100 verifications/month."
         keywords="email verification, email validation, email checker, verify email address, email list cleaning, bulk email verification, email deliverability, bounce rate reduction, SMTP verification, disposable email detection"
-        canonicalUrl="https://service-restarter.preview.emergentagent.com"
+        canonicalUrl="https://deploy-preview-15.preview.emergentagent.com"
         structuredData={structuredData}
       />
       {/* Header */}

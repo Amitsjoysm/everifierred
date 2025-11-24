@@ -161,6 +161,18 @@ async def create_payment_order(
         
         await db.payments.insert_one(payment_dict)
         
+        # Log payment attempt
+        await log_payment_attempt(
+            db=db,
+            user_id=current_user.id,
+            plan_id=plan_id,
+            amount=plan['price'],
+            status='order_created',
+            details={'order_id': razorpay_order['id']}
+        )
+        
+        logger.info(f"Payment order created: {razorpay_order['id']} for user {current_user.id}")
+        
         return {
             'order_id': razorpay_order['id'],
             'amount': razorpay_order['amount'],
@@ -168,6 +180,15 @@ async def create_payment_order(
             'razorpay_key': settings.RAZORPAY_KEY_ID
         }
     except Exception as e:
+        logger.error(f"Failed to create payment order: {str(e)}")
+        await log_payment_attempt(
+            db=db,
+            user_id=current_user.id,
+            plan_id=plan_id,
+            amount=plan['price'],
+            status='order_creation_failed',
+            details={'error': str(e)}
+        )
         raise HTTPException(status_code=500, detail=f"Failed to create order: {str(e)}")
 
 

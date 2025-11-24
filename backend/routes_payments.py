@@ -198,9 +198,31 @@ async def verify_payment(
     razorpay_payment_id: str,
     razorpay_signature: str,
     plan_id: str,
+    request: Request,
     current_user: User = Depends(get_current_user)
 ):
-    """Verify Razorpay payment"""
+    """Verify Razorpay payment with enhanced security"""
+    # Rate limit: 10 requests per minute
+    allowed, remaining = await rate_limiter.is_allowed(
+        identifier=current_user.id,
+        max_requests=10,
+        window_seconds=60
+    )
+    
+    if not allowed:
+        await log_security_event(
+            db=await get_db(),
+            event_type="rate_limit_exceeded",
+            severity="medium",
+            description=f"User {current_user.id} exceeded payment verification rate limit",
+            details={"order_id": razorpay_order_id}
+        )
+        raise HTTPException(
+            status_code=429,
+            detail="Too many verification requests. Please try again in 1 minute.",
+            headers={"Retry-After": "60"}
+        )
+    
     if not razorpay_client:
         raise HTTPException(status_code=503, detail="Payment service not configured")
     
@@ -213,26 +235,54 @@ async def verify_payment(
     })
     
     if not payment_record:
+        await log_security_event(
+            db=db,
+            event_type="payment_verification_failed",
+            severity="high",
+            description="Payment record not found during verification",
+            details={
+                "order_id": razorpay_order_id,
+                "user_id": current_user.id,
+                "payment_id": razorpay_payment_id
+            }
+        )
         raise HTTPException(status_code=404, detail="Payment record not found")
     
-    # Check if payment already processed
-    if payment_record.get('status') == 'success':
+    # Check idempotency - prevent duplicate processing
+    if check_payment_idempotency(payment_record, razorpay_payment_id):
+        await log_security_event(
+            db=db,
+            event_type="duplicate_payment_attempt",
+            severity="high",
+            description="Duplicate payment processing attempt detected",
+            details={
+                "order_id": razorpay_order_id,
+                "payment_id": razorpay_payment_id,
+                "user_id": current_user.id
+            }
+        )
         raise HTTPException(status_code=400, detail="Payment already processed")
     
-    # Verify signature
-    body = razorpay_order_id + "|" + razorpay_payment_id
-    expected_signature = hmac.new(
-        key=settings.RAZORPAY_KEY_SECRET.encode('utf-8'),
-        msg=body.encode('utf-8'),
-        digestmod=hashlib.sha256
-    ).hexdigest()
-    
-    if expected_signature != razorpay_signature:
+    # Verify signature using security module
+    if not verify_razorpay_signature(razorpay_order_id, razorpay_payment_id, razorpay_signature):
         # Mark payment as failed
         await db.payments.update_one(
             {"razorpay_order_id": razorpay_order_id},
             {"$set": {"status": "failed", "error_message": "Invalid signature"}}
         )
+        
+        await log_security_event(
+            db=db,
+            event_type="invalid_payment_signature",
+            severity="critical",
+            description="Invalid payment signature detected",
+            details={
+                "order_id": razorpay_order_id,
+                "payment_id": razorpay_payment_id,
+                "user_id": current_user.id
+            }
+        )
+        
         raise HTTPException(status_code=400, detail="Invalid payment signature")
     
     # Verify payment status from Razorpay

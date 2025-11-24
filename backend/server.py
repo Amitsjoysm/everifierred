@@ -85,6 +85,7 @@ api_router.include_router(admin_router)
 api_router.include_router(content_router)
 api_router.include_router(payments_router)
 api_router.include_router(mcp_router)
+api_router.include_router(assistant_router)
 
 # Include API router in main app
 app.include_router(api_router)

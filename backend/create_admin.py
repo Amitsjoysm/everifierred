@@ -18,8 +18,8 @@ async def create_admin_user():
     db = client[settings.DB_NAME]
     
     # Admin credentials
-    email = "admin@mailguard.com"
-    password = "Admin@123456"
+    email = "amits.joys@gmail.com"
+    password = "Admin@123"
     full_name = "Super Admin"
     
     # Check if admin already exists

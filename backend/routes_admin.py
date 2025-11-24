@@ -220,3 +220,143 @@ async def get_analytics(current_user: User = Depends(get_current_admin_user)):
         revenue_month=revenue_month,
         plan_distribution=plan_distribution
     )
+
+
+# ============= Blog Management =============
+
+@router.get("/blogs", response_model=List[Blog])
+async def get_all_blogs_admin(current_user: User = Depends(get_current_admin_user)):
+    """Get all blogs for admin"""
+    db = await get_db()
+    
+    blogs = await db.blogs.find({}, {"_id": 0}).to_list(100)
+    
+    for blog in blogs:
+        if isinstance(blog.get('created_at'), str):
+            blog['created_at'] = datetime.fromisoformat(blog['created_at'])
+        if isinstance(blog.get('updated_at'), str):
+            blog['updated_at'] = datetime.fromisoformat(blog['updated_at'])
+    
+    return [Blog(**blog) for blog in blogs]
+
+
+@router.post("/blogs", response_model=Blog)
+async def create_blog_admin(
+    blog: BlogCreate,
+    current_user: User = Depends(get_current_admin_user)
+):
+    """Create new blog post"""
+    db = await get_db()
+    
+    blog_dict = blog.model_dump()
+    blog_dict['id'] = str(__import__('uuid').uuid4())
+    blog_dict['created_at'] = datetime.now(timezone.utc).isoformat()
+    blog_dict['updated_at'] = datetime.now(timezone.utc).isoformat()
+    blog_dict['slug'] = blog.title.lower().replace(' ', '-').replace('/', '-')
+    
+    await db.blogs.insert_one(blog_dict)
+    
+    blog_dict['created_at'] = datetime.fromisoformat(blog_dict['created_at'])
+    blog_dict['updated_at'] = datetime.fromisoformat(blog_dict['updated_at'])
+    
+    return Blog(**blog_dict)
+
+
+@router.patch("/blogs/{blog_id}")
+async def update_blog_admin(
+    blog_id: str,
+    blog_update: dict,
+    current_user: User = Depends(get_current_admin_user)
+):
+    """Update blog post"""
+    db = await get_db()
+    
+    blog_update['updated_at'] = datetime.now(timezone.utc).isoformat()
+    
+    result = await db.blogs.update_one(
+        {"id": blog_id},
+        {"$set": blog_update}
+    )
+    
+    if result.modified_count == 0:
+        raise HTTPException(status_code=404, detail="Blog not found")
+    
+    return {"message": "Blog updated successfully"}
+
+
+@router.delete("/blogs/{blog_id}")
+async def delete_blog_admin(
+    blog_id: str,
+    current_user: User = Depends(get_current_super_admin)
+):
+    """Delete blog post"""
+    db = await get_db()
+    
+    result = await db.blogs.delete_one({"id": blog_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Blog not found")
+    
+    return {"message": "Blog deleted successfully"}
+
+
+# ============= FAQ Management =============
+
+@router.get("/faqs", response_model=List[FAQ])
+async def get_all_faqs_admin(current_user: User = Depends(get_current_admin_user)):
+    """Get all FAQs for admin"""
+    db = await get_db()
+    
+    faqs = await db.faqs.find({}, {"_id": 0}).to_list(100)
+    
+    return [FAQ(**faq) for faq in faqs]
+
+
+@router.post("/faqs", response_model=FAQ)
+async def create_faq_admin(
+    faq: FAQCreate,
+    current_user: User = Depends(get_current_admin_user)
+):
+    """Create new FAQ"""
+    db = await get_db()
+    
+    faq_dict = faq.model_dump()
+    faq_dict['id'] = str(__import__('uuid').uuid4())
+    
+    await db.faqs.insert_one(faq_dict)
+    
+    return FAQ(**faq_dict)
+
+
+@router.patch("/faqs/{faq_id}")
+async def update_faq_admin(
+    faq_id: str,
+    faq_update: dict,
+    current_user: User = Depends(get_current_admin_user)
+):
+    """Update FAQ"""
+    db = await get_db()
+    
+    result = await db.faqs.update_one(
+        {"id": faq_id},
+        {"$set": faq_update}
+    )
+    
+    if result.modified_count == 0:
+        raise HTTPException(status_code=404, detail="FAQ not found")
+    
+    return {"message": "FAQ updated successfully"}
+
+
+@router.delete("/faqs/{faq_id}")
+async def delete_faq_admin(
+    faq_id: str,
+    current_user: User = Depends(get_current_super_admin)
+):
+    """Delete FAQ"""
+    db = await get_db()
+    
+    result = await db.faqs.delete_one({"id": faq_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="FAQ not found")
+    
+    return {"message": "FAQ deleted successfully"}

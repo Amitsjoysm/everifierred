@@ -303,9 +303,10 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Email verification fallback mechanism"
-    - "MCP endpoints functionality"
-    - "External API endpoints"
+    - "Payment security enhancements"
+    - "In-chat purchase assistant"
+    - "Chat assistant UI"
+    - "Usage analytics widget"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"

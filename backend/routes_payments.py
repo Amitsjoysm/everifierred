@@ -453,6 +453,7 @@ async def razorpay_webhook(
     if event == 'payment.failed':
         payment_entity = payload.get('payment', {}).get('entity', {})
         order_id = payment_entity.get('order_id')
+        payment_id = payment_entity.get('id')
         
         if order_id:
             await db.payments.update_one(
@@ -465,6 +466,24 @@ async def razorpay_webhook(
                     }
                 }
             )
+            
+            # Log failed payment
+            payment_record = await db.payments.find_one({"razorpay_order_id": order_id})
+            if payment_record:
+                await log_payment_attempt(
+                    db=db,
+                    user_id=payment_record['user_id'],
+                    plan_id=payment_record['plan_id'],
+                    amount=payment_record['amount'],
+                    status='failed_webhook',
+                    details={
+                        'order_id': order_id,
+                        'payment_id': payment_id,
+                        'error': payment_entity.get('error_description')
+                    }
+                )
+            
+            logger.warning(f"Payment failed via webhook: {order_id}")
     
     elif event == 'payment.captured':
         payment_entity = payload.get('payment', {}).get('entity', {})

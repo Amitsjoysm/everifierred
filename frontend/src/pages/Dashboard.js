@@ -360,6 +360,9 @@ const Dashboard = () => {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Chat Assistant */}
+      <ChatAssistant />
     </div>
   );
 };

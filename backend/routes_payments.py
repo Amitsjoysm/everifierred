@@ -489,37 +489,71 @@ async def razorpay_webhook(
         payment_entity = payload.get('payment', {}).get('entity', {})
         order_id = payment_entity.get('order_id')
         payment_id = payment_entity.get('id')
+        amount_paid = payment_entity.get('amount', 0) / 100  # Convert from paise to rupees
         
         if order_id and payment_id:
             # Get payment record
             payment_record = await db.payments.find_one({"razorpay_order_id": order_id})
             
-            if payment_record and payment_record.get('status') != 'success':
-                # Update payment status
-                await db.payments.update_one(
-                    {"razorpay_order_id": order_id},
-                    {
-                        "$set": {
-                            "razorpay_payment_id": payment_id,
-                            "status": "success",
-                            "completed_at": datetime.now(timezone.utc).isoformat()
+            if payment_record:
+                # Validate amount
+                if not await validate_payment_amount(db, payment_record['plan_id'], amount_paid):
+                    await log_security_event(
+                        db=db,
+                        event_type="webhook_amount_mismatch",
+                        severity="critical",
+                        description="Webhook payment amount does not match expected",
+                        details={
+                            "order_id": order_id,
+                            "payment_id": payment_id,
+                            "expected_amount": payment_record['amount'],
+                            "actual_amount": amount_paid
                         }
-                    }
-                )
+                    )
+                    logger.error(f"Webhook amount mismatch for order {order_id}")
+                    return {"status": "error", "message": "Amount mismatch"}
                 
-                # Update user plan
-                plan = await db.plans.find_one({"id": payment_record['plan_id']}, {"_id": 0})
-                if plan:
-                    await db.users.update_one(
-                        {"id": payment_record['user_id']},
+                if payment_record.get('status') != 'success':
+                    # Update payment status
+                    await db.payments.update_one(
+                        {"razorpay_order_id": order_id},
                         {
                             "$set": {
-                                "plan": plan['type'],
-                                "credits_limit": plan['credits_limit'],
-                                "credits_used": 0
+                                "razorpay_payment_id": payment_id,
+                                "status": "success",
+                                "completed_at": datetime.now(timezone.utc).isoformat()
                             }
                         }
                     )
+                    
+                    # Update user plan
+                    plan = await db.plans.find_one({"id": payment_record['plan_id']}, {"_id": 0})
+                    if plan:
+                        await db.users.update_one(
+                            {"id": payment_record['user_id']},
+                            {
+                                "$set": {
+                                    "plan": plan['type'],
+                                    "credits_limit": plan['credits_limit'],
+                                    "credits_used": 0
+                                }
+                            }
+                        )
+                        
+                        # Log successful payment via webhook
+                        await log_payment_attempt(
+                            db=db,
+                            user_id=payment_record['user_id'],
+                            plan_id=payment_record['plan_id'],
+                            amount=payment_record['amount'],
+                            status='success_webhook',
+                            details={
+                                'order_id': order_id,
+                                'payment_id': payment_id
+                            }
+                        )
+                        
+                        logger.info(f"Payment captured via webhook: {order_id}")
     
     return {"status": "ok"}
 

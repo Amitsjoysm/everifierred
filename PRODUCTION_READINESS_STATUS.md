@@ -96,7 +96,7 @@ CORS_ORIGINS="*"
 
 ```bash
 # ✅ Already configured for preview environment
-REACT_APP_BACKEND_URL=https://deploy-preview-15.preview.emergentagent.com
+REACT_APP_BACKEND_URL=https://usermap-debug.preview.emergentagent.com
 
 # For production, update to:
 # REACT_APP_BACKEND_URL=https://api.yourdomain.com
@@ -173,9 +173,9 @@ Status:   Active & Email Verified
 ```
 
 ### Access URLs
-- **Login:** https://deploy-preview-15.preview.emergentagent.com/login
-- **Admin Panel:** https://deploy-preview-15.preview.emergentagent.com/admin
-- **Dashboard:** https://deploy-preview-15.preview.emergentagent.com/dashboard
+- **Login:** https://usermap-debug.preview.emergentagent.com/login
+- **Admin Panel:** https://usermap-debug.preview.emergentagent.com/admin
+- **Dashboard:** https://usermap-debug.preview.emergentagent.com/dashboard
 
 ---
 

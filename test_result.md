@@ -641,7 +641,7 @@ agent_communication:
       - Workers: ✓ CONNECTED TO BROKER
       
       🌐 PREVIEW URL:
-      https://deploy-preview-15.preview.emergentagent.com
+      https://usermap-debug.preview.emergentagent.com
       
       All systems operational and ready for use!
 
@@ -727,13 +727,13 @@ agent_communication:
       - Authentication: ✓ OTP Flow Working
       
       🌐 PREVIEW URL:
-      https://deploy-preview-15.preview.emergentagent.com
+      https://usermap-debug.preview.emergentagent.com
       
       📧 LOGIN PAGE:
-      https://deploy-preview-15.preview.emergentagent.com/login
+      https://usermap-debug.preview.emergentagent.com/login
       
       🛡️ ADMIN PANEL:
-      https://deploy-preview-15.preview.emergentagent.com/admin
+      https://usermap-debug.preview.emergentagent.com/admin
       
       All systems operational and ready for use!
 

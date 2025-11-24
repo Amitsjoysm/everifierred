@@ -278,6 +278,7 @@ async def get_usage_analysis(current_user: User = Depends(get_current_user)):
             monthly_projection=usage_data['monthly_projection'],
             current_plan=current_user.plan,
             credits_used=current_user.credits_used,
+            credits_limit=current_user.credits_limit,
             credits_remaining=credits_remaining,
             recommended_plan=recommendation['plan_name'] if recommendation else None,
             cost_savings=recommendation['savings'] if recommendation else None

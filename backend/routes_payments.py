@@ -401,18 +401,54 @@ async def verify_payment(
 
 
 @router.post("/payments/webhook")
-async def razorpay_webhook(request: dict):
-    """Handle Razorpay webhook events"""
+async def razorpay_webhook(
+    request: Request,
+    x_razorpay_signature: Optional[str] = Header(None)
+):
+    """Handle Razorpay webhook events with signature verification"""
     if not razorpay_client:
         raise HTTPException(status_code=503, detail="Payment service not configured")
     
     db = await get_db()
     
-    # TODO: Verify webhook signature in production
-    # For now, just log the event
+    # Get raw body for signature verification
+    body = await request.body()
+    body_str = body.decode('utf-8')
     
-    event = request.get('event')
-    payload = request.get('payload', {})
+    # Verify webhook signature (CRITICAL SECURITY)
+    webhook_secret = settings.RAZORPAY_KEY_SECRET  # Use same secret or separate webhook secret
+    
+    if x_razorpay_signature:
+        if not verify_webhook_signature(body_str, x_razorpay_signature, webhook_secret):
+            await log_security_event(
+                db=db,
+                event_type="invalid_webhook_signature",
+                severity="critical",
+                description="Invalid Razorpay webhook signature detected",
+                details={"body_preview": body_str[:100]}
+            )
+            raise HTTPException(status_code=401, detail="Invalid webhook signature")
+        
+        logger.info("Webhook signature verified successfully")
+    else:
+        # Log missing signature but don't fail (for backward compatibility)
+        await log_security_event(
+            db=db,
+            event_type="missing_webhook_signature",
+            severity="high",
+            description="Webhook received without signature",
+            details={"body_preview": body_str[:100]}
+        )
+        logger.warning("Webhook received without signature header")
+    
+    # Parse webhook data
+    try:
+        webhook_data = json.loads(body_str)
+    except json.JSONDecodeError:
+        raise HTTPException(status_code=400, detail="Invalid JSON in webhook")
+    
+    event = webhook_data.get('event')
+    payload = webhook_data.get('payload', {})
     
     if event == 'payment.failed':
         payment_entity = payload.get('payment', {}).get('entity', {})

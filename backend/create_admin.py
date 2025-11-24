@@ -25,9 +25,24 @@ async def create_admin_user():
     # Check if admin already exists
     existing = await db.users.find_one({"email": email})
     if existing:
-        print(f"\n⚠️  Admin user already exists!")
+        # Update existing user to be super_admin with correct plan
+        await db.users.update_one(
+            {"email": email},
+            {"$set": {
+                "role": "super_admin",
+                "plan": "enterprise",
+                "credits_limit": 25000,
+                "is_active": True,
+                "is_verified": True,
+                "hashed_password": pwd_context.hash(password),
+                "updated_at": datetime.now(timezone.utc).isoformat()
+            }}
+        )
+        print(f"\n✅  Admin user updated!")
         print(f"\nEmail: {email}")
-        print(f"Password: Admin@123456")
+        print(f"Password: {password}")
+        print(f"Role: super_admin")
+        print(f"Plan: enterprise")
         client.close()
         return
     

@@ -61,7 +61,16 @@ const UsageAnalytics = () => {
 
   if (!analytics) return null;
 
-  const usagePercentage = (analytics.credits_used / analytics.credits_limit) * 100;
+  // Safely extract values with defaults
+  const creditsUsed = analytics.credits_used || 0;
+  const creditsLimit = analytics.credits_limit || 1;
+  const creditsRemaining = analytics.credits_remaining || 0;
+  const dailyAverage = analytics.daily_average || 0;
+  const monthlyProjection = analytics.monthly_projection || 0;
+  const totalVerifications = analytics.total_verifications || 0;
+  const weeklyTrend = analytics.weekly_trend || 'stable';
+
+  const usagePercentage = (creditsUsed / creditsLimit) * 100;
   const getTrendIcon = () => {
     switch (analytics.weekly_trend) {
       case 'increasing':

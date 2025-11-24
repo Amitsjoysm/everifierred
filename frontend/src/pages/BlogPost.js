@@ -52,7 +52,7 @@ const BlogPost = () => {
     '@type': 'BlogPosting',
     headline: blog.title,
     description: blog.meta_description,
-    image: 'https://secure-pay-verify.preview.emergentagent.com/blog-default.png',
+    image: 'https://payment-guardian-4.preview.emergentagent.com/blog-default.png',
     author: {
       '@type': 'Person',
       name: blog.author,
@@ -62,7 +62,7 @@ const BlogPost = () => {
       name: 'MailGuard',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://secure-pay-verify.preview.emergentagent.com/logo.png',
+        url: 'https://payment-guardian-4.preview.emergentagent.com/logo.png',
       },
     },
     datePublished: blog.published_at,
@@ -71,7 +71,7 @@ const BlogPost = () => {
     articleBody: blog.content,
     mainEntityOfPage: {
       '@type': 'WebPage',
-      '@id': `https://secure-pay-verify.preview.emergentagent.com/blog/${blog.slug}`,
+      '@id': `https://payment-guardian-4.preview.emergentagent.com/blog/${blog.slug}`,
     },
   };
 
@@ -81,7 +81,7 @@ const BlogPost = () => {
         title={blog.meta_title || blog.title}
         description={blog.meta_description || blog.excerpt}
         keywords={blog.keywords.join(', ')}
-        canonicalUrl={`https://secure-pay-verify.preview.emergentagent.com/blog/${blog.slug}`}
+        canonicalUrl={`https://payment-guardian-4.preview.emergentagent.com/blog/${blog.slug}`}
         ogType="article"
         author={blog.author}
         structuredData={jsonLd}

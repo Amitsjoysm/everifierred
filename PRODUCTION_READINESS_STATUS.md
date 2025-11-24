@@ -96,7 +96,7 @@ CORS_ORIGINS="*"
 
 ```bash
 # ✅ Already configured for preview environment
-REACT_APP_BACKEND_URL=https://secure-pay-verify.preview.emergentagent.com
+REACT_APP_BACKEND_URL=https://payment-guardian-4.preview.emergentagent.com
 
 # For production, update to:
 # REACT_APP_BACKEND_URL=https://api.yourdomain.com
@@ -173,9 +173,9 @@ Status:   Active & Email Verified
 ```
 
 ### Access URLs
-- **Login:** https://secure-pay-verify.preview.emergentagent.com/login
-- **Admin Panel:** https://secure-pay-verify.preview.emergentagent.com/admin
-- **Dashboard:** https://secure-pay-verify.preview.emergentagent.com/dashboard
+- **Login:** https://payment-guardian-4.preview.emergentagent.com/login
+- **Admin Panel:** https://payment-guardian-4.preview.emergentagent.com/admin
+- **Dashboard:** https://payment-guardian-4.preview.emergentagent.com/dashboard
 
 ---
 

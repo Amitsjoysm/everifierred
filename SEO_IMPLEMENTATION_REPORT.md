@@ -33,7 +33,7 @@ All pages optimized with industry-leading SEO best practices including:
 - **Title:** "MailGuard - Professional Email Verification & Validation Service"
 - **Meta Description:** 160 characters optimized for click-through
 - **Keywords:** email verification, email validation, email checker, verify email address, bulk email verification
-- **Canonical URL:** https://secure-pay-verify.preview.emergentagent.com
+- **Canonical URL:** https://payment-guardian-4.preview.emergentagent.com
 - **Priority in Sitemap:** 1.0 (highest)
 - **Change Frequency:** daily
 

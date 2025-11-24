@@ -141,7 +141,7 @@ const UsageAnalytics = () => {
               <span className="text-xs text-gray-600">Daily Avg</span>
             </div>
             <p className="text-lg font-bold text-gray-900">
-              {analytics.daily_average.toFixed(1)}
+              {dailyAverage.toFixed(1)}
             </p>
           </div>
 
@@ -151,7 +151,7 @@ const UsageAnalytics = () => {
               <span className="text-xs text-gray-600">Projection</span>
             </div>
             <p className="text-lg font-bold text-gray-900">
-              {analytics.monthly_projection.toLocaleString()}
+              {monthlyProjection.toLocaleString()}
             </p>
           </div>
 
@@ -161,7 +161,7 @@ const UsageAnalytics = () => {
               <span className="text-xs text-gray-600">30 Days</span>
             </div>
             <p className="text-lg font-bold text-gray-900">
-              {analytics.total_verifications.toLocaleString()}
+              {totalVerifications.toLocaleString()}
             </p>
           </div>
         </div>

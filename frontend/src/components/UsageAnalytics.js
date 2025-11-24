@@ -180,16 +180,16 @@ const UsageAnalytics = () => {
               
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-lg font-bold text-gray-900">{recommendation.plan_name}</p>
-                  <p className="text-sm text-gray-600">₹{recommendation.plan_price}/month</p>
-                  {recommendation.savings && (
+                  <p className="text-lg font-bold text-gray-900">{recommendation.plan_name || 'Recommended Plan'}</p>
+                  <p className="text-sm text-gray-600">₹{(recommendation.plan_price || 0).toLocaleString()}/month</p>
+                  {recommendation.savings && recommendation.savings > 0 && (
                     <p className="text-xs text-green-600 font-medium mt-1">
                       Save ₹{recommendation.savings.toFixed(2)}/month
                     </p>
                   )}
                 </div>
                 <button
-                  onClick={() => navigate(recommendation.upgrade_url)}
+                  onClick={() => navigate(recommendation.upgrade_url || '/pricing')}
                   className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition font-medium"
                 >
                   Upgrade Now

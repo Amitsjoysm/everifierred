@@ -16,17 +16,16 @@ BASE_URL = "https://redis-sync-restart.preview.emergentagent.com/api"
 SUPERADMIN_EMAIL = "amits.joys@gmail.com"
 SUPERADMIN_PASSWORD = "Admin@123"
 
-class MailGuardTester:
+class ProductionReadinessTester:
     def __init__(self):
         self.session = requests.Session()
-        self.admin_token = None
+        self.superadmin_token = None
         self.test_results = {
-            "blog_faq_apis": {"status": "pending", "details": []},
-            "credit_mechanism": {"status": "pending", "details": []},
-            "verification_history": {"status": "pending", "details": []},
-            "payment_edge_cases": {"status": "pending", "details": []},
-            "bulk_verification_edge_cases": {"status": "pending", "details": []},
-            "authentication_flow": {"status": "pending", "details": []}
+            "superadmin_login": {"status": "pending", "details": []},
+            "create_user_functionality": {"status": "pending", "details": []},
+            "plans_crud_operations": {"status": "pending", "details": []},
+            "payment_subscription_fix": {"status": "pending", "details": []},
+            "system_health": {"status": "pending", "details": []}
         }
         
     def log_result(self, category, test_name, success, message, response_data=None):

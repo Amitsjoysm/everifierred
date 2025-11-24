@@ -23,6 +23,12 @@ celery_app.conf.update(
     task_time_limit=3600,  # 1 hour
     worker_prefetch_multiplier=4,
     worker_max_tasks_per_child=1000,
+    beat_schedule={
+        'cleanup-expired-otps': {
+            'task': 'tasks.cleanup_expired_otps',
+            'schedule': 300.0,  # Run every 5 minutes
+        },
+    },
 )
 
 logger.info("Celery app configured successfully")

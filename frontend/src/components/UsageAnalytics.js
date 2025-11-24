@@ -102,7 +102,7 @@ const UsageAnalytics = () => {
           <div className="flex items-center gap-2">
             {getTrendIcon()}
             <span className={`text-sm font-medium ${getTrendColor()}`}>
-              {analytics.weekly_trend}
+              {weeklyTrend}
             </span>
           </div>
         </div>

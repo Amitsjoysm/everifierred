@@ -78,9 +78,9 @@ async def create_custom_admin(email: str, password: str, full_name: str = "Super
     print(f"Credits:  25,000")
     print("\n" + "="*60)
     print("\nYou can now login at:")
-    print("https://usermap-debug.preview.emergentagent.com/login")
+    print("https://redis-sync-restart.preview.emergentagent.com/login")
     print("\nAccess Admin Panel at:")
-    print("https://usermap-debug.preview.emergentagent.com/admin")
+    print("https://redis-sync-restart.preview.emergentagent.com/admin")
     print("="*60 + "\n")
     
     client.close()

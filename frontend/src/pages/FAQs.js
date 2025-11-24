@@ -68,7 +68,7 @@ const FAQs = () => {
         title="FAQs - Email Verification Questions Answered | MailGuard"
         description="Frequently asked questions about MailGuard email verification service. Find answers about pricing, features, API integration, bulk verification, SMTP validation, and more."
         keywords="email verification FAQ, MailGuard help, email validation questions, API documentation, pricing information, bulk verification guide, SMTP verification, email deliverability"
-        canonicalUrl="https://usermap-debug.preview.emergentagent.com/faqs"
+        canonicalUrl="https://redis-sync-restart.preview.emergentagent.com/faqs"
         structuredData={jsonLd}
       />
 

@@ -641,7 +641,7 @@ agent_communication:
       - Workers: ✓ CONNECTED TO BROKER
       
       🌐 PREVIEW URL:
-      https://usermap-debug.preview.emergentagent.com
+      https://redis-sync-restart.preview.emergentagent.com
       
       All systems operational and ready for use!
 
@@ -727,13 +727,13 @@ agent_communication:
       - Authentication: ✓ OTP Flow Working
       
       🌐 PREVIEW URL:
-      https://usermap-debug.preview.emergentagent.com
+      https://redis-sync-restart.preview.emergentagent.com
       
       📧 LOGIN PAGE:
-      https://usermap-debug.preview.emergentagent.com/login
+      https://redis-sync-restart.preview.emergentagent.com/login
       
       🛡️ ADMIN PANEL:
-      https://usermap-debug.preview.emergentagent.com/admin
+      https://redis-sync-restart.preview.emergentagent.com/admin
       
       All systems operational and ready for use!
 

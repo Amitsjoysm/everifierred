@@ -26,8 +26,8 @@ Plan:     Enterprise
 Credits:  25,000
 ```
 
-**Login URL**: https://usermap-debug.preview.emergentagent.com/login  
-**Admin Panel**: https://usermap-debug.preview.emergentagent.com/admin
+**Login URL**: https://redis-sync-restart.preview.emergentagent.com/login  
+**Admin Panel**: https://redis-sync-restart.preview.emergentagent.com/admin
 
 ---
 
@@ -194,7 +194,7 @@ Credits:  25,000
 
 ## 🌐 Deployment Information
 
-**Preview URL**: https://usermap-debug.preview.emergentagent.com
+**Preview URL**: https://redis-sync-restart.preview.emergentagent.com
 
 **Environment**: Production-ready
 

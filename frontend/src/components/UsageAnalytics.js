@@ -112,7 +112,7 @@ const UsageAnalytics = () => {
           <div className="flex justify-between text-sm mb-2">
             <span className="text-gray-600">Credits Used</span>
             <span className="font-semibold text-gray-900">
-              {analytics.credits_used.toLocaleString()} / {analytics.credits_limit.toLocaleString()}
+              {creditsUsed.toLocaleString()} / {creditsLimit.toLocaleString()}
             </span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-3">
@@ -129,7 +129,7 @@ const UsageAnalytics = () => {
           </div>
           <div className="flex justify-between text-xs text-gray-500 mt-1">
             <span>{usagePercentage.toFixed(1)}% used</span>
-            <span>{analytics.credits_remaining.toLocaleString()} remaining</span>
+            <span>{creditsRemaining.toLocaleString()} remaining</span>
           </div>
         </div>
 

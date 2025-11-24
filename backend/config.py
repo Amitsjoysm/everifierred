@@ -30,6 +30,7 @@ class Settings(BaseSettings):
     # Razorpay
     RAZORPAY_KEY_ID: str = os.environ.get('RAZORPAY_KEY_ID', '')
     RAZORPAY_KEY_SECRET: str = os.environ.get('RAZORPAY_KEY_SECRET', '')
+    RAZORPAY_WEBHOOK_SECRET: str = os.environ.get('RAZORPAY_WEBHOOK_SECRET', '')
     
     # CORS
     CORS_ORIGINS: str = os.environ.get('CORS_ORIGINS', '*')

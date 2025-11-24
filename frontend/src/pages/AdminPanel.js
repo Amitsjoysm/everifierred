@@ -363,79 +363,218 @@ const AnalyticsTab = ({ analytics }) => {
 };
 
 // Users Tab Component
-const UsersTab = ({ users }) => {
-  if (!users || users.length === 0) {
-    return (
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">Users Management</h1>
-        <div className="bg-white rounded-lg shadow-md p-8 text-center">
-          <p className="text-gray-500">No users found</p>
-        </div>
-      </div>
-    );
-  }
+const UsersTab = ({ users, fetchUsers }) => {
+  const [showModal, setShowModal] = useState(false);
+  const [formData, setFormData] = useState({
+    email: '',
+    full_name: '',
+    password: '',
+    role: 'user',
+    plan: 'free',
+    credits_limit: 100
+  });
+
+  const getAuthHeaders = () => {
+    const token = localStorage.getItem('token');
+    return { Authorization: `Bearer ${token}` };
+  };
+
+  const handleCreateUser = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post(
+        `${API_URL}/api/admin/users`,
+        formData,
+        { headers: getAuthHeaders() }
+      );
+      toast.success('User created successfully');
+      setShowModal(false);
+      setFormData({
+        email: '',
+        full_name: '',
+        password: '',
+        role: 'user',
+        plan: 'free',
+        credits_limit: 100
+      });
+      fetchUsers();
+    } catch (error) {
+      toast.error(error.response?.data?.detail || 'Failed to create user');
+    }
+  };
 
   return (
     <div>
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">Users Management</h1>
-
-      <div className="bg-white rounded-lg shadow-md overflow-hidden">
-        <table className="w-full">
-          <thead className="bg-gray-50 border-b">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                User
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Plan
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Credits Used
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Status
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Role
-              </th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {users.map((user) => (
-              <tr key={user.id}>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div>
-                    <div className="font-medium text-gray-900">{user.full_name}</div>
-                    <div className="text-sm text-gray-500">{user.email}</div>
-                  </div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800 capitalize">
-                    {user.plan}
-                  </span>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {user.credits_used} / {user.credits_limit}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span
-                    className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                      user.is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                    }`}
-                  >
-                    {user.is_active ? 'Active' : 'Inactive'}
-                  </span>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="px-2 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-800 capitalize">
-                    {user.role}
-                  </span>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold text-gray-900">Users Management</h1>
+        <button
+          onClick={() => setShowModal(true)}
+          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center gap-2"
+        >
+          <Plus className="w-4 h-4" />
+          Create User
+        </button>
       </div>
+
+      {!users || users.length === 0 ? (
+        <div className="bg-white rounded-lg shadow-md p-8 text-center">
+          <p className="text-gray-500">No users found</p>
+        </div>
+      ) : (
+        <div className="bg-white rounded-lg shadow-md overflow-hidden">
+          <table className="w-full">
+            <thead className="bg-gray-50 border-b">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  User
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Plan
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Credits Used
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Status
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Role
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {users.map((user) => (
+                <tr key={user.id}>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div>
+                      <div className="font-medium text-gray-900">{user.full_name}</div>
+                      <div className="text-sm text-gray-500">{user.email}</div>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800 capitalize">
+                      {user.plan}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {user.credits_used} / {user.credits_limit}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span
+                      className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                        user.is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                      }`}
+                    >
+                      {user.is_active ? 'Active' : 'Inactive'}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className="px-2 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-800 capitalize">
+                      {user.role}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {/* Create User Modal */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold text-gray-900">Create New User</h2>
+              <button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-gray-600">
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            <form onSubmit={handleCreateUser} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <input
+                  type="email"
+                  required
+                  value={formData.email}
+                  onChange={(e) => setFormData({...formData, email: e.target.value})}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                <input
+                  type="text"
+                  required
+                  value={formData.full_name}
+                  onChange={(e) => setFormData({...formData, full_name: e.target.value})}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                <input
+                  type="password"
+                  required
+                  value={formData.password}
+                  onChange={(e) => setFormData({...formData, password: e.target.value})}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
+                <select
+                  value={formData.role}
+                  onChange={(e) => setFormData({...formData, role: e.target.value})}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                >
+                  <option value="user">User</option>
+                  <option value="admin">Admin</option>
+                  <option value="super_admin">Super Admin</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Plan</label>
+                <select
+                  value={formData.plan}
+                  onChange={(e) => setFormData({...formData, plan: e.target.value})}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                >
+                  <option value="free">Free</option>
+                  <option value="starter">Starter</option>
+                  <option value="professional">Professional</option>
+                  <option value="enterprise">Enterprise</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Credits Limit</label>
+                <input
+                  type="number"
+                  required
+                  value={formData.credits_limit}
+                  onChange={(e) => setFormData({...formData, credits_limit: parseInt(e.target.value)})}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                />
+              </div>
+              <div className="flex gap-3 pt-4">
+                <button
+                  type="button"
+                  onClick={() => setShowModal(false)}
+                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                >
+                  Create User
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

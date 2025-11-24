@@ -178,51 +178,85 @@ class ProductionReadinessTester:
         failed_tests = [t for t in self.test_results[category]["details"] if not t["success"]]
         self.test_results[category]["status"] = "failed" if failed_tests else "passed"
         
-    def test_authentication_flow(self):
-        """Test Authentication Flow"""
-        print("\n🔐 Testing Authentication Flow...")
-        category = "authentication_flow"
+    def test_plans_crud_operations(self):
+        """Test Plans CRUD Operations"""
+        print("\n📋 Testing Plans CRUD Operations...")
+        category = "plans_crud_operations"
         
-        # Test 1: Registration (Step 1)
-        test_email = f"test_{int(time.time())}@example.com"
-        register_data = {
-            "email": test_email,
-            "password": "TestPassword123!",
-            "full_name": "Test User"
-        }
-        
-        response = self.make_request("POST", "/auth/register", json=register_data)
+        if not self.superadmin_token:
+            self.log_result(category, "Plans CRUD tests", False, "No SuperAdmin authentication token available")
+            self.test_results[category]["status"] = "failed"
+            return
+            
+        # Test 1: GET /api/admin/plans - Get all plans
+        response = self.make_request("GET", "/admin/plans")
         if response and response.status_code == 200:
-            self.log_result(category, "POST /auth/register", True, "Registration OTP sent")
-            
-            # Test 2: OTP Verification (mock)
-            verify_data = {
-                "email": test_email,
-                "otp": "123456"  # Mock OTP
-            }
-            
-            response = self.make_request("POST", "/auth/verify-registration", json=verify_data)
-            if response and response.status_code == 200:
-                self.log_result(category, "POST /auth/verify-registration", True, "Registration completed")
+            plans = response.json()
+            if isinstance(plans, list):
+                self.log_result(category, "GET /admin/plans", True,
+                              f"Retrieved {len(plans)} plans")
+                
+                # Store plan for later tests
+                test_plan_id = None
+                if plans:
+                    test_plan_id = plans[0].get("id")
+                    
+                # Test 2: POST /api/admin/plans - Create new plan (if endpoint works)
+                new_plan_data = {
+                    "id": f"test_plan_{int(time.time())}",
+                    "name": "Test Plan",
+                    "type": "starter",
+                    "price": 99.99,
+                    "credits_limit": 1000,
+                    "features": ["Feature 1", "Feature 2"],
+                    "is_active": True,
+                    "created_at": datetime.now().isoformat()
+                }
+                
+                response = self.make_request("POST", "/admin/plans", json=new_plan_data)
+                if response and response.status_code == 200:
+                    created_plan = response.json()
+                    created_plan_id = created_plan.get("id")
+                    self.log_result(category, "POST /admin/plans", True,
+                                  f"Plan created successfully: {created_plan.get('name', 'Unknown')}")
+                    
+                    # Test 3: PATCH /api/admin/plans/{plan_id} - Update plan
+                    if created_plan_id:
+                        update_data = {
+                            "name": "Updated Test Plan",
+                            "price": 149.99
+                        }
+                        
+                        response = self.make_request("PATCH", f"/admin/plans/{created_plan_id}", json=update_data)
+                        if response and response.status_code == 200:
+                            self.log_result(category, f"PATCH /admin/plans/{created_plan_id}", True,
+                                          "Plan updated successfully")
+                        else:
+                            self.log_result(category, f"PATCH /admin/plans/{created_plan_id}", False,
+                                          f"Failed to update plan: {response.status_code if response else 'No response'}")
+                        
+                        # Test 4: DELETE /api/admin/plans/{plan_id} - Delete plan
+                        response = self.make_request("DELETE", f"/admin/plans/{created_plan_id}")
+                        if response and response.status_code == 200:
+                            self.log_result(category, f"DELETE /admin/plans/{created_plan_id}", True,
+                                          "Plan deleted successfully")
+                        else:
+                            self.log_result(category, f"DELETE /admin/plans/{created_plan_id}", False,
+                                          f"Failed to delete plan: {response.status_code if response else 'No response'}")
+                else:
+                    self.log_result(category, "POST /admin/plans", False,
+                                  f"Failed to create plan: {response.status_code if response else 'No response'}")
+                    if response:
+                        try:
+                            error_detail = response.json()
+                            self.log_result(category, "Create plan error details", False, f"Error: {error_detail}")
+                        except:
+                            pass
             else:
-                self.log_result(category, "POST /auth/verify-registration", False,
-                              f"OTP verification failed: {response.status_code if response else 'No response'}")
+                self.log_result(category, "GET /admin/plans", False, "Response is not a list")
         else:
-            self.log_result(category, "POST /auth/register", False,
-                          f"Registration failed: {response.status_code if response else 'No response'}")
-            
-        # Test 3: Login Flow
-        login_data = {
-            "email": ADMIN_EMAIL,
-            "password": ADMIN_PASSWORD
-        }
-        
-        response = self.make_request("POST", "/auth/login", json=login_data)
-        if response and response.status_code == 200:
-            self.log_result(category, "POST /auth/login", True, "Login OTP sent")
-        else:
-            self.log_result(category, "POST /auth/login", False,
-                          f"Login failed: {response.status_code if response else 'No response'}")
+            self.log_result(category, "GET /admin/plans", False,
+                          f"Failed: {response.status_code if response else 'No response'}")
             
         # Update category status
         failed_tests = [t for t in self.test_results[category]["details"] if not t["success"]]

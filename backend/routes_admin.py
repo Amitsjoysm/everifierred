@@ -14,6 +14,47 @@ router = APIRouter(prefix="/admin", tags=["Admin"])
 
 # ============= User Management =============
 
+@router.post("/users", response_model=UserResponse)
+async def create_user(
+    email: str,
+    full_name: str,
+    password: str,
+    role: UserRole = UserRole.USER,
+    plan: PlanType = PlanType.FREE,
+    credits_limit: int = 100,
+    current_user: User = Depends(get_current_super_admin)
+):
+    """Create new user (Super Admin only)"""
+    db = await get_db()
+    from passlib.context import CryptContext
+    pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+    
+    # Check if user already exists
+    existing_user = await db.users.find_one({"email": email})
+    if existing_user:
+        raise HTTPException(status_code=400, detail="User with this email already exists")
+    
+    # Create new user
+    new_user = User(
+        email=email,
+        full_name=full_name,
+        hashed_password=pwd_context.hash(password),
+        role=role,
+        plan=plan,
+        credits_limit=credits_limit,
+        is_verified=True,  # Admin-created users are pre-verified
+        is_active=True
+    )
+    
+    user_dict = new_user.model_dump()
+    user_dict['created_at'] = user_dict['created_at'].isoformat()
+    user_dict['updated_at'] = user_dict['updated_at'].isoformat()
+    
+    await db.users.insert_one(user_dict)
+    
+    return UserResponse(**new_user.model_dump())
+
+
 @router.get("/users", response_model=List[UserResponse])
 async def get_all_users(
     skip: int = 0,

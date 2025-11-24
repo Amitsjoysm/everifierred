@@ -529,3 +529,54 @@ agent_communication:
       Admin credentials:
       Email: admin@mailguard.com
       Password: Admin@123456
+
+  - agent: "main"
+    message: |
+      APP RESTARTED - READY FOR COMPREHENSIVE TESTING - 2025-11-24
+      
+      ✅ SYSTEM STATUS:
+      - Backend dependencies installed
+      - Frontend dependencies installed (yarn)
+      - All services running:
+        * Backend: RUNNING (port 8001)
+        * Frontend: RUNNING (port 3000)
+        * MongoDB: RUNNING
+        * nginx-code-proxy: RUNNING
+      
+      ✅ USER ACCOUNTS CREATED:
+      
+      ADMIN ACCOUNT:
+      - Email: admin@mailguard.com
+      - Password: Admin@123456
+      - Role: super_admin
+      - Plan: enterprise
+      - Credits: 25,000
+      
+      TEST USER ACCOUNT:
+      - Email: user@mailguard.com
+      - Password: User@123456
+      - Role: user
+      - Plan: free
+      - Credits: 100
+      
+      🔍 TESTING SCOPE - CRITICAL SECURITY & FEATURE TESTS:
+      
+      PRIORITY 1 - SECURITY TESTS (CRITICAL):
+      1. Rate limiting on payment endpoints
+      2. Payment amount validation
+      3. Webhook signature verification
+      4. Idempotency checks
+      5. Security event logging
+      
+      PRIORITY 2 - IN-CHAT PURCHASE ASSISTANT:
+      1. Chat API with various queries
+      2. Usage analysis endpoint
+      3. Plan recommendation logic
+      4. Usage pattern detection
+      
+      PRIORITY 3 - EXISTING ENDPOINTS (SMOKE TESTS):
+      1. Plans retrieval
+      2. Payment order creation
+      3. Payment history
+      
+      Ready for testing agent to perform comprehensive security and feature testing.

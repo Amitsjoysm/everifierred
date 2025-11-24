@@ -97,28 +97,28 @@ const AdminPanel = () => {
     const response = await axios.get(`${API_URL}/api/admin/users?page=${usersPage}&limit=20`, {
       headers: getAuthHeaders(),
     });
-    setUsers(response.data.users);
+    setUsers(response.data || []);
   };
 
   const fetchPlans = async () => {
     const response = await axios.get(`${API_URL}/api/admin/plans`, {
       headers: getAuthHeaders(),
     });
-    setPlans(response.data);
+    setPlans(response.data || []);
   };
 
   const fetchBlogs = async () => {
     const response = await axios.get(`${API_URL}/api/admin/blogs`, {
       headers: getAuthHeaders(),
     });
-    setBlogs(response.data);
+    setBlogs(response.data || []);
   };
 
   const fetchFaqs = async () => {
     const response = await axios.get(`${API_URL}/api/admin/faqs`, {
       headers: getAuthHeaders(),
     });
-    setFaqs(response.data);
+    setFaqs(response.data || []);
   };
 
   const handleLogout = () => {

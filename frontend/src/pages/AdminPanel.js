@@ -577,6 +577,23 @@ const BlogsTab = ({ blogs }) => {
 
 // FAQs Tab Component (stub)
 const FAQsTab = ({ faqs }) => {
+  if (!faqs || faqs.length === 0) {
+    return (
+      <div>
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-900">FAQ Management</h1>
+          <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center gap-2">
+            <Plus className="w-4 h-4" />
+            New FAQ
+          </button>
+        </div>
+        <div className="bg-white rounded-lg shadow-md p-8 text-center">
+          <p className="text-gray-500">No FAQs found</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div>
       <div className="flex justify-between items-center mb-8">

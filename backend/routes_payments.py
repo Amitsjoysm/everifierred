@@ -1,14 +1,27 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request, Header
 from datetime import datetime, timezone
-from typing import List
+from typing import List, Optional
 import razorpay
 import hmac
 import hashlib
+import logging
+import json
 
 from database import get_db
 from models import Plan, PlanType, Payment, User
 from auth import get_current_user
 from config import settings
+from rate_limiter import rate_limiter
+from payment_security import (
+    verify_razorpay_signature,
+    verify_webhook_signature,
+    validate_payment_amount,
+    log_payment_attempt,
+    log_security_event,
+    check_payment_idempotency
+)
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(tags=["Payments"])
 

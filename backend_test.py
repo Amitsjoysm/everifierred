@@ -120,52 +120,59 @@ class ProductionReadinessTester:
             self.test_results[category]["status"] = "failed"
             return False
         
-    def test_blog_faq_apis(self):
-        """Test Blog and FAQ API endpoints (HIGH PRIORITY)"""
-        print("\n📝 Testing Blog and FAQ APIs...")
-        category = "blog_faq_apis"
+    def test_create_user_functionality(self):
+        """Test Create User Functionality (NEW FEATURE)"""
+        print("\n👤 Testing Create User Functionality...")
+        category = "create_user_functionality"
         
-        # Test 1: GET /api/content/blogs
-        response = self.make_request("GET", "/content/blogs")
-        if response and response.status_code == 200:
-            blogs = response.json()
-            if isinstance(blogs, list):
-                self.log_result(category, "GET /content/blogs", True, 
-                              f"Retrieved {len(blogs)} blogs", {"count": len(blogs)})
-                
-                # Test 2: GET /api/content/blogs/{slug} if blogs exist
-                if blogs:
-                    first_blog = blogs[0]
-                    slug = first_blog.get("slug")
-                    if slug:
-                        response = self.make_request("GET", f"/content/blogs/{slug}")
-                        if response and response.status_code == 200:
-                            blog_detail = response.json()
-                            self.log_result(category, f"GET /content/blogs/{slug}", True,
-                                          f"Retrieved blog: {blog_detail.get('title', 'Unknown')}")
-                        else:
-                            self.log_result(category, f"GET /content/blogs/{slug}", False,
-                                          f"Failed to get blog by slug: {response.status_code if response else 'No response'}")
-                else:
-                    self.log_result(category, "Blog slug test", False, "No blogs available to test slug endpoint")
-            else:
-                self.log_result(category, "GET /content/blogs", False, "Response is not a list")
-        else:
-            self.log_result(category, "GET /content/blogs", False, 
-                          f"Failed: {response.status_code if response else 'No response'}")
+        if not self.superadmin_token:
+            self.log_result(category, "Create user tests", False, "No SuperAdmin authentication token available")
+            self.test_results[category]["status"] = "failed"
+            return
             
-        # Test 3: GET /api/content/faqs
-        response = self.make_request("GET", "/content/faqs")
+        # Test 1: POST /api/admin/users - Create new user
+        test_user_data = {
+            "email": "testuser@example.com",
+            "full_name": "Test User",
+            "password": "Test@123",
+            "role": "user",
+            "plan": "free",
+            "credits_limit": 100
+        }
+        
+        response = self.make_request("POST", "/admin/users", json=test_user_data)
         if response and response.status_code == 200:
-            faqs = response.json()
-            if isinstance(faqs, list):
-                self.log_result(category, "GET /content/faqs", True,
-                              f"Retrieved {len(faqs)} FAQs", {"count": len(faqs)})
+            user_data = response.json()
+            self.log_result(category, "POST /admin/users", True,
+                          f"User created successfully: {user_data.get('email', 'Unknown')}")
+            
+            # Test 2: GET /api/admin/users - Verify new user appears in list
+            response = self.make_request("GET", "/admin/users")
+            if response and response.status_code == 200:
+                users = response.json()
+                if isinstance(users, list):
+                    # Check if our test user is in the list
+                    test_user_found = any(user.get('email') == test_user_data['email'] for user in users)
+                    if test_user_found:
+                        self.log_result(category, "GET /admin/users verification", True,
+                                      f"New user found in users list. Total users: {len(users)}")
+                    else:
+                        self.log_result(category, "GET /admin/users verification", False,
+                                      "New user not found in users list")
+                else:
+                    self.log_result(category, "GET /admin/users verification", False, "Response is not a list")
             else:
-                self.log_result(category, "GET /content/faqs", False, "Response is not a list")
+                self.log_result(category, "GET /admin/users verification", False,
+                              f"Failed to get users list: {response.status_code if response else 'No response'}")
         else:
-            self.log_result(category, "GET /content/faqs", False,
-                          f"Failed: {response.status_code if response else 'No response'}")
+            self.log_result(category, "POST /admin/users", False,
+                          f"Failed to create user: {response.status_code if response else 'No response'}")
+            if response:
+                try:
+                    error_detail = response.json()
+                    self.log_result(category, "Create user error details", False, f"Error: {error_detail}")
+                except:
+                    pass
             
         # Update category status
         failed_tests = [t for t in self.test_results[category]["details"] if not t["success"]]

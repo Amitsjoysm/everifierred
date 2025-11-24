@@ -67,9 +67,31 @@ async def get_plan(plan_id: str):
 @router.post("/payments/create-order")
 async def create_payment_order(
     plan_id: str,
+    request: Request,
     current_user: User = Depends(get_current_user)
 ):
-    """Create Razorpay order for plan subscription"""
+    """Create Razorpay order for plan subscription with rate limiting"""
+    # Rate limit: 5 requests per minute
+    allowed, remaining = await rate_limiter.is_allowed(
+        identifier=current_user.id,
+        max_requests=5,
+        window_seconds=60
+    )
+    
+    if not allowed:
+        await log_security_event(
+            db=await get_db(),
+            event_type="rate_limit_exceeded",
+            severity="medium",
+            description=f"User {current_user.id} exceeded payment creation rate limit",
+            details={"plan_id": plan_id}
+        )
+        raise HTTPException(
+            status_code=429,
+            detail="Too many payment requests. Please try again in 1 minute.",
+            headers={"Retry-After": "60"}
+        )
+    
     if not razorpay_client:
         raise HTTPException(status_code=503, detail="Payment service not configured")
     

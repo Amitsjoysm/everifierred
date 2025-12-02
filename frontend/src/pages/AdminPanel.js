@@ -794,85 +794,276 @@ const PlansTab = ({ plans, fetchPlans, showModal, setShowModal, editing, setEdit
   );
 };
 
-// Blogs Tab Component (stub)
-const BlogsTab = ({ blogs }) => {
-  if (!blogs || blogs.length === 0) {
-    return (
-      <div>
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Blog Management</h1>
-          <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center gap-2">
-            <Plus className="w-4 h-4" />
-            New Blog
-          </button>
-        </div>
-        <div className="bg-white rounded-lg shadow-md p-8 text-center">
-          <p className="text-gray-500">No blogs found</p>
-        </div>
-      </div>
-    );
-  }
+// Blogs Tab Component with full CRUD
+const BlogsTab = ({ blogs, fetchBlogs, showModal, setShowModal, editing, setEditing, getAuthHeaders }) => {
+  const [formData, setFormData] = useState({
+    title: '',
+    content: '',
+    excerpt: '',
+    author: '',
+    meta_title: '',
+    meta_description: '',
+    keywords: [],
+    is_published: false
+  });
+
+  useEffect(() => {
+    if (editing) {
+      setFormData({
+        title: editing.title || '',
+        content: editing.content || '',
+        excerpt: editing.excerpt || '',
+        author: editing.author || '',
+        meta_title: editing.meta_title || '',
+        meta_description: editing.meta_description || '',
+        keywords: editing.keywords || [],
+        is_published: editing.is_published || false
+      });
+    } else {
+      setFormData({
+        title: '',
+        content: '',
+        excerpt: '',
+        author: '',
+        meta_title: '',
+        meta_description: '',
+        keywords: [],
+        is_published: false
+      });
+    }
+  }, [editing]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (editing) {
+        await axios.patch(
+          `${API_URL}/api/admin/blogs/${editing.id}`,
+          formData,
+          { headers: getAuthHeaders() }
+        );
+        toast.success('Blog updated successfully');
+      } else {
+        await axios.post(
+          `${API_URL}/api/admin/blogs`,
+          formData,
+          { headers: getAuthHeaders() }
+        );
+        toast.success('Blog created successfully');
+      }
+      setShowModal(false);
+      setEditing(null);
+      fetchBlogs();
+    } catch (error) {
+      toast.error(error.response?.data?.detail || 'Failed to save blog');
+    }
+  };
+
+  const handleDelete = async (blogId) => {
+    if (!window.confirm('Are you sure you want to delete this blog?')) return;
+    try {
+      await axios.delete(`${API_URL}/api/admin/blogs/${blogId}`, {
+        headers: getAuthHeaders()
+      });
+      toast.success('Blog deleted successfully');
+      fetchBlogs();
+    } catch (error) {
+      toast.error(error.response?.data?.detail || 'Failed to delete blog');
+    }
+  };
 
   return (
     <div>
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold text-gray-900">Blog Management</h1>
-        <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center gap-2">
+        <button
+          onClick={() => {
+            setEditing(null);
+            setShowModal(true);
+          }}
+          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center gap-2"
+        >
           <Plus className="w-4 h-4" />
           New Blog
         </button>
       </div>
 
-      <div className="bg-white rounded-lg shadow-md overflow-hidden">
-        <table className="w-full">
-          <thead className="bg-gray-50 border-b">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Title
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Author
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Status
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {blogs.map((blog) => (
-              <tr key={blog.id}>
-                <td className="px-6 py-4">
-                  <div className="font-medium text-gray-900">{blog.title}</div>
-                  <div className="text-sm text-gray-500">{blog.slug}</div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{blog.author}</td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span
-                    className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                      blog.is_published ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
-                    }`}
-                  >
-                    {blog.is_published ? 'Published' : 'Draft'}
-                  </span>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm">
-                  <div className="flex gap-2">
-                    <button className="text-blue-600 hover:text-blue-700">
-                      <Edit className="w-4 h-4" />
-                    </button>
-                    <button className="text-red-600 hover:text-red-700">
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </div>
-                </td>
+      {!blogs || blogs.length === 0 ? (
+        <div className="bg-white rounded-lg shadow-md p-8 text-center">
+          <p className="text-gray-500">No blogs found</p>
+        </div>
+      ) : (
+        <div className="bg-white rounded-lg shadow-md overflow-hidden">
+          <table className="w-full">
+            <thead className="bg-gray-50 border-b">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Title
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Author
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Status
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Actions
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {blogs.map((blog) => (
+                <tr key={blog.id}>
+                  <td className="px-6 py-4">
+                    <div className="font-medium text-gray-900">{blog.title}</div>
+                    <div className="text-sm text-gray-500">{blog.slug}</div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{blog.author}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span
+                      className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                        blog.is_published ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                      }`}
+                    >
+                      {blog.is_published ? 'Published' : 'Draft'}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm">
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => {
+                          setEditing(blog);
+                          setShowModal(true);
+                        }}
+                        className="text-blue-600 hover:text-blue-700"
+                      >
+                        <Edit className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(blog.id)}
+                        className="text-red-600 hover:text-red-700"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {/* Create/Edit Blog Modal */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-8 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold text-gray-900">
+                {editing ? 'Edit Blog' : 'Create New Blog'}
+              </h2>
+              <button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-gray-600">
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                <input
+                  type="text"
+                  required
+                  value={formData.title}
+                  onChange={(e) => setFormData({...formData, title: e.target.value})}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Author</label>
+                <input
+                  type="text"
+                  required
+                  value={formData.author}
+                  onChange={(e) => setFormData({...formData, author: e.target.value})}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Excerpt</label>
+                <textarea
+                  required
+                  value={formData.excerpt}
+                  onChange={(e) => setFormData({...formData, excerpt: e.target.value})}
+                  rows="2"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Content (Markdown)</label>
+                <textarea
+                  required
+                  value={formData.content}
+                  onChange={(e) => setFormData({...formData, content: e.target.value})}
+                  rows="6"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Meta Title</label>
+                <input
+                  type="text"
+                  required
+                  value={formData.meta_title}
+                  onChange={(e) => setFormData({...formData, meta_title: e.target.value})}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Meta Description</label>
+                <textarea
+                  required
+                  value={formData.meta_description}
+                  onChange={(e) => setFormData({...formData, meta_description: e.target.value})}
+                  rows="2"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Keywords (comma-separated)</label>
+                <input
+                  type="text"
+                  value={Array.isArray(formData.keywords) ? formData.keywords.join(', ') : ''}
+                  onChange={(e) => setFormData({...formData, keywords: e.target.value.split(',').map(k => k.trim()).filter(k => k)})}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                />
+              </div>
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={formData.is_published}
+                  onChange={(e) => setFormData({...formData, is_published: e.target.checked})}
+                  className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                />
+                <label className="text-sm font-medium text-gray-700">Published</label>
+              </div>
+              <div className="flex gap-3 pt-4">
+                <button
+                  type="button"
+                  onClick={() => setShowModal(false)}
+                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                >
+                  {editing ? 'Update' : 'Create'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

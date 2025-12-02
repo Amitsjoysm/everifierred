@@ -1390,9 +1390,69 @@ const FAQsTab = ({ faqs, fetchFaqs, showModal, setShowModal, editing, setEditing
 
 // SEO Tab Component
 const SEOTab = () => {
+  const [seoSettings, setSeoSettings] = useState({
+    robots_txt: '',
+    llm_txt: ''
+  });
+  const [loading, setLoading] = useState(true);
+  const [editing, setEditing] = useState(false);
+
+  const getAuthHeaders = () => {
+    const token = localStorage.getItem('token');
+    return { Authorization: `Bearer ${token}` };
+  };
+
+  useEffect(() => {
+    fetchSEOSettings();
+  }, []);
+
+  const fetchSEOSettings = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/admin/seo-settings`, {
+        headers: getAuthHeaders(),
+      });
+      setSeoSettings(response.data);
+    } catch (error) {
+      console.error('Failed to fetch SEO settings:', error);
+      toast.error('Failed to load SEO settings');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSave = async () => {
+    try {
+      await axios.post(
+        `${API_URL}/api/admin/seo-settings`,
+        seoSettings,
+        { headers: getAuthHeaders() }
+      );
+      toast.success('SEO settings updated successfully');
+      setEditing(false);
+    } catch (error) {
+      toast.error(error.response?.data?.detail || 'Failed to update SEO settings');
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
   return (
     <div>
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">SEO Management</h1>
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold text-gray-900">SEO Management</h1>
+        <button
+          onClick={() => setEditing(!editing)}
+          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+        >
+          {editing ? 'Cancel' : 'Edit Settings'}
+        </button>
+      </div>
 
       <div className="space-y-6">
         <div className="bg-white p-6 rounded-lg shadow-md">
@@ -1409,30 +1469,70 @@ const SEOTab = () => {
         </div>
 
         <div className="bg-white p-6 rounded-lg shadow-md">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Robots.txt</h3>
-          <p className="text-gray-600 mb-4">Configure search engine crawler access:</p>
-          <a
-            href="/robots.txt"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 hover:text-blue-700 font-medium"
-          >
-            {window.location.origin}/robots.txt
-          </a>
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-semibold text-gray-900">Robots.txt</h3>
+            <a
+              href="/robots.txt"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm text-blue-600 hover:text-blue-700"
+            >
+              View Live
+            </a>
+          </div>
+          {editing ? (
+            <textarea
+              value={seoSettings.robots_txt}
+              onChange={(e) => setSeoSettings({...seoSettings, robots_txt: e.target.value})}
+              rows="8"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent font-mono text-sm"
+              placeholder="User-agent: *&#10;Allow: /&#10;Disallow: /api/"
+            />
+          ) : (
+            <pre className="bg-gray-50 p-4 rounded-lg text-sm overflow-x-auto">
+              {seoSettings.robots_txt || 'No robots.txt content configured'}
+            </pre>
+          )}
         </div>
 
         <div className="bg-white p-6 rounded-lg shadow-md">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">LLM.txt</h3>
-          <p className="text-gray-600 mb-4">Information for AI crawlers:</p>
-          <a
-            href="/llm.txt"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 hover:text-blue-700 font-medium"
-          >
-            {window.location.origin}/llm.txt
-          </a>
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-semibold text-gray-900">LLM.txt</h3>
+            <a
+              href="/llm.txt"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm text-blue-600 hover:text-blue-700"
+            >
+              View Live
+            </a>
+          </div>
+          <p className="text-gray-600 mb-4">Information for AI crawlers and LLMs:</p>
+          {editing ? (
+            <textarea
+              value={seoSettings.llm_txt}
+              onChange={(e) => setSeoSettings({...seoSettings, llm_txt: e.target.value})}
+              rows="12"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent font-mono text-sm"
+              placeholder="# About&#10;Your site description..."
+            />
+          ) : (
+            <pre className="bg-gray-50 p-4 rounded-lg text-sm overflow-x-auto whitespace-pre-wrap">
+              {seoSettings.llm_txt || 'No llm.txt content configured'}
+            </pre>
+          )}
         </div>
+
+        {editing && (
+          <div className="flex justify-end">
+            <button
+              onClick={handleSave}
+              className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+            >
+              Save Changes
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

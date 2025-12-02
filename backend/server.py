@@ -94,13 +94,23 @@ app.include_router(api_router)
 # SEO Routes - robots.txt, sitemap.xml, llm.txt
 @app.get("/robots.txt")
 async def robots_txt():
-    content = """User-agent: *
+    from database import get_db
+    
+    db = await get_db()
+    seo_settings = await db.seo_settings.find_one({}, {"_id": 0})
+    
+    if seo_settings and 'robots_txt' in seo_settings:
+        content = seo_settings['robots_txt']
+    else:
+        content = """User-agent: *
 Allow: /
 Disallow: /api/
-Disallow: /admin/
-
-Sitemap: {}/sitemap.xml
-""".format(settings.APP_URL)
+Disallow: /admin/"""
+    
+    # Add sitemap reference if not present
+    if 'Sitemap:' not in content:
+        content += f"\n\nSitemap: {settings.APP_URL}/sitemap.xml"
+    
     return content
 
 @app.get("/sitemap.xml")

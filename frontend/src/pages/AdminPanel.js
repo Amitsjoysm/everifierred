@@ -491,7 +491,10 @@ const UsersTab = ({ users, fetchUsers }) => {
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold text-gray-900">Users Management</h1>
         <button
-          onClick={() => setShowModal(true)}
+          onClick={() => {
+            setEditing(null);
+            setShowModal(true);
+          }}
           className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center gap-2"
         >
           <Plus className="w-4 h-4" />
@@ -523,6 +526,9 @@ const UsersTab = ({ users, fetchUsers }) => {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Role
                 </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
@@ -543,18 +549,38 @@ const UsersTab = ({ users, fetchUsers }) => {
                     {user.credits_used} / {user.credits_limit}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span
-                      className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                        user.is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                    <button
+                      onClick={() => toggleUserStatus(user.id, user.is_active)}
+                      className={`px-2 py-1 text-xs font-semibold rounded-full cursor-pointer ${
+                        user.is_active ? 'bg-green-100 text-green-800 hover:bg-green-200' : 'bg-red-100 text-red-800 hover:bg-red-200'
                       }`}
                     >
                       {user.is_active ? 'Active' : 'Inactive'}
-                    </span>
+                    </button>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className="px-2 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-800 capitalize">
                       {user.role}
                     </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm">
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => {
+                          setEditing(user);
+                          setShowModal(true);
+                        }}
+                        className="text-blue-600 hover:text-blue-700"
+                      >
+                        <Edit className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(user.id)}
+                        className="text-red-600 hover:text-red-700"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -563,22 +589,23 @@ const UsersTab = ({ users, fetchUsers }) => {
         </div>
       )}
 
-      {/* Create User Modal */}
+      {/* Create/Edit User Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold text-gray-900">Create New User</h2>
+              <h2 className="text-2xl font-bold text-gray-900">{editing ? 'Edit User' : 'Create New User'}</h2>
               <button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-gray-600">
                 <X className="w-6 h-6" />
               </button>
             </div>
-            <form onSubmit={handleCreateUser} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
                 <input
                   type="email"
-                  required
+                  required={!editing}
+                  disabled={editing}
                   value={formData.email}
                   onChange={(e) => setFormData({...formData, email: e.target.value})}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"

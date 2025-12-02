@@ -11,7 +11,7 @@ import uuid
 from datetime import datetime
 from typing import Dict, Any, List
 
-# Configuration
+# Configuration - Updated for review request
 BASE_URL = "https://blogging-crud.preview.emergentagent.com/api"
 ADMIN_EMAIL = "amits.joys@gmail.com"
 ADMIN_PASSWORD = "Admin@123"

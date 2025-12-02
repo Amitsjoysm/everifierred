@@ -162,6 +162,14 @@ async def llm_txt():
     from database import get_db
     
     db = await get_db()
+    
+    # Check if custom SEO settings exist
+    seo_settings = await db.seo_settings.find_one({}, {"_id": 0})
+    
+    if seo_settings and 'llm_txt' in seo_settings and seo_settings['llm_txt']:
+        return seo_settings['llm_txt']
+    
+    # Otherwise, generate default content
     blogs = await db.blogs.find({"is_published": True}, {"_id": 0, "title": 1, "slug": 1, "excerpt": 1}).to_list(10)
     faqs = await db.faqs.find({"is_published": True}, {"_id": 0, "question": 1, "answer": 1, "category": 1}).to_list(20)
     

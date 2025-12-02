@@ -365,6 +365,8 @@ const AnalyticsTab = ({ analytics }) => {
 // Users Tab Component
 const UsersTab = ({ users, fetchUsers }) => {
   const [showModal, setShowModal] = useState(false);
+  const [editing, setEditing] = useState(null);
+  const [plans, setPlans] = useState([]);
   const [formData, setFormData] = useState({
     email: '',
     full_name: '',
@@ -379,16 +381,69 @@ const UsersTab = ({ users, fetchUsers }) => {
     return { Authorization: `Bearer ${token}` };
   };
 
-  const handleCreateUser = async (e) => {
+  useEffect(() => {
+    fetchPlans();
+  }, []);
+
+  useEffect(() => {
+    if (editing) {
+      setFormData({
+        email: editing.email || '',
+        full_name: editing.full_name || '',
+        password: '',
+        role: editing.role || 'user',
+        plan: editing.plan || 'free',
+        credits_limit: editing.credits_limit || 100
+      });
+    } else {
+      setFormData({
+        email: '',
+        full_name: '',
+        password: '',
+        role: 'user',
+        plan: 'free',
+        credits_limit: 100
+      });
+    }
+  }, [editing]);
+
+  const fetchPlans = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/admin/plans`, {
+        headers: getAuthHeaders(),
+      });
+      setPlans(response.data || []);
+    } catch (error) {
+      console.error('Failed to fetch plans:', error);
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(
-        `${API_URL}/api/admin/users`,
-        formData,
-        { headers: getAuthHeaders() }
-      );
-      toast.success('User created successfully');
+      if (editing) {
+        const updateData = { ...formData };
+        if (!updateData.password) {
+          delete updateData.password;
+        }
+        delete updateData.email;
+        
+        await axios.patch(
+          `${API_URL}/api/admin/users/${editing.id}`,
+          updateData,
+          { headers: getAuthHeaders() }
+        );
+        toast.success('User updated successfully');
+      } else {
+        await axios.post(
+          `${API_URL}/api/admin/users`,
+          formData,
+          { headers: getAuthHeaders() }
+        );
+        toast.success('User created successfully');
+      }
       setShowModal(false);
+      setEditing(null);
       setFormData({
         email: '',
         full_name: '',
@@ -399,7 +454,35 @@ const UsersTab = ({ users, fetchUsers }) => {
       });
       fetchUsers();
     } catch (error) {
-      toast.error(error.response?.data?.detail || 'Failed to create user');
+      toast.error(error.response?.data?.detail || 'Failed to save user');
+    }
+  };
+
+  const handleDelete = async (userId) => {
+    if (!window.confirm('Are you sure you want to delete this user?')) return;
+    try {
+      await axios.delete(`${API_URL}/api/admin/users/${userId}`, {
+        headers: getAuthHeaders()
+      });
+      toast.success('User deleted successfully');
+      fetchUsers();
+    } catch (error) {
+      toast.error(error.response?.data?.detail || 'Failed to delete user');
+    }
+  };
+
+  const toggleUserStatus = async (userId, currentStatus) => {
+    try {
+      const endpoint = currentStatus ? 'deactivate' : 'activate';
+      await axios.patch(
+        `${API_URL}/api/admin/users/${userId}/${endpoint}`,
+        {},
+        { headers: getAuthHeaders() }
+      );
+      toast.success(`User ${currentStatus ? 'deactivated' : 'activated'} successfully`);
+      fetchUsers();
+    } catch (error) {
+      toast.error(error.response?.data?.detail || 'Failed to update user status');
     }
   };
 

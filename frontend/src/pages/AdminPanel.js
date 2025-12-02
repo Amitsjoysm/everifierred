@@ -622,10 +622,10 @@ const UsersTab = ({ users, fetchUsers }) => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Password {editing && '(leave blank to keep current)'}</label>
                 <input
                   type="password"
-                  required
+                  required={!editing}
                   value={formData.password}
                   onChange={(e) => setFormData({...formData, password: e.target.value})}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
@@ -650,10 +650,20 @@ const UsersTab = ({ users, fetchUsers }) => {
                   onChange={(e) => setFormData({...formData, plan: e.target.value})}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
                 >
-                  <option value="free">Free</option>
-                  <option value="starter">Starter</option>
-                  <option value="professional">Professional</option>
-                  <option value="enterprise">Enterprise</option>
+                  {plans && plans.length > 0 ? (
+                    plans.map((plan) => (
+                      <option key={plan.id} value={plan.type}>
+                        {plan.name} ({plan.credits_limit} credits)
+                      </option>
+                    ))
+                  ) : (
+                    <>
+                      <option value="free">Free</option>
+                      <option value="starter">Starter</option>
+                      <option value="professional">Professional</option>
+                      <option value="enterprise">Enterprise</option>
+                    </>
+                  )}
                 </select>
               </div>
               <div>

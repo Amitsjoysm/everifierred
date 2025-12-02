@@ -98,6 +98,36 @@ async def get_user_by_id(
     return UserResponse(**user)
 
 
+@router.patch("/users/{user_id}")
+async def update_user(
+    user_id: str,
+    user_update: dict,
+    current_user: User = Depends(get_current_admin_user)
+):
+    """Update user details (Admin only)"""
+    db = await get_db()
+    from passlib.context import CryptContext
+    
+    # If password is being updated, hash it
+    if 'password' in user_update and user_update['password']:
+        pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+        user_update['hashed_password'] = pwd_context.hash(user_update['password'])
+        del user_update['password']
+    
+    # Update timestamp
+    user_update['updated_at'] = datetime.now(timezone.utc).isoformat()
+    
+    result = await db.users.update_one(
+        {"id": user_id},
+        {"$set": user_update}
+    )
+    
+    if result.modified_count == 0:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    return {"message": "User updated successfully"}
+
+
 @router.patch("/users/{user_id}/activate")
 async def activate_user(
     user_id: str,

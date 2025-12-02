@@ -96,7 +96,7 @@ CORS_ORIGINS="*"
 
 ```bash
 # ✅ Already configured for preview environment
-REACT_APP_BACKEND_URL=https://redis-sync-restart.preview.emergentagent.com
+REACT_APP_BACKEND_URL=https://blogging-crud.preview.emergentagent.com
 
 # For production, update to:
 # REACT_APP_BACKEND_URL=https://api.yourdomain.com
@@ -173,9 +173,9 @@ Status:   Active & Email Verified
 ```
 
 ### Access URLs
-- **Login:** https://redis-sync-restart.preview.emergentagent.com/login
-- **Admin Panel:** https://redis-sync-restart.preview.emergentagent.com/admin
-- **Dashboard:** https://redis-sync-restart.preview.emergentagent.com/dashboard
+- **Login:** https://blogging-crud.preview.emergentagent.com/login
+- **Admin Panel:** https://blogging-crud.preview.emergentagent.com/admin
+- **Dashboard:** https://blogging-crud.preview.emergentagent.com/dashboard
 
 ---
 

@@ -26,8 +26,8 @@ Plan:     Enterprise
 Credits:  25,000
 ```
 
-**Login URL**: https://redis-sync-restart.preview.emergentagent.com/login  
-**Admin Panel**: https://redis-sync-restart.preview.emergentagent.com/admin
+**Login URL**: https://blogging-crud.preview.emergentagent.com/login  
+**Admin Panel**: https://blogging-crud.preview.emergentagent.com/admin
 
 ---
 
@@ -194,7 +194,7 @@ Credits:  25,000
 
 ## 🌐 Deployment Information
 
-**Preview URL**: https://redis-sync-restart.preview.emergentagent.com
+**Preview URL**: https://blogging-crud.preview.emergentagent.com
 
 **Environment**: Production-ready
 

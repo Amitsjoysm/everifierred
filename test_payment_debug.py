@@ -10,7 +10,7 @@ import sys
 import os
 sys.path.append('/app/backend')
 
-BASE_URL = "https://redis-sync-restart.preview.emergentagent.com/api"
+BASE_URL = "https://blogging-crud.preview.emergentagent.com/api"
 ADMIN_EMAIL = "admin@mailguard.com"
 ADMIN_PASSWORD = "Admin@123456"
 

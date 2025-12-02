@@ -16,7 +16,7 @@ import os
 import jwt
 
 # Configuration
-BASE_URL = "https://redis-sync-restart.preview.emergentagent.com/api"
+BASE_URL = "https://blogging-crud.preview.emergentagent.com/api"
 ADMIN_EMAIL = "amits.joys@gmail.com"
 SECRET_KEY = "prod-secret-key-change-this-in-production-2024"
 

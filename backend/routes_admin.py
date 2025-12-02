@@ -431,3 +431,59 @@ async def delete_faq_admin(
         raise HTTPException(status_code=404, detail="FAQ not found")
     
     return {"message": "FAQ deleted successfully"}
+
+
+# ============= SEO Settings =============
+
+@router.get("/seo-settings")
+async def get_seo_settings(current_user: User = Depends(get_current_admin_user)):
+    """Get SEO settings"""
+    db = await get_db()
+    
+    settings = await db.seo_settings.find_one({}, {"_id": 0})
+    if not settings:
+        # Return default settings
+        return {
+            "robots_txt": """User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin/""",
+            "llm_txt": """# MailGuard - Email Verification Service
+
+## About
+MailGuard is a professional email verification service that helps businesses validate email addresses in real-time.
+
+## Features
+- Real-time email verification
+- Bulk email validation
+- API access
+- Comprehensive analytics
+
+## Plans
+- Free: 100 credits
+- Starter: 1,000 credits
+- Professional: 10,000 credits
+- Enterprise: Unlimited credits
+
+## API
+API documentation available at /api/docs"""
+        }
+    
+    return settings
+
+
+@router.post("/seo-settings")
+async def update_seo_settings(
+    settings: dict,
+    current_user: User = Depends(get_current_super_admin)
+):
+    """Update SEO settings (Super Admin only)"""
+    db = await get_db()
+    
+    await db.seo_settings.update_one(
+        {},
+        {"$set": settings},
+        upsert=True
+    )
+    
+    return {"message": "SEO settings updated successfully"}

@@ -257,9 +257,10 @@ const Dashboard = () => {
 
         {/* Main Content */}
         <Tabs defaultValue="single" className="space-y-6">
-          <TabsList className="grid w-full max-w-md grid-cols-2">
+          <TabsList className="grid w-full max-w-3xl grid-cols-3">
             <TabsTrigger value="single" data-testid="single-verify-tab">Single Verification</TabsTrigger>
             <TabsTrigger value="bulk" data-testid="bulk-verify-tab">Bulk Verification</TabsTrigger>
+            <TabsTrigger value="api" data-testid="api-access-tab">API & MCP Access</TabsTrigger>
           </TabsList>
 
           {/* Single Email Verification */}

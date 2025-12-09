@@ -693,10 +693,6 @@ const UsersTab = ({ users, fetchUsers }) => {
                 />
                 <p className="text-xs text-gray-500 mt-1">Auto-filled from selected plan, can be customized</p>
               </div>
-                  onChange={(e) => setFormData({...formData, credits_limit: parseInt(e.target.value)})}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
-                />
-              </div>
               <div className="flex gap-3 pt-4">
                 <button
                   type="button"

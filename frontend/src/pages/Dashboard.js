@@ -14,7 +14,7 @@ import ChatAssistant from '../components/ChatAssistant';
 import UsageAnalytics from '../components/UsageAnalytics';
 
 const Dashboard = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, refreshUser } = useAuth();
   const navigate = useNavigate();
   const [singleEmail, setSingleEmail] = useState('');
   const [verifying, setVerifying] = useState(false);
@@ -51,6 +51,8 @@ const Dashboard = () => {
       setResult(response.data);
       toast.success('Email verified successfully!');
       setSingleEmail('');
+      // Refresh user data to update credits
+      await refreshUser();
     } catch (error) {
       toast.error(error.response?.data?.detail || 'Verification failed');
     } finally {
@@ -73,6 +75,8 @@ const Dashboard = () => {
       toast.success('File uploaded! Verification started.');
       setBulkFile(null);
       fetchJobs();
+      // Refresh user data to update credits
+      await refreshUser();
     } catch (error) {
       toast.error(error.response?.data?.detail || 'Upload failed');
     } finally {

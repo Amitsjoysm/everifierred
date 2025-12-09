@@ -736,7 +736,13 @@ const PlansTab = ({ plans, fetchPlans, showModal, setShowModal, editing, setEdit
     name: '',
     type: 'free',
     price: 0,
+    price_usd: 0,
+    currency: 'INR',
+    billing_cycle: 'monthly',
     credits_limit: 100,
+    is_recurring: false,
+    razorpay_plan_id_inr: '',
+    razorpay_plan_id_usd: '',
     features: [],
     is_active: true
   });
@@ -747,7 +753,13 @@ const PlansTab = ({ plans, fetchPlans, showModal, setShowModal, editing, setEdit
         name: editing.name || '',
         type: editing.type || 'free',
         price: editing.price || 0,
+        price_usd: editing.price_usd || 0,
+        currency: editing.currency || 'INR',
+        billing_cycle: editing.billing_cycle || 'monthly',
         credits_limit: editing.credits_limit || 100,
+        is_recurring: editing.is_recurring || false,
+        razorpay_plan_id_inr: editing.razorpay_plan_id_inr || '',
+        razorpay_plan_id_usd: editing.razorpay_plan_id_usd || '',
         features: editing.features || [],
         is_active: editing.is_active !== undefined ? editing.is_active : true
       });
@@ -756,7 +768,13 @@ const PlansTab = ({ plans, fetchPlans, showModal, setShowModal, editing, setEdit
         name: '',
         type: 'free',
         price: 0,
+        price_usd: 0,
+        currency: 'INR',
+        billing_cycle: 'monthly',
         credits_limit: 100,
+        is_recurring: false,
+        razorpay_plan_id_inr: '',
+        razorpay_plan_id_usd: '',
         features: [],
         is_active: true
       });

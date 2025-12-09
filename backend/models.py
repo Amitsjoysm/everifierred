@@ -38,7 +38,7 @@ class UserBase(BaseModel):
     role: UserRole = UserRole.USER
     is_active: bool = True
     is_verified: bool = False
-    plan: PlanType = PlanType.FREE
+    plan: str = "free"  # Changed from PlanType enum to str
     credits_used: int = 0
     credits_limit: int = 100
     api_calls_count: int = 0

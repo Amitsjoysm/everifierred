@@ -748,6 +748,236 @@ async def retry_failed_payment(
 
 @router.get("/payment-logs")
 async def get_payment_logs(
+
+
+# ============= Invoice Generation =============
+
+@router.post("/generate-invoice/{payment_id}")
+async def generate_invoice(
+    payment_id: str,
+    current_user: User = Depends(get_current_admin_user)
+):
+    """Generate PDF invoice for a successful payment"""
+    db = await get_db()
+    
+    # Fetch payment
+    payment = await db.payments.find_one({"id": payment_id}, {"_id": 0})
+    
+    if not payment:
+        raise HTTPException(status_code=404, detail="Payment not found")
+    
+    if payment.get('status') != 'success':
+        raise HTTPException(status_code=400, detail="Can only generate invoices for successful payments")
+    
+    # Fetch user data
+    user = await db.users.find_one({"id": payment.get('user_id')}, {"_id": 0})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Fetch plan data
+    plan = await db.plans.find_one({"id": payment.get('plan_id')}, {"_id": 0})
+    if not plan:
+        raise HTTPException(status_code=404, detail="Plan not found")
+    
+    # Generate invoice number
+    invoice_number = generate_invoice_number(payment.get('id'), payment.get('created_at'))
+    
+    try:
+        # Generate invoice
+        invoice_gen = InvoiceGenerator()
+        invoice_path = invoice_gen.generate_invoice(
+            payment_data=payment,
+            user_data=user,
+            plan_data=plan,
+            invoice_number=invoice_number
+        )
+        
+        # Store invoice reference in database
+        await db.payments.update_one(
+            {"id": payment_id},
+            {
+                "$set": {
+                    "invoice_number": invoice_number,
+                    "invoice_path": invoice_path,
+                    "invoice_generated_at": datetime.now(timezone.utc).isoformat(),
+                    "invoice_generated_by": current_user.id
+                }
+            }
+        )
+        
+        logger.info(f"Invoice generated: {invoice_number} for payment {payment_id}")
+        
+        return {
+            "message": "Invoice generated successfully",
+            "invoice_number": invoice_number,
+            "invoice_path": invoice_path
+        }
+        
+    except Exception as e:
+        logger.error(f"Invoice generation failed: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Invoice generation failed: {str(e)}")
+
+
+@router.get("/download-invoice/{payment_id}")
+async def download_invoice(
+    payment_id: str,
+    current_user: User = Depends(get_current_admin_user)
+):
+    """Download invoice PDF"""
+    db = await get_db()
+    
+    # Fetch payment with invoice
+    payment = await db.payments.find_one({"id": payment_id}, {"_id": 0})
+    
+    if not payment:
+        raise HTTPException(status_code=404, detail="Payment not found")
+    
+    invoice_path = payment.get('invoice_path')
+    invoice_number = payment.get('invoice_number')
+    
+    if not invoice_path or not Path(invoice_path).exists():
+        # Try to generate invoice if not exists
+        if payment.get('status') == 'success':
+            user = await db.users.find_one({"id": payment.get('user_id')}, {"_id": 0})
+            plan = await db.plans.find_one({"id": payment.get('plan_id')}, {"_id": 0})
+            
+            if user and plan:
+                invoice_number = generate_invoice_number(payment.get('id'), payment.get('created_at'))
+                invoice_gen = InvoiceGenerator()
+                invoice_path = invoice_gen.generate_invoice(
+                    payment_data=payment,
+                    user_data=user,
+                    plan_data=plan,
+                    invoice_number=invoice_number
+                )
+                
+                # Update database
+                await db.payments.update_one(
+                    {"id": payment_id},
+                    {
+                        "$set": {
+                            "invoice_number": invoice_number,
+                            "invoice_path": invoice_path,
+                            "invoice_generated_at": datetime.now(timezone.utc).isoformat(),
+                            "invoice_generated_by": current_user.id
+                        }
+                    }
+                )
+        else:
+            raise HTTPException(status_code=404, detail="Invoice not found and cannot be generated")
+    
+    # Return PDF file
+    return FileResponse(
+        path=invoice_path,
+        media_type='application/pdf',
+        filename=f"invoice_{invoice_number}.pdf"
+    )
+
+
+@router.get("/invoices")
+async def get_all_invoices(
+    limit: int = Query(default=50, ge=1, le=500),
+    current_user: User = Depends(get_current_admin_user)
+):
+    """Get all generated invoices"""
+    db = await get_db()
+    
+    # Fetch payments with invoices
+    payments_with_invoices = await db.payments.find(
+        {
+            "invoice_number": {"$exists": True},
+            "status": "success"
+        },
+        {"_id": 0}
+    ).sort("invoice_generated_at", -1).limit(limit).to_list(limit)
+    
+    # Enrich with user info
+    for payment in payments_with_invoices:
+        user = await db.users.find_one(
+            {"id": payment.get('user_id')},
+            {"_id": 0, "email": 1, "full_name": 1}
+        )
+        if user:
+            payment['user_email'] = user.get('email')
+            payment['user_name'] = user.get('full_name')
+    
+    return {
+        "invoices": payments_with_invoices,
+        "count": len(payments_with_invoices)
+    }
+
+
+@router.post("/bulk-generate-invoices")
+async def bulk_generate_invoices(
+    days: int = Query(default=30, ge=1, le=365),
+    current_user: User = Depends(get_current_admin_user)
+):
+    """Generate invoices for all successful payments in period that don't have invoices"""
+    db = await get_db()
+    
+    # Calculate date range
+    start_date = (datetime.now(timezone.utc) - timedelta(days=days)).isoformat()
+    
+    # Find successful payments without invoices
+    payments = await db.payments.find(
+        {
+            "status": "success",
+            "created_at": {"$gte": start_date},
+            "invoice_number": {"$exists": False}
+        },
+        {"_id": 0}
+    ).to_list(1000)
+    
+    generated_count = 0
+    failed_count = 0
+    
+    invoice_gen = InvoiceGenerator()
+    
+    for payment in payments:
+        try:
+            # Fetch user and plan
+            user = await db.users.find_one({"id": payment.get('user_id')}, {"_id": 0})
+            plan = await db.plans.find_one({"id": payment.get('plan_id')}, {"_id": 0})
+            
+            if not user or not plan:
+                failed_count += 1
+                continue
+            
+            # Generate invoice
+            invoice_number = generate_invoice_number(payment.get('id'), payment.get('created_at'))
+            invoice_path = invoice_gen.generate_invoice(
+                payment_data=payment,
+                user_data=user,
+                plan_data=plan,
+                invoice_number=invoice_number
+            )
+            
+            # Update database
+            await db.payments.update_one(
+                {"id": payment.get('id')},
+                {
+                    "$set": {
+                        "invoice_number": invoice_number,
+                        "invoice_path": invoice_path,
+                        "invoice_generated_at": datetime.now(timezone.utc).isoformat(),
+                        "invoice_generated_by": current_user.id
+                    }
+                }
+            )
+            
+            generated_count += 1
+            
+        except Exception as e:
+            logger.error(f"Failed to generate invoice for payment {payment.get('id')}: {str(e)}")
+            failed_count += 1
+    
+    return {
+        "message": f"Bulk invoice generation completed",
+        "total_payments": len(payments),
+        "generated": generated_count,
+        "failed": failed_count
+    }
+
     days: int = Query(default=7, ge=1, le=90),
     limit: int = Query(default=100, ge=1, le=1000),
     current_user: User = Depends(get_current_admin_user)

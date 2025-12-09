@@ -198,10 +198,10 @@ class InvoiceGenerator:
             # Terms and conditions
             elements.append(Paragraph("TERMS & CONDITIONS:", self.heading_style))
             terms = """
-            <bullet>&bull;</bullet> This is a computer-generated invoice and does not require a signature.<br/>
-            <bullet>&bull;</bullet> All credits are valid for one billing cycle (monthly/annual as per plan).<br/>
-            <bullet>&bull;</bullet> No refunds will be provided after credit usage exceeds 20% of the plan limit.<br/>
-            <bullet>&bull;</bullet> For any queries, please contact support@mailguard.com<br/>
+            • This is a computer-generated invoice and does not require a signature.<br/>
+            • All credits are valid for one billing cycle (monthly/annual as per plan).<br/>
+            • No refunds will be provided after credit usage exceeds 20% of the plan limit.<br/>
+            • For any queries, please contact support@mailguard.com
             """
             elements.append(Paragraph(terms, self.normal_style))
             elements.append(Spacer(1, 20))

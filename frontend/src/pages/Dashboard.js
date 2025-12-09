@@ -50,8 +50,8 @@ const Dashboard = () => {
 
   const fetchApiKeys = async () => {
     try {
-      const response = await api.get('/apikeys');
-      setApiKeys(response.data.api_keys || []);
+      const response = await api.get('/api-keys');
+      setApiKeys(response.data || []);
     } catch (error) {
       console.error('Error fetching API keys:', error);
     } finally {
@@ -62,7 +62,7 @@ const Dashboard = () => {
   const handleCreateApiKey = async () => {
     setCreatingKey(true);
     try {
-      const response = await api.post('/apikeys/generate', {
+      const response = await api.post('/api-keys', {
         name: `API Key ${new Date().toLocaleString()}`
       });
       toast.success('API Key created successfully!');
@@ -83,7 +83,7 @@ const Dashboard = () => {
     if (!window.confirm('Are you sure you want to delete this API key?')) return;
     
     try {
-      await api.delete(`/apikeys/${keyId}`);
+      await api.delete(`/api-keys/${keyId}`);
       toast.success('API Key deleted successfully!');
       fetchApiKeys();
     } catch (error) {

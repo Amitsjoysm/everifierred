@@ -712,12 +712,27 @@ async def get_blog_post_html(slug: str):
     </script>
     """
     
+    # Add breadcrumb navigation
+    breadcrumb_schema = generate_breadcrumb_schema([
+        {"name": "Home", "url": "https://razorpay-integration.preview.emergentagent.com"},
+        {"name": "Blog", "url": "https://razorpay-integration.preview.emergentagent.com/html/blogs"},
+        {"name": blog.get('title', ''), "url": f"https://razorpay-integration.preview.emergentagent.com/html/blog/{slug}"}
+    ])
+    
+    # Combine structured data
+    all_structured_data = f"""
+    {structured_data}
+    <script type="application/ld+json">
+    {breadcrumb_schema}
+    </script>
+    """
+    
     return generate_html_template(
         title=f"{blog.get('title', '')} | MailGuard Blog",
         description=blog.get('excerpt', ''),
         content=content,
         canonical_url=f"https://razorpay-integration.preview.emergentagent.com/html/blog/{slug}",
-        structured_data=structured_data
+        structured_data=all_structured_data
     )
 
 

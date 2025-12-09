@@ -413,6 +413,124 @@ const Dashboard = () => {
               </CardContent>
             </Card>
           </TabsContent>
+
+          {/* API & MCP Access Tab */}
+          <TabsContent value="api">
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle>API & MCP Access</CardTitle>
+                  <Button onClick={handleCreateApiKey} disabled={creatingKey}>
+                    <Plus className="h-4 w-4 mr-2" />
+                    {creatingKey ? 'Creating...' : 'Create API Key'}
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-6">
+                  {/* API Keys List */}
+                  <div>
+                    <h3 className="font-semibold text-lg mb-4">Your API Keys</h3>
+                    {loadingKeys ? (
+                      <p className="text-gray-500">Loading API keys...</p>
+                    ) : apiKeys.length === 0 ? (
+                      <div className="text-center py-8 bg-gray-50 rounded-lg">
+                        <Key className="h-12 w-12 text-gray-400 mx-auto mb-3" />
+                        <p className="text-gray-600 mb-2">No API keys yet</p>
+                        <p className="text-sm text-gray-500">Create an API key to access the API and MCP endpoints</p>
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
+                        {apiKeys.map((apiKey) => (
+                          <div key={apiKey.id} className="p-4 bg-white border border-gray-200 rounded-lg">
+                            <div className="flex items-center justify-between">
+                              <div className="flex-1 mr-4">
+                                <p className="font-medium mb-1">{apiKey.name || 'Unnamed Key'}</p>
+                                <div className="flex items-center space-x-2">
+                                  <code className="text-sm bg-gray-100 px-3 py-1 rounded font-mono">
+                                    {apiKey.key.substring(0, 20)}...{apiKey.key.substring(apiKey.key.length - 4)}
+                                  </code>
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    onClick={() => handleCopyApiKey(apiKey.key)}
+                                  >
+                                    <Copy className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                                <div className="flex items-center space-x-4 mt-2 text-xs text-gray-600">
+                                  <span>Calls: {apiKey.calls_count || 0}</span>
+                                  <span>Created: {new Date(apiKey.created_at).toLocaleDateString()}</span>
+                                  {apiKey.last_used && (
+                                    <span>Last used: {new Date(apiKey.last_used).toLocaleDateString()}</span>
+                                  )}
+                                </div>
+                              </div>
+                              <Button
+                                size="sm"
+                                variant="destructive"
+                                onClick={() => handleDeleteApiKey(apiKey.id)}
+                              >
+                                Delete
+                              </Button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* API Documentation */}
+                  <div className="mt-8 p-6 bg-blue-50 rounded-lg">
+                    <h3 className="font-semibold text-lg mb-4">API Endpoints</h3>
+                    <div className="space-y-4 text-sm">
+                      <div>
+                        <p className="font-semibold text-gray-900 mb-1">Single Email Verification</p>
+                        <code className="block bg-white p-3 rounded text-xs overflow-x-auto">
+                          POST {process.env.REACT_APP_BACKEND_URL}/api/external/verify<br/>
+                          Headers: X-API-Key: YOUR_API_KEY<br/>
+                          Body: &#123;"email": "test@example.com"&#125;
+                        </code>
+                      </div>
+
+                      <div>
+                        <p className="font-semibold text-gray-900 mb-1">MCP Endpoint (for LLMs)</p>
+                        <code className="block bg-white p-3 rounded text-xs overflow-x-auto">
+                          POST {process.env.REACT_APP_BACKEND_URL}/api/mcp/verify<br/>
+                          Headers: X-API-Key: YOUR_API_KEY<br/>
+                          Body: &#123;"email": "test@example.com"&#125;
+                        </code>
+                      </div>
+
+                      <div>
+                        <p className="font-semibold text-gray-900 mb-1">MCP Bulk Verification</p>
+                        <code className="block bg-white p-3 rounded text-xs overflow-x-auto">
+                          POST {process.env.REACT_APP_BACKEND_URL}/api/mcp/verify-bulk<br/>
+                          Headers: X-API-Key: YOUR_API_KEY<br/>
+                          Body: &#123;"emails": ["test1@example.com", "test2@example.com"]&#125;
+                        </code>
+                      </div>
+
+                      <div>
+                        <p className="font-semibold text-gray-900 mb-1">MCP Capabilities</p>
+                        <code className="block bg-white p-3 rounded text-xs overflow-x-auto">
+                          GET {process.env.REACT_APP_BACKEND_URL}/api/mcp/capabilities
+                        </code>
+                      </div>
+
+                      <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded">
+                        <p className="text-sm text-yellow-900">
+                          <strong>Note:</strong> Keep your API keys secure and never share them publicly. 
+                          Each verification consumes 1 credit from your plan limit.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
         </Tabs>
       </div>
 

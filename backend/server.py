@@ -20,6 +20,7 @@ from routes_external import router as external_router
 from routes_admin import router as admin_router
 from routes_content import router as content_router
 from routes_payments import router as payments_router
+from routes_payment_admin import router as payment_admin_router
 from routes_mcp import router as mcp_router
 from routes_assistant import router as assistant_router
 from routes_html import router as html_router
@@ -85,6 +86,7 @@ api_router.include_router(external_router)
 api_router.include_router(admin_router)
 api_router.include_router(content_router)
 api_router.include_router(payments_router)
+api_router.include_router(payment_admin_router)
 api_router.include_router(mcp_router)
 api_router.include_router(assistant_router)
 

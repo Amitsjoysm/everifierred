@@ -20,7 +20,7 @@ async def create_user(
     full_name: str,
     password: str,
     role: UserRole = UserRole.USER,
-    plan: PlanType = PlanType.FREE,
+    plan: str = "free",  # Changed from PlanType to str
     credits_limit: int = 100,
     current_user: User = Depends(get_current_super_admin)
 ):
@@ -33,6 +33,12 @@ async def create_user(
     existing_user = await db.users.find_one({"email": email})
     if existing_user:
         raise HTTPException(status_code=400, detail="User with this email already exists")
+    
+    # If plan is provided, lookup the plan and get credits from it
+    if plan and plan != "free":
+        plan_doc = await db.plans.find_one({"type": plan, "is_active": True}, {"_id": 0})
+        if plan_doc:
+            credits_limit = plan_doc.get('credits_limit', credits_limit)
     
     # Create new user
     new_user = User(

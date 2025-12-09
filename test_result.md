@@ -641,7 +641,7 @@ agent_communication:
       - Workers: ✓ CONNECTED TO BROKER
       
       🌐 PREVIEW URL:
-      https://blogging-crud.preview.emergentagent.com
+      https://razorpay-integration.preview.emergentagent.com
       
       All systems operational and ready for use!
 
@@ -727,13 +727,13 @@ agent_communication:
       - Authentication: ✓ OTP Flow Working
       
       🌐 PREVIEW URL:
-      https://blogging-crud.preview.emergentagent.com
+      https://razorpay-integration.preview.emergentagent.com
       
       📧 LOGIN PAGE:
-      https://blogging-crud.preview.emergentagent.com/login
+      https://razorpay-integration.preview.emergentagent.com/login
       
       🛡️ ADMIN PANEL:
-      https://blogging-crud.preview.emergentagent.com/admin
+      https://razorpay-integration.preview.emergentagent.com/admin
       
       All systems operational and ready for use!
 

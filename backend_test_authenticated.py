@@ -11,7 +11,7 @@ import asyncio
 from datetime import datetime
 
 # Configuration
-BASE_URL = "https://blogging-crud.preview.emergentagent.com/api"
+BASE_URL = "https://razorpay-integration.preview.emergentagent.com/api"
 ADMIN_EMAIL = "admin@mailguard.com"
 ADMIN_PASSWORD = "Admin@123456"
 

@@ -194,8 +194,14 @@ class Plan(BaseModel):
     type: str  # Changed from PlanType enum to str for flexibility
     credits_limit: int
     price: float
-    razorpay_plan_id: Optional[str] = None
-    features: List[str]
+    price_usd: Optional[float] = None  # USD price for international customers
+    currency: str = "INR"  # Default currency
+    billing_cycle: str = "monthly"  # monthly, yearly
+    razorpay_plan_id: Optional[str] = None  # For one-time payments
+    razorpay_plan_id_inr: Optional[str] = None  # Razorpay subscription plan for INR
+    razorpay_plan_id_usd: Optional[str] = None  # Razorpay subscription plan for USD
+    is_recurring: bool = False  # True for subscription plans
+    features: List[str] = []
     is_active: bool = True
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 

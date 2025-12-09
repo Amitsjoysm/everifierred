@@ -418,6 +418,22 @@ const UsersTab = ({ users, fetchUsers }) => {
     }
   };
 
+  const handlePlanChange = (planType) => {
+    const selectedPlan = plans.find(p => p.type === planType);
+    if (selectedPlan) {
+      setFormData({
+        ...formData,
+        plan: planType,
+        credits_limit: selectedPlan.credits_limit
+      });
+    } else {
+      setFormData({
+        ...formData,
+        plan: planType
+      });
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {

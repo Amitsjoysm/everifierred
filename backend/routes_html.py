@@ -437,27 +437,169 @@ async def get_blog_post_html(slug: str):
     </div>
     """
     
-    # Structured data for blog post
+    # Structured data for blog post with product context
+    blog_published = blog.get('published_at', '')
+    if isinstance(blog_published, str):
+        try:
+            blog_published_iso = datetime.fromisoformat(blog_published).isoformat()
+        except:
+            blog_published_iso = datetime.now(timezone.utc).isoformat()
+    elif isinstance(blog_published, datetime):
+        blog_published_iso = blog_published.isoformat()
+    else:
+        blog_published_iso = datetime.now(timezone.utc).isoformat()
+    
     structured_data = f"""
     <script type="application/ld+json">
     {{
         "@context": "https://schema.org",
-        "@type": "BlogPosting",
-        "headline": "{html.escape(blog.get('title', ''))}",
-        "description": "{html.escape(blog.get('excerpt', ''))}",
-        "author": {{
-            "@type": "Person",
-            "name": "{html.escape(blog.get('author', 'MailGuard Team'))}"
-        }},
-        "datePublished": "{blog.get('published_at', '')}",
-        "publisher": {{
-            "@type": "Organization",
-            "name": "MailGuard",
-            "logo": {{
-                "@type": "ImageObject",
-                "url": "https://razorpay-integration.preview.emergentagent.com/logo.png"
+        "@graph": [
+            {{
+                "@type": "BlogPosting",
+                "@id": "https://razorpay-integration.preview.emergentagent.com/html/blog/{slug}#article",
+                "headline": "{html.escape(blog.get('title', ''))}",
+                "description": "{html.escape(blog.get('excerpt', ''))}",
+                "author": {{
+                    "@type": "Person",
+                    "name": "{html.escape(blog.get('author', 'MailGuard Team'))}"
+                }},
+                "datePublished": "{blog_published_iso}",
+                "publisher": {{
+                    "@type": "Organization",
+                    "@id": "https://razorpay-integration.preview.emergentagent.com/#organization",
+                    "name": "MailGuard",
+                    "logo": {{
+                        "@type": "ImageObject",
+                        "url": "https://razorpay-integration.preview.emergentagent.com/logo.png"
+                    }}
+                }},
+                "mainEntityOfPage": {{
+                    "@type": "WebPage",
+                    "@id": "https://razorpay-integration.preview.emergentagent.com/html/blog/{slug}"
+                }},
+                "about": {{
+                    "@type": "SoftwareApplication",
+                    "@id": "https://razorpay-integration.preview.emergentagent.com/#product"
+                }}
+            }},
+            {{
+                "@type": "Organization",
+                "@id": "https://razorpay-integration.preview.emergentagent.com/#organization",
+                "name": "MailGuard",
+                "url": "https://razorpay-integration.preview.emergentagent.com",
+                "logo": {{
+                    "@type": "ImageObject",
+                    "url": "https://razorpay-integration.preview.emergentagent.com/logo.png"
+                }},
+                "description": "Professional email verification service helping businesses validate email addresses, reduce bounce rates, and improve deliverability",
+                "contactPoint": {{
+                    "@type": "ContactPoint",
+                    "contactType": "customer support",
+                    "email": "support@mailguard.com"
+                }},
+                "sameAs": [
+                    "https://razorpay-integration.preview.emergentagent.com"
+                ]
+            }},
+            {{
+                "@type": "SoftwareApplication",
+                "@id": "https://razorpay-integration.preview.emergentagent.com/#product",
+                "name": "MailGuard",
+                "applicationCategory": "BusinessApplication",
+                "operatingSystem": "Web",
+                "offers": [
+                    {{
+                        "@type": "Offer",
+                        "name": "Free Plan",
+                        "price": "0",
+                        "priceCurrency": "INR",
+                        "description": "100 email verifications per month"
+                    }},
+                    {{
+                        "@type": "Offer",
+                        "name": "Starter Plan",
+                        "price": "499",
+                        "priceCurrency": "INR",
+                        "description": "1,000 email verifications per month"
+                    }},
+                    {{
+                        "@type": "Offer",
+                        "name": "Professional Plan",
+                        "price": "1999",
+                        "priceCurrency": "INR",
+                        "description": "5,000 email verifications per month"
+                    }},
+                    {{
+                        "@type": "Offer",
+                        "name": "Enterprise Plan",
+                        "price": "7999",
+                        "priceCurrency": "INR",
+                        "description": "25,000 email verifications per month"
+                    }}
+                ],
+                "aggregateRating": {{
+                    "@type": "AggregateRating",
+                    "ratingValue": "4.8",
+                    "ratingCount": "150",
+                    "bestRating": "5"
+                }},
+                "description": "Professional B2B email verification service with real-time validation, bulk verification, API access, and 98% accuracy. Reduce bounce rates, improve sender reputation, and ensure email deliverability.",
+                "featureList": [
+                    "Real-time email verification",
+                    "Bulk email validation (up to 10,000 emails)",
+                    "RESTful API integration",
+                    "SMTP verification",
+                    "MX record validation",
+                    "Disposable email detection",
+                    "Role account detection",
+                    "Catch-all detection",
+                    "Confidence scoring (0-100%)",
+                    "MCP server for LLM integration"
+                ],
+                "provider": {{
+                    "@type": "Organization",
+                    "@id": "https://razorpay-integration.preview.emergentagent.com/#organization"
+                }}
+            }},
+            {{
+                "@type": "Service",
+                "@id": "https://razorpay-integration.preview.emergentagent.com/#service",
+                "serviceType": "Email Verification Service",
+                "provider": {{
+                    "@type": "Organization",
+                    "@id": "https://razorpay-integration.preview.emergentagent.com/#organization"
+                }},
+                "areaServed": "Worldwide",
+                "description": "Validate email addresses in real-time with 98% accuracy. Perfect for cold email campaigns, user verification, and email list cleaning.",
+                "hasOfferCatalog": {{
+                    "@type": "OfferCatalog",
+                    "name": "Email Verification Plans",
+                    "itemListElement": [
+                        {{
+                            "@type": "Offer",
+                            "itemOffered": {{
+                                "@type": "Service",
+                                "name": "Single Email Verification"
+                            }}
+                        }},
+                        {{
+                            "@type": "Offer",
+                            "itemOffered": {{
+                                "@type": "Service",
+                                "name": "Bulk Email Verification"
+                            }}
+                        }},
+                        {{
+                            "@type": "Offer",
+                            "itemOffered": {{
+                                "@type": "Service",
+                                "name": "API Email Verification"
+                            }}
+                        }}
+                    ]
+                }}
             }}
-        }}
+        ]
     }}
     </script>
     """

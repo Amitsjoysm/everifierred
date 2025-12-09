@@ -298,11 +298,22 @@ async def get_blogs_html():
     """Serve static HTML page with all blog posts"""
     db = await get_db()
     
+    # Fetch SEO settings
+    seo_settings = await db.seo_settings.find_one({}, {"_id": 0}) or {}
+    
     # Fetch all published blogs
     blogs = await db.blogs.find(
         {"is_published": True},
         {"_id": 0}
     ).sort("published_at", -1).to_list(100)
+    
+    # Use custom SEO settings or defaults
+    page_title = seo_settings.get('blog_page_title', 
+        'Email Verification Blog - Expert Insights & Best Practices | MailGuard')
+    page_description = seo_settings.get('blog_page_description',
+        'Expert insights, guides, and best practices for email verification, deliverability, bounce reduction, and sender reputation management.')
+    page_keywords = seo_settings.get('blog_page_keywords',
+        'email verification blog, email validation guide, deliverability tips, sender reputation, bounce rate reduction')
     
     if not blogs:
         content = """
@@ -368,8 +379,8 @@ async def get_blogs_html():
     """
     
     return generate_html_template(
-        title="Email Verification Blog - Expert Insights & Best Practices | MailGuard",
-        description="Expert insights, guides, and best practices for email verification, deliverability, bounce reduction, and sender reputation management.",
+        title=page_title,
+        description=page_description,
         content=content,
         canonical_url="https://razorpay-integration.preview.emergentagent.com/html/blogs",
         structured_data=structured_data
@@ -465,11 +476,22 @@ async def get_faqs_html():
     """Serve static HTML page with all FAQs"""
     db = await get_db()
     
+    # Fetch SEO settings
+    seo_settings = await db.seo_settings.find_one({}, {"_id": 0}) or {}
+    
     # Fetch all published FAQs
     faqs = await db.faqs.find(
         {"is_published": True},
         {"_id": 0}
     ).sort("order", 1).to_list(1000)
+    
+    # Use custom SEO settings or defaults
+    page_title = seo_settings.get('faq_page_title',
+        'FAQs - Email Verification Questions Answered | MailGuard')
+    page_description = seo_settings.get('faq_page_description',
+        'Frequently asked questions about MailGuard email verification service. Find answers about pricing, features, API integration, bulk verification, and more.')
+    page_keywords = seo_settings.get('faq_page_keywords',
+        'email verification FAQ, MailGuard help, email validation questions, API documentation, pricing information')
     
     if not faqs:
         content = """
@@ -540,8 +562,8 @@ async def get_faqs_html():
     """
     
     return generate_html_template(
-        title="FAQs - Email Verification Questions Answered | MailGuard",
-        description="Frequently asked questions about MailGuard email verification service. Find answers about pricing, features, API integration, bulk verification, and more.",
+        title=page_title,
+        description=page_description,
         content=content,
         canonical_url="https://razorpay-integration.preview.emergentagent.com/html/faqs",
         structured_data=structured_data

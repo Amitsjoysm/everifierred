@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Mail, Upload, Download, Clock, CheckCircle, XCircle, BarChart } from 'lucide-react';
+import { Mail, Upload, Download, Clock, CheckCircle, XCircle, BarChart, Key, Copy, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -23,10 +23,17 @@ const Dashboard = () => {
   const [uploading, setUploading] = useState(false);
   const [jobs, setJobs] = useState([]);
   const [loadingJobs, setLoadingJobs] = useState(true);
+  const [apiKeys, setApiKeys] = useState([]);
+  const [loadingKeys, setLoadingKeys] = useState(true);
+  const [creatingKey, setCreatingKey] = useState(false);
 
   useEffect(() => {
     fetchJobs();
-    const interval = setInterval(fetchJobs, 5000);
+    fetchApiKeys();
+    const interval = setInterval(() => {
+      fetchJobs();
+      fetchApiKeys();
+    }, 5000);
     return () => clearInterval(interval);
   }, []);
 

@@ -1,0 +1,15 @@
+.git
+.gitignore
+*.md
+README.md
+.env.local
+.env.development
+.DS_Store
+*.log
+test_result.md
+*.py
+node_modules
+build
+dist
+__pycache__
+*.pyc

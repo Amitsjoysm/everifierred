@@ -663,7 +663,7 @@ const UsersTab = ({ users, fetchUsers }) => {
                 <label className="block text-sm font-medium text-gray-700 mb-1">Plan</label>
                 <select
                   value={formData.plan}
-                  onChange={(e) => setFormData({...formData, plan: e.target.value})}
+                  onChange={(e) => handlePlanChange(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
                 >
                   {plans && plans.length > 0 ? (
@@ -688,6 +688,11 @@ const UsersTab = ({ users, fetchUsers }) => {
                   type="number"
                   required
                   value={formData.credits_limit}
+                  onChange={(e) => setFormData({...formData, credits_limit: parseInt(e.target.value)})}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                />
+                <p className="text-xs text-gray-500 mt-1">Auto-filled from selected plan, can be customized</p>
+              </div>
                   onChange={(e) => setFormData({...formData, credits_limit: parseInt(e.target.value)})}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
                 />

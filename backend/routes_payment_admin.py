@@ -3,16 +3,19 @@ Admin Payment Management Routes
 Production-ready Razorpay administration and monitoring
 """
 from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi.responses import FileResponse
 from datetime import datetime, timezone, timedelta
 from typing import List, Optional, Dict, Any
 import razorpay
 import logging
 from pydantic import BaseModel
+from pathlib import Path
 
 from database import get_db
 from models import User, Payment
 from auth import get_current_admin_user
 from config import settings
+from invoice_generator import InvoiceGenerator, generate_invoice_number
 
 logger = logging.getLogger(__name__)
 

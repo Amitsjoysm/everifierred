@@ -48,6 +48,49 @@ const Dashboard = () => {
     }
   };
 
+  const fetchApiKeys = async () => {
+    try {
+      const response = await api.get('/apikeys');
+      setApiKeys(response.data.api_keys || []);
+    } catch (error) {
+      console.error('Error fetching API keys:', error);
+    } finally {
+      setLoadingKeys(false);
+    }
+  };
+
+  const handleCreateApiKey = async () => {
+    setCreatingKey(true);
+    try {
+      const response = await api.post('/apikeys/generate', {
+        name: `API Key ${new Date().toLocaleString()}`
+      });
+      toast.success('API Key created successfully!');
+      fetchApiKeys();
+    } catch (error) {
+      toast.error(error.response?.data?.detail || 'Failed to create API key');
+    } finally {
+      setCreatingKey(false);
+    }
+  };
+
+  const handleCopyApiKey = (key) => {
+    navigator.clipboard.writeText(key);
+    toast.success('API Key copied to clipboard!');
+  };
+
+  const handleDeleteApiKey = async (keyId) => {
+    if (!window.confirm('Are you sure you want to delete this API key?')) return;
+    
+    try {
+      await api.delete(`/apikeys/${keyId}`);
+      toast.success('API Key deleted successfully!');
+      fetchApiKeys();
+    } catch (error) {
+      toast.error(error.response?.data?.detail || 'Failed to delete API key');
+    }
+  };
+
   const handleSingleVerify = async (e) => {
     e.preventDefault();
     setVerifying(true);

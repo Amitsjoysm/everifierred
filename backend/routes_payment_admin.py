@@ -748,6 +748,25 @@ async def retry_failed_payment(
 
 @router.get("/payment-logs")
 async def get_payment_logs(
+    days: int = Query(default=7, ge=1, le=90),
+    limit: int = Query(default=100, ge=1, le=1000),
+    current_user: User = Depends(get_current_admin_user)
+):
+    """Get payment attempt logs"""
+    db = await get_db()
+    
+    start_date = (datetime.now(timezone.utc) - timedelta(days=days)).isoformat()
+    
+    logs = await db.payment_logs.find(
+        {"timestamp": {"$gte": start_date}},
+        {"_id": 0}
+    ).sort("timestamp", -1).limit(limit).to_list(limit)
+    
+    return {
+        "logs": logs,
+        "count": len(logs),
+        "period_days": days
+    }
 
 
 # ============= Invoice Generation =============

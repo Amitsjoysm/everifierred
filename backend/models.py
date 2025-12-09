@@ -50,6 +50,15 @@ class UserCreate(BaseModel):
     full_name: str
 
 
+class AdminUserCreate(BaseModel):
+    email: EmailStr
+    full_name: str
+    password: str
+    role: UserRole = UserRole.USER
+    plan: str = "free"
+    credits_limit: int = 100
+
+
 class UserLogin(BaseModel):
     email: EmailStr
     password: str

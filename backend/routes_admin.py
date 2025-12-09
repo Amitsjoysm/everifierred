@@ -5,7 +5,7 @@ from typing import List, Optional
 from database import get_db
 from models import (
     User, UserResponse, UserRole, Plan, PlanType, Blog, BlogCreate,
-    FAQ, FAQCreate, AnalyticsData, Payment
+    FAQ, FAQCreate, AnalyticsData, Payment, AdminUserCreate
 )
 from auth import get_current_admin_user, get_current_super_admin
 
@@ -16,12 +16,7 @@ router = APIRouter(prefix="/admin", tags=["Admin"])
 
 @router.post("/users", response_model=UserResponse)
 async def create_user(
-    email: str,
-    full_name: str,
-    password: str,
-    role: UserRole = UserRole.USER,
-    plan: str = "free",  # Changed from PlanType to str
-    credits_limit: int = 100,
+    user_data: AdminUserCreate,
     current_user: User = Depends(get_current_super_admin)
 ):
     """Create new user (Super Admin only)"""
@@ -30,23 +25,24 @@ async def create_user(
     pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
     
     # Check if user already exists
-    existing_user = await db.users.find_one({"email": email})
+    existing_user = await db.users.find_one({"email": user_data.email})
     if existing_user:
         raise HTTPException(status_code=400, detail="User with this email already exists")
     
     # If plan is provided, lookup the plan and get credits from it
-    if plan and plan != "free":
-        plan_doc = await db.plans.find_one({"type": plan, "is_active": True}, {"_id": 0})
+    credits_limit = user_data.credits_limit
+    if user_data.plan and user_data.plan != "free":
+        plan_doc = await db.plans.find_one({"type": user_data.plan, "is_active": True}, {"_id": 0})
         if plan_doc:
             credits_limit = plan_doc.get('credits_limit', credits_limit)
     
     # Create new user
     new_user = User(
-        email=email,
-        full_name=full_name,
-        hashed_password=pwd_context.hash(password),
-        role=role,
-        plan=plan,
+        email=user_data.email,
+        full_name=user_data.full_name,
+        hashed_password=pwd_context.hash(user_data.password),
+        role=user_data.role,
+        plan=user_data.plan,
         credits_limit=credits_limit,
         is_verified=True,  # Admin-created users are pre-verified
         is_active=True

@@ -1392,7 +1392,13 @@ const FAQsTab = ({ faqs, fetchFaqs, showModal, setShowModal, editing, setEditing
 const SEOTab = () => {
   const [seoSettings, setSeoSettings] = useState({
     robots_txt: '',
-    llm_txt: ''
+    llm_txt: '',
+    blog_page_title: '',
+    blog_page_description: '',
+    blog_page_keywords: '',
+    faq_page_title: '',
+    faq_page_description: '',
+    faq_page_keywords: ''
   });
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
@@ -1521,6 +1527,105 @@ const SEOTab = () => {
               {seoSettings.llm_txt || 'No llm.txt content configured'}
             </pre>
           )}
+        </div>
+
+        {/* HTML Pages Meta Tags */}
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Blog Page Meta Tags (Static HTML)</h3>
+          <p className="text-gray-600 mb-4">Customize meta tags for /html/blogs page:</p>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Page Title</label>
+              {editing ? (
+                <input
+                  type="text"
+                  value={seoSettings.blog_page_title || ''}
+                  onChange={(e) => setSeoSettings({...seoSettings, blog_page_title: e.target.value})}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                  placeholder="Email Verification Blog - Expert Insights | MailGuard"
+                />
+              ) : (
+                <p className="text-gray-900">{seoSettings.blog_page_title || 'Not set'}</p>
+              )}
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Meta Description</label>
+              {editing ? (
+                <textarea
+                  value={seoSettings.blog_page_description || ''}
+                  onChange={(e) => setSeoSettings({...seoSettings, blog_page_description: e.target.value})}
+                  rows="3"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                  placeholder="Expert insights and best practices for email verification..."
+                />
+              ) : (
+                <p className="text-gray-900">{seoSettings.blog_page_description || 'Not set'}</p>
+              )}
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Keywords (comma-separated)</label>
+              {editing ? (
+                <input
+                  type="text"
+                  value={seoSettings.blog_page_keywords || ''}
+                  onChange={(e) => setSeoSettings({...seoSettings, blog_page_keywords: e.target.value})}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                  placeholder="email verification, deliverability, bounce reduction"
+                />
+              ) : (
+                <p className="text-gray-900">{seoSettings.blog_page_keywords || 'Not set'}</p>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">FAQ Page Meta Tags (Static HTML)</h3>
+          <p className="text-gray-600 mb-4">Customize meta tags for /html/faqs page:</p>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Page Title</label>
+              {editing ? (
+                <input
+                  type="text"
+                  value={seoSettings.faq_page_title || ''}
+                  onChange={(e) => setSeoSettings({...seoSettings, faq_page_title: e.target.value})}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                  placeholder="FAQs - Email Verification Questions | MailGuard"
+                />
+              ) : (
+                <p className="text-gray-900">{seoSettings.faq_page_title || 'Not set'}</p>
+              )}
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Meta Description</label>
+              {editing ? (
+                <textarea
+                  value={seoSettings.faq_page_description || ''}
+                  onChange={(e) => setSeoSettings({...seoSettings, faq_page_description: e.target.value})}
+                  rows="3"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                  placeholder="Find answers about pricing, features, API integration..."
+                />
+              ) : (
+                <p className="text-gray-900">{seoSettings.faq_page_description || 'Not set'}</p>
+              )}
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Keywords (comma-separated)</label>
+              {editing ? (
+                <input
+                  type="text"
+                  value={seoSettings.faq_page_keywords || ''}
+                  onChange={(e) => setSeoSettings({...seoSettings, faq_page_keywords: e.target.value})}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                  placeholder="email verification FAQ, MailGuard help, API documentation"
+                />
+              ) : (
+                <p className="text-gray-900">{seoSettings.faq_page_keywords || 'Not set'}</p>
+              )}
+            </div>
+          </div>
         </div>
 
         {editing && (

@@ -182,7 +182,7 @@ class Plan(BaseModel):
     
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     name: str
-    type: PlanType
+    type: str  # Changed from PlanType enum to str for flexibility
     credits_limit: int
     price: float
     razorpay_plan_id: Optional[str] = None

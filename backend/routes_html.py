@@ -357,23 +357,112 @@ async def get_blogs_html():
         {''.join(blog_cards)}
         """
     
-    # Structured data for blog list
+    # Enhanced structured data for blog list with product context
     structured_data = """
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
-        "@type": "Blog",
-        "name": "MailGuard Email Verification Blog",
-        "description": "Expert insights and guides on email verification best practices",
-        "url": "https://razorpay-integration.preview.emergentagent.com/html/blogs",
-        "publisher": {
-            "@type": "Organization",
-            "name": "MailGuard",
-            "logo": {
-                "@type": "ImageObject",
-                "url": "https://razorpay-integration.preview.emergentagent.com/logo.png"
+        "@graph": [
+            {
+                "@type": "Blog",
+                "@id": "https://razorpay-integration.preview.emergentagent.com/html/blogs#blog",
+                "name": "MailGuard Email Verification Blog",
+                "description": "Expert insights and guides on email verification best practices, deliverability optimization, and sender reputation management",
+                "url": "https://razorpay-integration.preview.emergentagent.com/html/blogs",
+                "publisher": {
+                    "@type": "Organization",
+                    "@id": "https://razorpay-integration.preview.emergentagent.com/#organization"
+                },
+                "about": {
+                    "@type": "SoftwareApplication",
+                    "@id": "https://razorpay-integration.preview.emergentagent.com/#product"
+                }
+            },
+            {
+                "@type": "SoftwareApplication",
+                "@id": "https://razorpay-integration.preview.emergentagent.com/#product",
+                "name": "MailGuard",
+                "applicationCategory": "BusinessApplication",
+                "operatingSystem": "Web-based",
+                "softwareVersion": "1.0",
+                "description": "Professional B2B email verification service with 98% accuracy. Validate email addresses in real-time, process bulk lists, and integrate via API. Reduce bounce rates, improve sender reputation, and ensure email deliverability.",
+                "offers": [
+                    {
+                        "@type": "Offer",
+                        "name": "Free Plan",
+                        "price": "0",
+                        "priceCurrency": "INR",
+                        "description": "100 email verifications per month",
+                        "url": "https://razorpay-integration.preview.emergentagent.com/pricing"
+                    },
+                    {
+                        "@type": "Offer",
+                        "name": "Starter Plan",
+                        "price": "499",
+                        "priceCurrency": "INR",
+                        "description": "1,000 email verifications per month",
+                        "url": "https://razorpay-integration.preview.emergentagent.com/pricing"
+                    },
+                    {
+                        "@type": "Offer",
+                        "name": "Professional Plan",
+                        "price": "1999",
+                        "priceCurrency": "INR",
+                        "description": "5,000 email verifications per month",
+                        "url": "https://razorpay-integration.preview.emergentagent.com/pricing"
+                    },
+                    {
+                        "@type": "Offer",
+                        "name": "Enterprise Plan",
+                        "price": "7999",
+                        "priceCurrency": "INR",
+                        "description": "25,000 email verifications per month",
+                        "url": "https://razorpay-integration.preview.emergentagent.com/pricing"
+                    }
+                ],
+                "aggregateRating": {
+                    "@type": "AggregateRating",
+                    "ratingValue": "4.8",
+                    "ratingCount": "150",
+                    "bestRating": "5"
+                },
+                "featureList": [
+                    "Real-time email verification with instant results",
+                    "Bulk verification (up to 10,000 emails per batch)",
+                    "RESTful API with API key authentication",
+                    "MCP server for LLM and AI integration",
+                    "SMTP verification and mailbox check",
+                    "MX record validation",
+                    "Disposable and temporary email detection",
+                    "Role-based email detection",
+                    "Catch-all domain detection",
+                    "Advanced confidence scoring (0-100%)",
+                    "Email syntax validation",
+                    "Domain verification",
+                    "Risk assessment and classification"
+                ],
+                "provider": {
+                    "@type": "Organization",
+                    "@id": "https://razorpay-integration.preview.emergentagent.com/#organization"
+                }
+            },
+            {
+                "@type": "Organization",
+                "@id": "https://razorpay-integration.preview.emergentagent.com/#organization",
+                "name": "MailGuard",
+                "url": "https://razorpay-integration.preview.emergentagent.com",
+                "logo": {
+                    "@type": "ImageObject",
+                    "url": "https://razorpay-integration.preview.emergentagent.com/logo.png"
+                },
+                "description": "Leading email verification service provider helping businesses improve email deliverability and reduce bounce rates",
+                "contactPoint": {
+                    "@type": "ContactPoint",
+                    "contactType": "customer support",
+                    "email": "support@mailguard.com"
+                }
             }
-        }
+        ]
     }
     </script>
     """

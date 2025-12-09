@@ -966,10 +966,24 @@ async def get_faqs_html():
     </script>
     """
     
+    # Add breadcrumb navigation  
+    breadcrumb_schema = generate_breadcrumb_schema([
+        {"name": "Home", "url": "https://razorpay-integration.preview.emergentagent.com"},
+        {"name": "FAQs", "url": "https://razorpay-integration.preview.emergentagent.com/html/faqs"}
+    ])
+    
+    # Combine all structured data
+    all_structured_data = f"""
+    {structured_data}
+    <script type="application/ld+json">
+    {breadcrumb_schema}
+    </script>
+    """
+    
     return generate_html_template(
         title=page_title,
         description=page_description,
         content=content,
         canonical_url="https://razorpay-integration.preview.emergentagent.com/html/faqs",
-        structured_data=structured_data
+        structured_data=all_structured_data
     )

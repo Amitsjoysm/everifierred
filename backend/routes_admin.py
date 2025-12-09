@@ -442,7 +442,7 @@ async def get_seo_settings(current_user: User = Depends(get_current_admin_user))
     
     settings = await db.seo_settings.find_one({}, {"_id": 0})
     if not settings:
-        # Return default settings
+        # Return default settings with HTML page meta tags
         return {
             "robots_txt": """User-agent: *
 Allow: /
@@ -466,7 +466,13 @@ MailGuard is a professional email verification service that helps businesses val
 - Enterprise: Unlimited credits
 
 ## API
-API documentation available at /api/docs"""
+API documentation available at /api/docs""",
+            "blog_page_title": "Email Verification Blog - Expert Insights & Best Practices | MailGuard",
+            "blog_page_description": "Expert insights, guides, and best practices for email verification, deliverability, bounce reduction, and sender reputation management.",
+            "blog_page_keywords": "email verification blog, email validation guide, deliverability tips, sender reputation, bounce rate reduction",
+            "faq_page_title": "FAQs - Email Verification Questions Answered | MailGuard",
+            "faq_page_description": "Frequently asked questions about MailGuard email verification service. Find answers about pricing, features, API integration, bulk verification, and more.",
+            "faq_page_keywords": "email verification FAQ, MailGuard help, email validation questions, API documentation, pricing information"
         }
     
     return settings

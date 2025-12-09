@@ -851,16 +851,15 @@ const PlansTab = ({ plans, fetchPlans, showModal, setShowModal, editing, setEdit
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Plan Type</label>
-                <select
+                <input
+                  type="text"
+                  required
                   value={formData.type}
-                  onChange={(e) => setFormData({...formData, type: e.target.value})}
+                  onChange={(e) => setFormData({...formData, type: e.target.value.toLowerCase()})}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
-                >
-                  <option value="free">Free</option>
-                  <option value="starter">Starter</option>
-                  <option value="professional">Professional</option>
-                  <option value="enterprise">Enterprise</option>
-                </select>
+                  placeholder="e.g., free, starter, premium, custom"
+                />
+                <p className="text-xs text-gray-500 mt-1">Use lowercase (e.g., free, starter, premium, business)</p>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Price (₹)</label>

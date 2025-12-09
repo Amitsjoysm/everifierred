@@ -7,11 +7,30 @@ from fastapi.responses import HTMLResponse
 from datetime import datetime
 from typing import List
 import html
+import json
 
 from database import get_db
 from models import Blog, FAQ
 
 router = APIRouter(tags=["HTML Pages"])
+
+
+def generate_breadcrumb_schema(breadcrumbs: List[dict]) -> str:
+    """Generate BreadcrumbList schema for navigation"""
+    items = []
+    for i, crumb in enumerate(breadcrumbs, 1):
+        items.append({
+            "@type": "ListItem",
+            "position": i,
+            "name": crumb["name"],
+            "item": crumb["url"]
+        })
+    
+    return json.dumps({
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": items
+    })
 
 
 def generate_html_template(title: str, description: str, content: str, canonical_url: str, structured_data: str = "") -> str:

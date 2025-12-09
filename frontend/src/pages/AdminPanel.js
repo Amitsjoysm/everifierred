@@ -470,7 +470,21 @@ const UsersTab = ({ users, fetchUsers }) => {
       });
       fetchUsers();
     } catch (error) {
-      toast.error(error.response?.data?.detail || 'Failed to save user');
+      // Handle validation errors
+      let errorMessage = 'Failed to save user';
+      
+      if (error.response?.data?.detail) {
+        if (Array.isArray(error.response.data.detail)) {
+          // FastAPI validation errors
+          errorMessage = error.response.data.detail.map(err => err.msg).join(', ');
+        } else if (typeof error.response.data.detail === 'string') {
+          errorMessage = error.response.data.detail;
+        } else if (typeof error.response.data.detail === 'object') {
+          errorMessage = JSON.stringify(error.response.data.detail);
+        }
+      }
+      
+      toast.error(errorMessage);
     }
   };
 

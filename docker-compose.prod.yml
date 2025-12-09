@@ -1,0 +1,79 @@
+# Production Docker Compose with enhanced security
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: mailguard-mongodb-prod
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER:-admin}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:-changeme}
+      MONGO_INITDB_DATABASE: email_verifier_db
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_backup:/data/backup
+    networks:
+      - mailguard-network
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: mailguard-redis-prod
+    restart: always
+    command: redis-server --requirepass ${REDIS_PASSWORD:-changeme} --appendonly yes
+    volumes:
+      - redis_data:/data
+    networks:
+      - mailguard-network
+
+  backend:
+    build: ./backend
+    container_name: mailguard-backend-prod
+    restart: always
+    env_file:
+      - ./backend/.env
+    ports:
+      - "127.0.0.1:8001:8001"
+    depends_on:
+      - mongodb
+      - redis
+    networks:
+      - mailguard-network
+
+  celery-worker:
+    build: ./backend
+    container_name: mailguard-celery-worker-prod
+    restart: always
+    env_file:
+      - ./backend/.env
+    command: celery -A celery_app worker --loglevel=info --concurrency=4
+    depends_on:
+      - redis
+      - mongodb
+    networks:
+      - mailguard-network
+
+  frontend:
+    build: ./frontend
+    container_name: mailguard-frontend-prod
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - mailguard-network
+
+networks:
+  mailguard-network:
+    driver: bridge
+
+volumes:
+  mongodb_data:
+  mongodb_backup:
+  redis_data:

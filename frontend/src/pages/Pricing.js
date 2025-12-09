@@ -86,10 +86,23 @@ const Pricing = () => {
       };
 
       const rzp = new window.Razorpay(options);
+      rzp.on('payment.failed', function (response) {
+        toast.error('Payment failed: ' + response.error.description);
+      });
       rzp.open();
     } catch (error) {
       console.error('Error creating order:', error);
-      toast.error('Failed to initialize payment');
+      let errorMsg = 'Failed to initialize payment';
+      
+      if (error.response?.data?.detail) {
+        if (typeof error.response.data.detail === 'string') {
+          errorMsg = error.response.data.detail;
+        } else if (Array.isArray(error.response.data.detail)) {
+          errorMsg = error.response.data.detail.map(e => e.msg || e).join(', ');
+        }
+      }
+      
+      toast.error(errorMsg);
     }
   };
 

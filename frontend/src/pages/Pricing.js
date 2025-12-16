@@ -268,38 +268,40 @@ const Pricing = () => {
               Choose the perfect plan for your email verification needs. All plans include our core features.
             </p>
 
-          {/* Billing Cycle Toggle */}
-          <div className="flex items-center justify-center gap-4 mb-4">
-            <span className={`text-lg font-medium ${billingCycle === 'monthly' ? 'text-gray-900' : 'text-gray-500'}`}>
-              Monthly
-            </span>
-            <button
-              onClick={() => setBillingCycle(billingCycle === 'monthly' ? 'yearly' : 'monthly')}
-              className={`relative inline-flex h-8 w-16 items-center rounded-full transition-colors ${
-                billingCycle === 'yearly' ? 'bg-green-600' : 'bg-gray-300'
-              }`}
-            >
-              <span
-                className={`inline-block h-6 w-6 transform rounded-full bg-white transition-transform ${
-                  billingCycle === 'yearly' ? 'translate-x-9' : 'translate-x-1'
+            {/* Billing Cycle Toggle */}
+            <div className="flex items-center justify-center gap-3 sm:gap-4 mb-4" role="group" aria-label="Billing cycle selector">
+              <span className={`text-base sm:text-lg font-medium ${billingCycle === 'monthly' ? 'text-gray-900' : 'text-gray-500'}`}>
+                Monthly
+              </span>
+              <button
+                onClick={() => setBillingCycle(billingCycle === 'monthly' ? 'yearly' : 'monthly')}
+                className={`relative inline-flex h-8 w-16 items-center rounded-full transition-colors ${
+                  billingCycle === 'yearly' ? 'bg-green-600' : 'bg-gray-300'
                 }`}
-              />
-            </button>
-            <span className={`text-lg font-medium ${billingCycle === 'yearly' ? 'text-gray-900' : 'text-gray-500'}`}>
-              Yearly
-            </span>
-          </div>
-          
-          {/* Savings Badge */}
-          {billingCycle === 'yearly' && (
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-100 text-green-700 text-sm font-semibold">
-              <TrendingDown className="w-4 h-4" />
-              Save up to 62% with yearly billing!
+                aria-label={`Switch to ${billingCycle === 'monthly' ? 'yearly' : 'monthly'} billing`}
+                aria-pressed={billingCycle === 'yearly'}
+              >
+                <span
+                  className={`inline-block h-6 w-6 transform rounded-full bg-white transition-transform ${
+                    billingCycle === 'yearly' ? 'translate-x-9' : 'translate-x-1'
+                  }`}
+                />
+              </button>
+              <span className={`text-base sm:text-lg font-medium ${billingCycle === 'yearly' ? 'text-gray-900' : 'text-gray-500'}`}>
+                Yearly
+              </span>
             </div>
-          )}
-        </div>
+            
+            {/* Savings Badge */}
+            {billingCycle === 'yearly' && (
+              <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full bg-green-100 text-green-700 text-xs sm:text-sm font-semibold">
+                <TrendingDown className="w-3 h-3 sm:w-4 sm:h-4" aria-hidden="true" />
+                Save up to 62% with yearly billing!
+              </div>
+            )}
+          </header>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
           {plans.map((plan, index) => {
             const price = getPlanPrice(plan);
             const originalPrice = getOriginalPrice(plan);

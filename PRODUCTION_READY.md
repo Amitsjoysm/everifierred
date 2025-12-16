@@ -26,8 +26,8 @@ Plan:     Enterprise
 Credits:  25,000
 ```
 
-**Login URL**: https://razorpay-integration.preview.emergentagent.com/login  
-**Admin Panel**: https://razorpay-integration.preview.emergentagent.com/admin
+**Login URL**: https://admin-payment-tool.preview.emergentagent.com/login  
+**Admin Panel**: https://admin-payment-tool.preview.emergentagent.com/admin
 
 ---
 
@@ -194,7 +194,7 @@ Credits:  25,000
 
 ## 🌐 Deployment Information
 
-**Preview URL**: https://razorpay-integration.preview.emergentagent.com
+**Preview URL**: https://admin-payment-tool.preview.emergentagent.com
 
 **Environment**: Production-ready
 

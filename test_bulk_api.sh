@@ -21,7 +21,7 @@ if echo "$LOGIN_RESPONSE" | grep -q "OTP sent"; then
     echo "   3. Then test bulk verification with the token"
     echo ""
     echo "Alternatively, test via the frontend UI:"
-    echo "https://razorpay-integration.preview.emergentagent.com"
+    echo "https://admin-payment-tool.preview.emergentagent.com"
 else
     echo "❌ Unexpected login response"
 fi
@@ -80,5 +80,5 @@ echo "   2. Job is queued and processed by Celery worker"
 echo "   3. Check status via /api/verify/jobs"
 echo "   4. Download results via /api/verify/download/{job_id}"
 echo ""
-echo "🌐 Test via UI: https://razorpay-integration.preview.emergentagent.com"
+echo "🌐 Test via UI: https://admin-payment-tool.preview.emergentagent.com"
 echo "=========================================="

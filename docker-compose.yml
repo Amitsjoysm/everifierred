@@ -51,7 +51,7 @@ services:
     environment:
       - MONGO_URL=mongodb://mongodb:27017
       - REDIS_URL=redis://redis:6379/0
-      - APP_URL=https://razorpay-integration.preview.emergentagent.com
+      - APP_URL=https://admin-payment-tool.preview.emergentagent.com
     volumes:
       - ./backend/uploads:/app/uploads
       - ./backend/results:/app/results

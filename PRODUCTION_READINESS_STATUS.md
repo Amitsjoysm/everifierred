@@ -96,7 +96,7 @@ CORS_ORIGINS="*"
 
 ```bash
 # ✅ Already configured for preview environment
-REACT_APP_BACKEND_URL=https://razorpay-integration.preview.emergentagent.com
+REACT_APP_BACKEND_URL=https://admin-payment-tool.preview.emergentagent.com
 
 # For production, update to:
 # REACT_APP_BACKEND_URL=https://api.yourdomain.com
@@ -173,9 +173,9 @@ Status:   Active & Email Verified
 ```
 
 ### Access URLs
-- **Login:** https://razorpay-integration.preview.emergentagent.com/login
-- **Admin Panel:** https://razorpay-integration.preview.emergentagent.com/admin
-- **Dashboard:** https://razorpay-integration.preview.emergentagent.com/dashboard
+- **Login:** https://admin-payment-tool.preview.emergentagent.com/login
+- **Admin Panel:** https://admin-payment-tool.preview.emergentagent.com/admin
+- **Dashboard:** https://admin-payment-tool.preview.emergentagent.com/dashboard
 
 ---
 

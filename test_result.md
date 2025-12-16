@@ -641,7 +641,7 @@ agent_communication:
       - Workers: ✓ CONNECTED TO BROKER
       
       🌐 PREVIEW URL:
-      https://razorpay-integration.preview.emergentagent.com
+      https://admin-payment-tool.preview.emergentagent.com
       
       All systems operational and ready for use!
 
@@ -727,13 +727,13 @@ agent_communication:
       - Authentication: ✓ OTP Flow Working
       
       🌐 PREVIEW URL:
-      https://razorpay-integration.preview.emergentagent.com
+      https://admin-payment-tool.preview.emergentagent.com
       
       📧 LOGIN PAGE:
-      https://razorpay-integration.preview.emergentagent.com/login
+      https://admin-payment-tool.preview.emergentagent.com/login
       
       🛡️ ADMIN PANEL:
-      https://razorpay-integration.preview.emergentagent.com/admin
+      https://admin-payment-tool.preview.emergentagent.com/admin
       
       All systems operational and ready for use!
 
@@ -1095,11 +1095,11 @@ agent_communication:
       Credits: 25,000
       
       🌐 ACCESS URLS:
-      - Main App: https://razorpay-integration.preview.emergentagent.com
-      - Login: https://razorpay-integration.preview.emergentagent.com/login
-      - Admin Panel: https://razorpay-integration.preview.emergentagent.com/admin
-      - Blogs (HTML): https://razorpay-integration.preview.emergentagent.com/html/blogs
-      - FAQs (HTML): https://razorpay-integration.preview.emergentagent.com/html/faqs
+      - Main App: https://admin-payment-tool.preview.emergentagent.com
+      - Login: https://admin-payment-tool.preview.emergentagent.com/login
+      - Admin Panel: https://admin-payment-tool.preview.emergentagent.com/admin
+      - Blogs (HTML): https://admin-payment-tool.preview.emergentagent.com/html/blogs
+      - FAQs (HTML): https://admin-payment-tool.preview.emergentagent.com/html/faqs
       
       📦 NEW FILES CREATED:
       1. /app/backend/routes_html.py - Static HTML routes for SEO

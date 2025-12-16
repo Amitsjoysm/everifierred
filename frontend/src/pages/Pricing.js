@@ -138,7 +138,7 @@ const Pricing = () => {
         title="Pricing Plans - Affordable Email Verification | MailGuard"
         description="Flexible pricing plans for email verification. Start free with 100 verifications/month. Affordable paid plans from $4.99/month. No contracts, cancel anytime. Bulk discounts available."
         keywords="email verification pricing, email validation cost, affordable email checker, free email verification, bulk email verification pricing, email verification plans"
-        canonicalUrl="https://razorpay-integration.preview.emergentagent.com/pricing"
+        canonicalUrl="https://admin-payment-tool.preview.emergentagent.com/pricing"
         structuredData={structuredData}
       />
       

@@ -16,7 +16,7 @@ import os
 import jwt
 
 # Configuration
-BASE_URL = "https://razorpay-integration.preview.emergentagent.com/api"
+BASE_URL = "https://admin-payment-tool.preview.emergentagent.com/api"
 ADMIN_EMAIL = "amits.joys@gmail.com"
 SECRET_KEY = "prod-secret-key-change-this-in-production-2024"
 

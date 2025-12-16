@@ -11,7 +11,7 @@ from datetime import datetime
 from typing import Dict, Any, Optional
 
 # Configuration
-BASE_URL = "https://secure-checkout-28.preview.emergentagent.com/api"
+BASE_URL = "https://responsive-pages-4.preview.emergentagent.com/api"
 
 class FinalSecurityTester:
     def __init__(self):

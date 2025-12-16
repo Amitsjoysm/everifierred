@@ -26,8 +26,8 @@ Plan:     Enterprise
 Credits:  25,000
 ```
 
-**Login URL**: https://secure-checkout-28.preview.emergentagent.com/login  
-**Admin Panel**: https://secure-checkout-28.preview.emergentagent.com/admin
+**Login URL**: https://responsive-pages-4.preview.emergentagent.com/login  
+**Admin Panel**: https://responsive-pages-4.preview.emergentagent.com/admin
 
 ---
 
@@ -194,7 +194,7 @@ Credits:  25,000
 
 ## 🌐 Deployment Information
 
-**Preview URL**: https://secure-checkout-28.preview.emergentagent.com
+**Preview URL**: https://responsive-pages-4.preview.emergentagent.com
 
 **Environment**: Production-ready
 

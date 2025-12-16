@@ -641,7 +641,7 @@ agent_communication:
       - Workers: ✓ CONNECTED TO BROKER
       
       🌐 PREVIEW URL:
-      https://secure-checkout-28.preview.emergentagent.com
+      https://responsive-pages-4.preview.emergentagent.com
       
       All systems operational and ready for use!
 
@@ -727,13 +727,13 @@ agent_communication:
       - Authentication: ✓ OTP Flow Working
       
       🌐 PREVIEW URL:
-      https://secure-checkout-28.preview.emergentagent.com
+      https://responsive-pages-4.preview.emergentagent.com
       
       📧 LOGIN PAGE:
-      https://secure-checkout-28.preview.emergentagent.com/login
+      https://responsive-pages-4.preview.emergentagent.com/login
       
       🛡️ ADMIN PANEL:
-      https://secure-checkout-28.preview.emergentagent.com/admin
+      https://responsive-pages-4.preview.emergentagent.com/admin
       
       All systems operational and ready for use!
 
@@ -938,9 +938,9 @@ agent_communication:
       Password: Admin@123
       
       🌐 ACCESS:
-      - Login: https://secure-checkout-28.preview.emergentagent.com/login
-      - Admin Panel: https://secure-checkout-28.preview.emergentagent.com/admin
-      - Pricing: https://secure-checkout-28.preview.emergentagent.com/pricing
+      - Login: https://responsive-pages-4.preview.emergentagent.com/login
+      - Admin Panel: https://responsive-pages-4.preview.emergentagent.com/admin
+      - Pricing: https://responsive-pages-4.preview.emergentagent.com/pricing
       
       ✅ READY FOR TESTING & DEPLOYMENT
 
@@ -1072,10 +1072,10 @@ agent_communication:
       Status: ✓ VERIFIED & READY TO USE
       
       ✅ ACCESS URLS:
-      - Main App: https://secure-checkout-28.preview.emergentagent.com
-      - Login: https://secure-checkout-28.preview.emergentagent.com/login
-      - Admin Panel: https://secure-checkout-28.preview.emergentagent.com/admin
-      - Pricing Page: https://secure-checkout-28.preview.emergentagent.com/pricing
+      - Main App: https://responsive-pages-4.preview.emergentagent.com
+      - Login: https://responsive-pages-4.preview.emergentagent.com/login
+      - Admin Panel: https://responsive-pages-4.preview.emergentagent.com/admin
+      - Pricing Page: https://responsive-pages-4.preview.emergentagent.com/pricing
       
       ✅ PAYMENT TESTING:
       Use Razorpay test cards:
@@ -1303,11 +1303,11 @@ agent_communication:
       Credits: 25,000
       
       🌐 ACCESS URLS:
-      - Main App: https://secure-checkout-28.preview.emergentagent.com
-      - Login: https://secure-checkout-28.preview.emergentagent.com/login
-      - Admin Panel: https://secure-checkout-28.preview.emergentagent.com/admin
-      - Blogs (HTML): https://secure-checkout-28.preview.emergentagent.com/html/blogs
-      - FAQs (HTML): https://secure-checkout-28.preview.emergentagent.com/html/faqs
+      - Main App: https://responsive-pages-4.preview.emergentagent.com
+      - Login: https://responsive-pages-4.preview.emergentagent.com/login
+      - Admin Panel: https://responsive-pages-4.preview.emergentagent.com/admin
+      - Blogs (HTML): https://responsive-pages-4.preview.emergentagent.com/html/blogs
+      - FAQs (HTML): https://responsive-pages-4.preview.emergentagent.com/html/faqs
       
       📦 NEW FILES CREATED:
       1. /app/backend/routes_html.py - Static HTML routes for SEO
@@ -1500,7 +1500,7 @@ agent_communication:
       - Email: amits.joys@gmail.com
       - Password: Admin@123
       
-      Preview URL: https://secure-checkout-28.preview.emergentagent.com
+      Preview URL: https://responsive-pages-4.preview.emergentagent.com
 
   - agent: "main"
     message: |

@@ -190,7 +190,7 @@ USD Yearly:
 2. Click **"+ Create New Webhook"**
 3. **Configure:**
    ```
-   Webhook URL: https://secure-checkout-28.preview.emergentagent.com/api/payments/webhook
+   Webhook URL: https://responsive-pages-4.preview.emergentagent.com/api/payments/webhook
    
    Active Events (Select these):
    ✓ payment.captured

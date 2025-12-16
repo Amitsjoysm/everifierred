@@ -96,7 +96,7 @@ CORS_ORIGINS="*"
 
 ```bash
 # ✅ Already configured for preview environment
-REACT_APP_BACKEND_URL=https://secure-checkout-28.preview.emergentagent.com
+REACT_APP_BACKEND_URL=https://responsive-pages-4.preview.emergentagent.com
 
 # For production, update to:
 # REACT_APP_BACKEND_URL=https://api.yourdomain.com
@@ -173,9 +173,9 @@ Status:   Active & Email Verified
 ```
 
 ### Access URLs
-- **Login:** https://secure-checkout-28.preview.emergentagent.com/login
-- **Admin Panel:** https://secure-checkout-28.preview.emergentagent.com/admin
-- **Dashboard:** https://secure-checkout-28.preview.emergentagent.com/dashboard
+- **Login:** https://responsive-pages-4.preview.emergentagent.com/login
+- **Admin Panel:** https://responsive-pages-4.preview.emergentagent.com/admin
+- **Dashboard:** https://responsive-pages-4.preview.emergentagent.com/dashboard
 
 ---
 

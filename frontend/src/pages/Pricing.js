@@ -10,7 +10,7 @@ const API_URL = process.env.REACT_APP_BACKEND_URL;
 
 const Pricing = () => {
   const navigate = useNavigate();
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, refreshUser } = useAuth();
   const [plans, setPlans] = useState([]);
   const [loading, setLoading] = useState(true);
 

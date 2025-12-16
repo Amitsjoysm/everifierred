@@ -51,7 +51,7 @@ services:
     environment:
       - MONGO_URL=mongodb://mongodb:27017
       - REDIS_URL=redis://redis:6379/0
-      - APP_URL=https://payment-secure-1.preview.emergentagent.com
+      - APP_URL=https://auth-debug-35.preview.emergentagent.com
     volumes:
       - ./backend/uploads:/app/uploads
       - ./backend/results:/app/results

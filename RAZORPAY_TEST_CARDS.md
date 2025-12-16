@@ -101,7 +101,7 @@ OTP: Any 6 digits
    - Password: (your password)
 
 2. **Go to Pricing Page**
-   - Navigate to: https://payment-secure-1.preview.emergentagent.com/pricing
+   - Navigate to: https://auth-debug-35.preview.emergentagent.com/pricing
 
 3. **Select a Plan**
    - Click "Subscribe Now" on Starter/Professional/Enterprise

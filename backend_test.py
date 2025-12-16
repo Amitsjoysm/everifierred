@@ -12,7 +12,7 @@ import subprocess
 from datetime import datetime
 
 # Configuration - Updated for review request
-BASE_URL = "https://payment-secure-1.preview.emergentagent.com/api"
+BASE_URL = "https://auth-debug-35.preview.emergentagent.com/api"
 SUPERADMIN_EMAIL = "amits.joys@gmail.com"
 SUPERADMIN_PASSWORD = "Admin@123"
 

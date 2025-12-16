@@ -74,9 +74,9 @@ async def verify_admin():
     print(f"\nEmail:    admin@mailguard.com")
     print(f"Password: Admin@123456")
     print("\nLogin URL:")
-    print("https://payment-secure-1.preview.emergentagent.com/login")
+    print("https://auth-debug-35.preview.emergentagent.com/login")
     print("\nAdmin Panel URL:")
-    print("https://payment-secure-1.preview.emergentagent.com/admin")
+    print("https://auth-debug-35.preview.emergentagent.com/admin")
     print("="*60 + "\n")
     
     client.close()

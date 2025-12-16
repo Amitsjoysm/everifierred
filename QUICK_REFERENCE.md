@@ -9,9 +9,9 @@ Password: Admin@123
 ```
 
 **URLs:**
-- Login: https://payment-secure-1.preview.emergentagent.com/login
-- Admin Panel: https://payment-secure-1.preview.emergentagent.com/admin
-- Pricing Page: https://payment-secure-1.preview.emergentagent.com/pricing
+- Login: https://auth-debug-35.preview.emergentagent.com/login
+- Admin Panel: https://auth-debug-35.preview.emergentagent.com/admin
+- Pricing Page: https://auth-debug-35.preview.emergentagent.com/pricing
 
 ---
 

@@ -12,7 +12,7 @@ from datetime import datetime
 from typing import Dict, Any, List
 
 # Configuration - Updated for review request
-BASE_URL = "https://payment-secure-1.preview.emergentagent.com/api"
+BASE_URL = "https://auth-debug-35.preview.emergentagent.com/api"
 ADMIN_EMAIL = "amits.joys@gmail.com"
 ADMIN_PASSWORD = "Admin@123"
 

@@ -200,7 +200,7 @@ Before going live:
 1. Go to Settings → Webhooks
 2. Add webhook URL:
    ```
-   https://payment-secure-1.preview.emergentagent.com/api/payments/webhook
+   https://secure-checkout-28.preview.emergentagent.com/api/payments/webhook
    ```
 3. Select events:
    - payment.captured

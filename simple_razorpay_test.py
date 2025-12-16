@@ -8,7 +8,7 @@ import requests
 import json
 from datetime import datetime
 
-BASE_URL = "https://payment-secure-1.preview.emergentagent.com/api"
+BASE_URL = "https://secure-checkout-28.preview.emergentagent.com/api"
 RAZORPAY_TEST_KEY = "rzp_test_RsCrbXGSd0FUz0"
 
 def test_plan_retrieval():

@@ -262,8 +262,8 @@ const Blog = () => {
                 </li>
                 <li className="cursor-pointer hover:text-white transition-colors">Contact</li>
               </ul>
-            </div>
-            <div>
+            </nav>
+            <nav aria-label="Legal navigation">
               <h3 className="text-base font-semibold mb-4">Legal</h3>
               <ul className="space-y-2 text-sm text-gray-400">
                 <li className="cursor-pointer hover:text-white transition-colors">Privacy Policy</li>

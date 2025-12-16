@@ -60,7 +60,7 @@ const Pricing = () => {
         order_id: response.data.order_id,
         handler: async function (razorpayResponse) {
           try {
-            await axios.post(
+            const verifyResponse = await axios.post(
               `${API_URL}/api/payments/verify`,
               {
                 razorpay_order_id: razorpayResponse.razorpay_order_id,
@@ -70,10 +70,31 @@ const Pricing = () => {
               },
               { headers: { Authorization: `Bearer ${token}` } }
             );
-            toast.success('Payment successful! Plan upgraded.');
+            
+            // Refresh user data to show updated plan and credits
+            await refreshUser();
+            
+            toast.success(`Payment successful! Upgraded to ${plan.name} plan with ${plan.credits_limit} credits.`);
             navigate('/dashboard');
           } catch (error) {
-            toast.error('Payment verification failed');
+            console.error('Payment verification error:', error);
+            
+            // Show detailed error message
+            let errorMsg = 'Unable to verify payment';
+            if (error.response?.data?.detail) {
+              errorMsg = error.response.data.detail;
+            } else if (error.response?.data?.message) {
+              errorMsg = error.response.data.message;
+            } else if (error.message) {
+              errorMsg = error.message;
+            }
+            
+            toast.error(errorMsg);
+            
+            // If verification failed, redirect to pricing page to retry
+            setTimeout(() => {
+              navigate('/pricing');
+            }, 2000);
           }
         },
         prefill: {

@@ -335,7 +335,7 @@ const Pricing = () => {
                   <div className="mb-6">
                     {plan.type === 'free' ? (
                       <div>
-                        <span className="text-4xl font-bold text-gray-900">Free</span>
+                        <span className="text-3xl sm:text-4xl font-bold text-gray-900">Free</span>
                         <p className="text-sm text-gray-500 mt-1">Forever</p>
                       </div>
                     ) : (
@@ -343,7 +343,7 @@ const Pricing = () => {
                         {/* Show original price crossed out */}
                         {originalPrice && discount > 0 && (
                           <div className="flex items-center gap-2 mb-1">
-                            <span className="text-xl text-gray-400 line-through">
+                            <span className="text-lg sm:text-xl text-gray-400 line-through">
                               ₹{originalPrice.toLocaleString()}
                             </span>
                           </div>
@@ -351,25 +351,25 @@ const Pricing = () => {
                         
                         {/* Current price */}
                         <div className="flex items-baseline gap-1">
-                          <span className="text-4xl font-bold text-gray-900">
+                          <span className="text-3xl sm:text-4xl font-bold text-gray-900">
                             ₹{price.toLocaleString()}
                           </span>
-                          <span className="text-gray-600">
+                          <span className="text-sm sm:text-base text-gray-600">
                             /{billingCycle === 'yearly' ? 'year' : 'month'}
                           </span>
                         </div>
                         
                         {/* Yearly monthly equivalent */}
                         {billingCycle === 'yearly' && (
-                          <p className="text-sm text-green-600 font-semibold mt-1">
+                          <p className="text-xs sm:text-sm text-green-600 font-semibold mt-1">
                             ₹{monthlyEquivalent}/month effective
                           </p>
                         )}
                         
                         {/* Savings highlight */}
                         {savings > 0 && (
-                          <div className="mt-2 inline-flex items-center gap-1 px-3 py-1 rounded-full bg-green-50 text-green-700 text-sm font-semibold">
-                            <TrendingDown className="w-4 h-4" />
+                          <div className="mt-2 inline-flex items-center gap-1 px-2 sm:px-3 py-1 rounded-full bg-green-50 text-green-700 text-xs sm:text-sm font-semibold">
+                            <TrendingDown className="w-3 h-3 sm:w-4 sm:h-4" aria-hidden="true" />
                             Save ₹{savings.toLocaleString()}
                           </div>
                         )}

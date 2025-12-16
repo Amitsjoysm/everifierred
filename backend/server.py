@@ -79,6 +79,24 @@ async def health_check():
     return {"status": "healthy"}
 
 
+# Public plans endpoint (for backward compatibility)
+@api_router.get("/plans")
+async def get_plans():
+    """Get all active pricing plans - redirects to payments/plans"""
+    from database import get_db
+    from models import Plan
+    from datetime import datetime
+    
+    db = await get_db()
+    plans = await db.plans.find({"is_active": True}, {"_id": 0}).sort("price", 1).to_list(100)
+    
+    for plan in plans:
+        if isinstance(plan.get('created_at'), str):
+            plan['created_at'] = datetime.fromisoformat(plan['created_at'])
+    
+    return [Plan(**plan) for plan in plans]
+
+
 # Include all routers
 api_router.include_router(auth_router)
 api_router.include_router(verification_router)

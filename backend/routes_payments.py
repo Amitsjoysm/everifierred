@@ -293,20 +293,31 @@ async def verify_payment(
     
     # Verify payment status from Razorpay
     try:
+        logger.info(f"Fetching payment details from Razorpay: {razorpay_payment_id}")
         razorpay_payment = razorpay_client.payment.fetch(razorpay_payment_id)
         
+        logger.info(f"Razorpay payment status: {razorpay_payment.get('status')} for payment {razorpay_payment_id}")
+        
         if razorpay_payment['status'] != 'captured' and razorpay_payment['status'] != 'authorized':
+            error_msg = f"Payment status: {razorpay_payment['status']}"
             await db.payments.update_one(
                 {"razorpay_order_id": razorpay_order_id},
-                {"$set": {"status": "failed", "error_message": f"Payment status: {razorpay_payment['status']}"}}
+                {"$set": {"status": "failed", "error_message": error_msg}}
             )
+            logger.warning(f"Payment verification failed: {error_msg}")
             raise HTTPException(status_code=400, detail=f"Payment not successful. Status: {razorpay_payment['status']}")
+    except HTTPException:
+        # Re-raise HTTPException without catching
+        raise
     except Exception as e:
+        error_msg = f"Failed to verify payment with Razorpay: {str(e)}"
+        logger.error(f"{error_msg} - Order: {razorpay_order_id}, Payment: {razorpay_payment_id}")
+        
         await db.payments.update_one(
             {"razorpay_order_id": razorpay_order_id},
             {"$set": {"status": "failed", "error_message": str(e)}}
         )
-        raise HTTPException(status_code=500, detail=f"Failed to verify payment with Razorpay: {str(e)}")
+        raise HTTPException(status_code=500, detail=error_msg)
     
     # Get plan details
     plan = await db.plans.find_one({"id": plan_id, "is_active": True}, {"_id": 0})

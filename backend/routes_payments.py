@@ -64,7 +64,7 @@ async def get_plan(plan_id: str):
 
 # ============= Payment Processing =============
 
-@router.post("/payments/create-order")
+@router.post("/create-order")
 async def create_payment_order(
     plan_id: str,
     request: Request,

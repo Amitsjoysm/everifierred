@@ -400,7 +400,7 @@ async def verify_payment(
     }
 
 
-@router.post("/payments/webhook")
+@router.post("/webhook")
 async def razorpay_webhook(
     request: Request,
     x_razorpay_signature: Optional[str] = Header(None)
@@ -558,7 +558,7 @@ async def razorpay_webhook(
     return {"status": "ok"}
 
 
-@router.post("/payments/cancel/{order_id}")
+@router.post("/cancel/{order_id}")
 async def cancel_payment(
     order_id: str,
     current_user: User = Depends(get_current_user)
@@ -588,7 +588,7 @@ async def cancel_payment(
     return {"message": "Payment cancelled successfully"}
 
 
-@router.get("/payments/history", response_model=List[Payment])
+@router.get("/history", response_model=List[Payment])
 async def get_payment_history(current_user: User = Depends(get_current_user)):
     """Get user's payment history"""
     db = await get_db()

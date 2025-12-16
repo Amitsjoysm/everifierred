@@ -208,6 +208,11 @@ async def verify_payment(
     current_user: User = Depends(get_current_user)
 ):
     """Verify Razorpay payment with enhanced security"""
+    logger.info(
+        f"Payment verification started - User: {current_user.id}, "
+        f"Order: {razorpay_order_id}, Payment: {razorpay_payment_id}, Plan: {plan_id}"
+    )
+    
     # Rate limit: 10 requests per minute
     allowed, remaining = await rate_limiter.is_allowed(
         identifier=current_user.id,

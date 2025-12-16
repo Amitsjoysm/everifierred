@@ -221,6 +221,15 @@ class Payment(BaseModel):
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 
+
+class PaymentVerifyRequest(BaseModel):
+    """Request model for payment verification"""
+    razorpay_order_id: str
+    razorpay_payment_id: str
+    razorpay_signature: str
+    plan_id: str
+
+
 class Blog(BaseModel):
     model_config = ConfigDict(extra="ignore")
     

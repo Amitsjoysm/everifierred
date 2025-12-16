@@ -249,6 +249,45 @@ class Payment(BaseModel):
 
 
 
+class Subscription(BaseModel):
+    """Model for tracking recurring subscriptions"""
+    model_config = ConfigDict(extra="ignore")
+    
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str
+    plan_id: str
+    razorpay_subscription_id: str
+    status: str = "active"  # active, paused, cancelled, expired, halted
+    billing_cycle: str = "monthly"  # monthly or yearly
+    amount: float
+    currency: str = "INR"
+    
+    # Subscription dates
+    start_date: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    current_start: Optional[datetime] = None  # Current billing period start
+    current_end: Optional[datetime] = None  # Current billing period end
+    next_billing_date: Optional[datetime] = None
+    cancelled_at: Optional[datetime] = None
+    
+    # Payment tracking
+    total_payments: int = 0
+    successful_payments: int = 0
+    failed_payments: int = 0
+    
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+
+class PaymentVerifyRequest(BaseModel):
+    """Request model for payment verification"""
+    razorpay_order_id: str
+    razorpay_payment_id: str
+    razorpay_signature: str
+    plan_id: str
+    billing_cycle: str = "monthly"  # monthly or yearly
+
+
+
 class PaymentVerifyRequest(BaseModel):
     """Request model for payment verification"""
     razorpay_order_id: str

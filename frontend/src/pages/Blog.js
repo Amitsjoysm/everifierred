@@ -159,72 +159,76 @@ const Blog = () => {
           </div>
         </header>
 
-      {/* Search */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8">
-        <div className="bg-white rounded-lg shadow-lg p-4">
-          <input
-            type="text"
-            placeholder="Search articles..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          />
-        </div>
-      </div>
-
-      {/* Blog Posts */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        {filteredBlogs.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-gray-600 text-lg">No blog posts found</p>
+        {/* Search */}
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8" aria-label="Blog search">
+          <div className="bg-white rounded-lg shadow-lg p-4">
+            <label htmlFor="blog-search" className="sr-only">Search articles</label>
+            <input
+              id="blog-search"
+              type="search"
+              placeholder="Search articles..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              aria-label="Search blog articles"
+            />
           </div>
-        ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredBlogs.map((blog) => (
-              <div
-                key={blog.id}
-                className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-shadow cursor-pointer"
-                onClick={() => navigate(`/blog/${blog.slug}`)}
-              >
-                <div className="p-6">
-                  <div className="flex items-center gap-4 text-sm text-gray-600 mb-4">
-                    <div className="flex items-center gap-1">
-                      <Calendar className="w-4 h-4" />
-                      <span>
-                        {blog.published_at
-                          ? format(new Date(blog.published_at), 'MMM dd, yyyy')
-                          : 'Draft'}
-                      </span>
+        </section>
+
+        {/* Blog Posts */}
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16" aria-label="Blog posts">
+          {filteredBlogs.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-gray-600 text-lg">No blog posts found</p>
+            </div>
+          ) : (
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+              {filteredBlogs.map((blog) => (
+                <article
+                  key={blog.id}
+                  className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-shadow cursor-pointer"
+                  onClick={() => navigate(`/blog/${blog.slug}`)}
+                >
+                  <div className="p-6">
+                    <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-xs sm:text-sm text-gray-600 mb-4">
+                      <div className="flex items-center gap-1">
+                        <Calendar className="w-4 h-4" aria-hidden="true" />
+                        <time dateTime={blog.published_at}>
+                          {blog.published_at
+                            ? format(new Date(blog.published_at), 'MMM dd, yyyy')
+                            : 'Draft'}
+                        </time>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <User className="w-4 h-4" aria-hidden="true" />
+                        <span>{blog.author}</span>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-1">
-                      <User className="w-4 h-4" />
-                      <span>{blog.author}</span>
+
+                    <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3">{blog.title}</h2>
+                    <p className="text-sm sm:text-base text-gray-600 mb-4 line-clamp-3">{blog.excerpt}</p>
+
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {blog.keywords.slice(0, 3).map((keyword, idx) => (
+                        <span
+                          key={idx}
+                          className="px-2 sm:px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs sm:text-sm"
+                        >
+                          {keyword}
+                        </span>
+                      ))}
+                    </div>
+
+                    <div className="flex items-center text-blue-600 font-semibold text-sm sm:text-base">
+                      Read More <ArrowRight className="w-4 h-4 ml-1" aria-hidden="true" />
                     </div>
                   </div>
-
-                  <h2 className="text-2xl font-bold text-gray-900 mb-3">{blog.title}</h2>
-                  <p className="text-gray-600 mb-4 line-clamp-3">{blog.excerpt}</p>
-
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {blog.keywords.slice(0, 3).map((keyword, idx) => (
-                      <span
-                        key={idx}
-                        className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm"
-                      >
-                        {keyword}
-                      </span>
-                    ))}
-                  </div>
-
-                  <div className="flex items-center text-blue-600 font-semibold">
-                    Read More <ArrowRight className="w-4 h-4 ml-1" />
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+                </article>
+              ))}
+            </div>
+          )}
+        </section>
+      </main>
 
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-12 mt-24">

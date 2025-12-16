@@ -6,6 +6,14 @@ import SEO from '../components/SEO';
 import MobileMenu from '../components/MobileMenu';
 
 const Landing = () => {
+  const navigate = useNavigate();
+  
+  const mobileMenuLinks = [
+    { to: '/pricing', label: 'Pricing' },
+    { to: '/blog', label: 'Blog' },
+    { to: '/faqs', label: 'FAQs' },
+  ];
+
   const structuredData = {
     '@context': 'https://schema.org',
     '@type': 'Organization',

@@ -16,6 +16,12 @@ const Pricing = () => {
   const [loading, setLoading] = useState(true);
   const [billingCycle, setBillingCycle] = useState('monthly'); // 'monthly' or 'yearly'
 
+  const mobileMenuLinks = [
+    { to: '/', label: 'Home' },
+    { to: '/blog', label: 'Blog' },
+    { to: '/faqs', label: 'FAQs' },
+  ];
+
   useEffect(() => {
     fetchPlans();
   }, []);

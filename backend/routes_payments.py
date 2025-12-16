@@ -64,13 +64,165 @@ async def get_plan(plan_id: str):
 
 # ============= Payment Processing =============
 
+@router.post("/create-subscription")
+async def create_subscription(
+    plan_id: str,
+    billing_cycle: str = "monthly",
+    request: Request = None,
+    current_user: User = Depends(get_current_user)
+):
+    """Create Razorpay subscription for recurring payments"""
+    # Rate limit: 5 requests per minute
+    allowed, remaining = await rate_limiter.is_allowed(
+        identifier=current_user.id,
+        max_requests=5,
+        window_seconds=60
+    )
+    
+    if not allowed:
+        await log_security_event(
+            db=await get_db(),
+            event_type="rate_limit_exceeded",
+            severity="medium",
+            description=f"User {current_user.id} exceeded subscription creation rate limit",
+            details={"plan_id": plan_id}
+        )
+        raise HTTPException(
+            status_code=429,
+            detail="Too many subscription requests. Please try again in 1 minute.",
+            headers={"Retry-After": "60"}
+        )
+    
+    if not razorpay_client:
+        raise HTTPException(status_code=503, detail="Payment service not configured")
+    
+    if billing_cycle not in ["monthly", "yearly"]:
+        raise HTTPException(status_code=400, detail="Invalid billing cycle. Must be 'monthly' or 'yearly'")
+    
+    db = await get_db()
+    
+    # Get plan details
+    plan = await db.plans.find_one({"id": plan_id, "is_active": True}, {"_id": 0})
+    if not plan:
+        raise HTTPException(status_code=404, detail="Plan not found or inactive")
+    
+    if plan['price'] == 0:
+        raise HTTPException(status_code=400, detail="Free plan doesn't require payment")
+    
+    # Check if user already has an active subscription
+    existing_subscription = await db.subscriptions.find_one({
+        "user_id": current_user.id,
+        "status": {"$in": ["active", "authenticated", "created"]}
+    })
+    
+    if existing_subscription:
+        raise HTTPException(
+            status_code=400,
+            detail="You already have an active subscription. Please cancel it before subscribing to a new plan."
+        )
+    
+    # Get the appropriate Razorpay plan ID based on billing cycle
+    razorpay_plan_id = plan.get(f'razorpay_plan_id_{billing_cycle}')
+    if not razorpay_plan_id:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Subscription not available for {billing_cycle} billing cycle"
+        )
+    
+    # Determine amount based on billing cycle
+    amount = plan['yearly_price'] if billing_cycle == 'yearly' else plan['price']
+    
+    try:
+        # Create Razorpay subscription
+        subscription_data = {
+            "plan_id": razorpay_plan_id,
+            "customer_notify": 1,
+            "total_count": 0,  # 0 means subscription continues until cancelled
+            "notes": {
+                "user_id": current_user.id,
+                "plan_id": plan_id,
+                "plan_name": plan['name'],
+                "billing_cycle": billing_cycle
+            }
+        }
+        
+        razorpay_subscription = razorpay_client.subscription.create(subscription_data)
+        subscription_id = razorpay_subscription['id']
+        
+        # Calculate next billing date
+        from datetime import timedelta
+        if billing_cycle == 'yearly':
+            next_billing = datetime.now(timezone.utc) + timedelta(days=365)
+        else:
+            next_billing = datetime.now(timezone.utc) + timedelta(days=30)
+        
+        # Store subscription record
+        from models import Subscription
+        subscription = Subscription(
+            user_id=current_user.id,
+            plan_id=plan_id,
+            razorpay_subscription_id=subscription_id,
+            status='created',
+            billing_cycle=billing_cycle,
+            amount=amount,
+            currency='INR',
+            next_billing_date=next_billing
+        )
+        
+        subscription_dict = subscription.model_dump()
+        subscription_dict['start_date'] = subscription_dict['start_date'].isoformat()
+        subscription_dict['next_billing_date'] = subscription_dict['next_billing_date'].isoformat()
+        subscription_dict['created_at'] = subscription_dict['created_at'].isoformat()
+        subscription_dict['updated_at'] = subscription_dict['updated_at'].isoformat()
+        
+        await db.subscriptions.insert_one(subscription_dict)
+        
+        # Log subscription creation
+        await log_payment_attempt(
+            db=db,
+            user_id=current_user.id,
+            plan_id=plan_id,
+            amount=amount,
+            status='subscription_created',
+            details={
+                'subscription_id': subscription_id,
+                'billing_cycle': billing_cycle
+            }
+        )
+        
+        logger.info(f"Subscription created: {subscription_id} for user {current_user.id}, billing: {billing_cycle}")
+        
+        # Return subscription details for Razorpay Checkout
+        return {
+            'subscription_id': subscription_id,
+            'razorpay_key': settings.RAZORPAY_KEY_ID,
+            'amount': int(amount * 100),  # In paise
+            'currency': 'INR',
+            'plan_name': plan['name'],
+            'billing_cycle': billing_cycle
+        }
+        
+    except Exception as e:
+        logger.error(f"Failed to create subscription: {str(e)}")
+        await log_payment_attempt(
+            db=db,
+            user_id=current_user.id,
+            plan_id=plan_id,
+            amount=amount,
+            status='subscription_creation_failed',
+            details={'error': str(e), 'billing_cycle': billing_cycle}
+        )
+        raise HTTPException(status_code=500, detail=f"Failed to create subscription: {str(e)}")
+
+
 @router.post("/create-order")
 async def create_payment_order(
     plan_id: str,
-    request: Request,
+    billing_cycle: str = "monthly",
+    request: Request = None,
     current_user: User = Depends(get_current_user)
 ):
-    """Create Razorpay order for plan subscription with rate limiting"""
+    """Legacy endpoint - redirects to subscription creation"""
     # Rate limit: 5 requests per minute
     allowed, remaining = await rate_limiter.is_allowed(
         identifier=current_user.id,

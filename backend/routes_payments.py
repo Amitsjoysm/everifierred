@@ -23,7 +23,7 @@ from payment_security import (
 
 logger = logging.getLogger(__name__)
 
-router = APIRouter(tags=["Payments"])
+router = APIRouter(prefix="/payments", tags=["Payments"])
 
 # Initialize Razorpay client
 razorpay_client = None

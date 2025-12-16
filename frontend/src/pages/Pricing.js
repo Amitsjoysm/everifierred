@@ -81,8 +81,20 @@ const Pricing = () => {
             
             // Show detailed error message
             let errorMsg = 'Unable to verify payment';
+            
             if (error.response?.data?.detail) {
-              errorMsg = error.response.data.detail;
+              // Handle both string and array formats
+              if (typeof error.response.data.detail === 'string') {
+                errorMsg = error.response.data.detail;
+              } else if (Array.isArray(error.response.data.detail)) {
+                // Extract messages from validation error array
+                errorMsg = error.response.data.detail
+                  .map(err => err.msg || JSON.stringify(err))
+                  .join(', ');
+              } else if (typeof error.response.data.detail === 'object') {
+                // Handle object format
+                errorMsg = JSON.stringify(error.response.data.detail);
+              }
             } else if (error.response?.data?.message) {
               errorMsg = error.response.data.message;
             } else if (error.message) {

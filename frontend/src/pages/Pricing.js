@@ -377,7 +377,7 @@ const Pricing = () => {
                     )}
                   </div>
 
-                  <p className="text-gray-600 mb-6">
+                  <p className="text-sm sm:text-base text-gray-600 mb-6">
                     {plan.credits_limit === -1
                       ? 'Unlimited verifications'
                       : `${plan.credits_limit.toLocaleString()} verifications/month`}
@@ -385,58 +385,60 @@ const Pricing = () => {
                   
                   <button
                     onClick={() => handleSelectPlan(plan)}
-                    className={`w-full py-3 px-6 rounded-lg font-semibold transition-all duration-200 ${
+                    className={`w-full py-3 px-4 sm:px-6 rounded-lg text-sm sm:text-base font-semibold transition-all duration-200 ${
                       plan.type === 'professional'
                         ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl'
                         : plan.type === 'free'
                         ? 'bg-gray-100 text-gray-900 hover:bg-gray-200'
                         : 'bg-blue-600 text-white hover:bg-blue-700'
                     }`}
+                    aria-label={`Select ${plan.name} plan`}
                   >
                     {plan.type === 'free' ? 'Get Started' : `Subscribe ${billingCycle === 'yearly' ? 'Yearly' : 'Monthly'}`}
                   </button>
 
-                  <div className="mt-8 space-y-4">
-                    <p className="font-semibold text-gray-900">Features:</p>
+                  <div className="mt-6 sm:mt-8 space-y-3 sm:space-y-4">
+                    <h3 className="text-sm sm:text-base font-semibold text-gray-900">Features:</h3>
                     {plan.features.map((feature, idx) => (
-                      <div key={idx} className="flex items-start gap-3">
-                        <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                        <span className="text-gray-600 text-sm">{feature}</span>
+                      <div key={idx} className="flex items-start gap-2 sm:gap-3">
+                        <Check className="w-4 h-4 sm:w-5 sm:h-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                        <span className="text-xs sm:text-sm text-gray-600">{feature}</span>
                       </div>
                     ))}
                   </div>
                 </div>
-              </div>
+              </article>
             );
           })}
-        </div>
-
-        {/* Trust Badges */}
-        <div className="mt-16 text-center">
-          <p className="text-gray-600 mb-6">Trusted by 10,000+ businesses worldwide</p>
-          <div className="flex justify-center items-center gap-8 flex-wrap">
-            <div className="flex items-center gap-2 text-gray-700">
-              <Check className="w-5 h-5 text-green-500" />
-              <span className="font-medium">Cancel anytime</span>
-            </div>
-            <div className="flex items-center gap-2 text-gray-700">
-              <Check className="w-5 h-5 text-green-500" />
-              <span className="font-medium">No hidden fees</span>
-            </div>
-            <div className="flex items-center gap-2 text-gray-700">
-              <Check className="w-5 h-5 text-green-500" />
-              <span className="font-medium">99.9% uptime</span>
-            </div>
-            <div className="flex items-center gap-2 text-gray-700">
-              <Check className="w-5 h-5 text-green-500" />
-              <span className="font-medium">24/7 support</span>
-            </div>
           </div>
-        </div>
+
+          {/* Trust Badges */}
+          <aside className="mt-12 sm:mt-16 text-center" aria-label="Trust badges">
+            <p className="text-sm sm:text-base text-gray-600 mb-6">Trusted by 10,000+ businesses worldwide</p>
+            <div className="flex justify-center items-center gap-4 sm:gap-6 md:gap-8 flex-wrap">
+              <div className="flex items-center gap-2 text-gray-700">
+                <Check className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" aria-hidden="true" />
+                <span className="text-xs sm:text-sm font-medium">Cancel anytime</span>
+              </div>
+              <div className="flex items-center gap-2 text-gray-700">
+                <Check className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" aria-hidden="true" />
+                <span className="text-xs sm:text-sm font-medium">No hidden fees</span>
+              </div>
+              <div className="flex items-center gap-2 text-gray-700">
+                <Check className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" aria-hidden="true" />
+                <span className="text-xs sm:text-sm font-medium">99.9% uptime</span>
+              </div>
+              <div className="flex items-center gap-2 text-gray-700">
+                <Check className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" aria-hidden="true" />
+                <span className="text-xs sm:text-sm font-medium">24/7 support</span>
+              </div>
+            </div>
+          </aside>
+        </section>
 
         {/* FAQ Section */}
-        <div className="mt-24">
-          <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 sm:pb-24" aria-label="Frequently asked questions">
+          <h2 className="text-2xl sm:text-3xl font-bold text-center text-gray-900 mb-8 sm:mb-12">
             Frequently Asked Questions
           </h2>
           <div className="max-w-3xl mx-auto space-y-6">

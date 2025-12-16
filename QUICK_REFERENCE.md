@@ -9,9 +9,9 @@ Password: Admin@123
 ```
 
 **URLs:**
-- Login: https://payment-gateway-sync.preview.emergentagent.com/login
-- Admin Panel: https://payment-gateway-sync.preview.emergentagent.com/admin
-- Pricing Page: https://payment-gateway-sync.preview.emergentagent.com/pricing
+- Login: https://payment-debug-14.preview.emergentagent.com/login
+- Admin Panel: https://payment-debug-14.preview.emergentagent.com/admin
+- Pricing Page: https://payment-debug-14.preview.emergentagent.com/pricing
 
 ---
 

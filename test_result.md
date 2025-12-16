@@ -641,7 +641,7 @@ agent_communication:
       - Workers: ✓ CONNECTED TO BROKER
       
       🌐 PREVIEW URL:
-      https://payment-gateway-sync.preview.emergentagent.com
+      https://payment-debug-14.preview.emergentagent.com
       
       All systems operational and ready for use!
 
@@ -727,13 +727,13 @@ agent_communication:
       - Authentication: ✓ OTP Flow Working
       
       🌐 PREVIEW URL:
-      https://payment-gateway-sync.preview.emergentagent.com
+      https://payment-debug-14.preview.emergentagent.com
       
       📧 LOGIN PAGE:
-      https://payment-gateway-sync.preview.emergentagent.com/login
+      https://payment-debug-14.preview.emergentagent.com/login
       
       🛡️ ADMIN PANEL:
-      https://payment-gateway-sync.preview.emergentagent.com/admin
+      https://payment-debug-14.preview.emergentagent.com/admin
       
       All systems operational and ready for use!
 
@@ -938,9 +938,9 @@ agent_communication:
       Password: Admin@123
       
       🌐 ACCESS:
-      - Login: https://payment-gateway-sync.preview.emergentagent.com/login
-      - Admin Panel: https://payment-gateway-sync.preview.emergentagent.com/admin
-      - Pricing: https://payment-gateway-sync.preview.emergentagent.com/pricing
+      - Login: https://payment-debug-14.preview.emergentagent.com/login
+      - Admin Panel: https://payment-debug-14.preview.emergentagent.com/admin
+      - Pricing: https://payment-debug-14.preview.emergentagent.com/pricing
       
       ✅ READY FOR TESTING & DEPLOYMENT
 
@@ -1072,10 +1072,10 @@ agent_communication:
       Status: ✓ VERIFIED & READY TO USE
       
       ✅ ACCESS URLS:
-      - Main App: https://payment-gateway-sync.preview.emergentagent.com
-      - Login: https://payment-gateway-sync.preview.emergentagent.com/login
-      - Admin Panel: https://payment-gateway-sync.preview.emergentagent.com/admin
-      - Pricing Page: https://payment-gateway-sync.preview.emergentagent.com/pricing
+      - Main App: https://payment-debug-14.preview.emergentagent.com
+      - Login: https://payment-debug-14.preview.emergentagent.com/login
+      - Admin Panel: https://payment-debug-14.preview.emergentagent.com/admin
+      - Pricing Page: https://payment-debug-14.preview.emergentagent.com/pricing
       
       ✅ PAYMENT TESTING:
       Use Razorpay test cards:
@@ -1303,11 +1303,11 @@ agent_communication:
       Credits: 25,000
       
       🌐 ACCESS URLS:
-      - Main App: https://payment-gateway-sync.preview.emergentagent.com
-      - Login: https://payment-gateway-sync.preview.emergentagent.com/login
-      - Admin Panel: https://payment-gateway-sync.preview.emergentagent.com/admin
-      - Blogs (HTML): https://payment-gateway-sync.preview.emergentagent.com/html/blogs
-      - FAQs (HTML): https://payment-gateway-sync.preview.emergentagent.com/html/faqs
+      - Main App: https://payment-debug-14.preview.emergentagent.com
+      - Login: https://payment-debug-14.preview.emergentagent.com/login
+      - Admin Panel: https://payment-debug-14.preview.emergentagent.com/admin
+      - Blogs (HTML): https://payment-debug-14.preview.emergentagent.com/html/blogs
+      - FAQs (HTML): https://payment-debug-14.preview.emergentagent.com/html/faqs
       
       📦 NEW FILES CREATED:
       1. /app/backend/routes_html.py - Static HTML routes for SEO

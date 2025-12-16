@@ -161,6 +161,7 @@ const Blog = () => {
 
         {/* Search */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8" aria-labelledby="search-heading">
+          <h2 id="search-heading" className="sr-only">Search Blog Articles</h2>
           <div className="bg-white rounded-lg shadow-lg p-4">
             <label htmlFor="blog-search" className="sr-only">Search articles</label>
             <input
@@ -176,7 +177,7 @@ const Blog = () => {
         </section>
 
         {/* Blog Posts */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16" aria-label="Blog posts">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16" aria-labelledby="posts-heading">
           {filteredBlogs.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-gray-600 text-lg">No blog posts found</p>

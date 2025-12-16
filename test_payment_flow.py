@@ -6,10 +6,11 @@ import asyncio
 import sys
 sys.path.insert(0, '/app/backend')
 
-from database import get_db
+from database import connect_to_mongo, get_db
 from datetime import datetime
 
 async def check_payment_flow():
+    await connect_to_mongo()
     db = await get_db()
     
     print("=" * 80)

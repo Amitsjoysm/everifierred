@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Check, X } from 'lucide-react';
+import { Check, Zap, TrendingDown } from 'lucide-react';
 import axios from 'axios';
 import { toast } from 'sonner';
 import { useAuth } from '../context/AuthContext';
@@ -13,6 +13,7 @@ const Pricing = () => {
   const { user, isAuthenticated, refreshUser } = useAuth();
   const [plans, setPlans] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [billingCycle, setBillingCycle] = useState('monthly'); // 'monthly' or 'yearly'
 
   useEffect(() => {
     fetchPlans();
@@ -30,6 +31,24 @@ const Pricing = () => {
     }
   };
 
+  const getPlanPrice = (plan) => {
+    return billingCycle === 'yearly' ? plan.yearly_price : plan.price;
+  };
+
+  const getOriginalPrice = (plan) => {
+    return billingCycle === 'yearly' ? plan.yearly_original_price : plan.original_price;
+  };
+
+  const getDiscountPercentage = (plan) => {
+    return billingCycle === 'yearly' ? plan.yearly_discount_percentage : plan.discount_percentage;
+  };
+
+  const getSavings = (plan) => {
+    const originalPrice = getOriginalPrice(plan);
+    const currentPrice = getPlanPrice(plan);
+    return originalPrice - currentPrice;
+  };
+
   const handleSelectPlan = async (plan) => {
     if (!isAuthenticated) {
       toast.info('Please login to subscribe');
@@ -44,29 +63,31 @@ const Pricing = () => {
 
     try {
       const token = localStorage.getItem('token');
+      
+      // Create subscription
       const response = await axios.post(
-        `${API_URL}/api/payments/create-order?plan_id=${plan.id}`,
+        `${API_URL}/api/payments/create-subscription?plan_id=${plan.id}&billing_cycle=${billingCycle}`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      // Initialize Razorpay
+      // Initialize Razorpay Subscription
       const options = {
         key: response.data.razorpay_key,
-        amount: response.data.amount,
-        currency: response.data.currency,
+        subscription_id: response.data.subscription_id,
         name: 'MailGuard',
-        description: plan.name + ' Plan',
-        order_id: response.data.order_id,
+        description: `${plan.name} Plan - ${billingCycle === 'yearly' ? 'Yearly' : 'Monthly'} Subscription`,
         handler: async function (razorpayResponse) {
           try {
+            // Verify subscription payment
             const verifyResponse = await axios.post(
-              `${API_URL}/api/payments/verify`,
+              `${API_URL}/api/payments/verify-subscription`,
               {
-                razorpay_order_id: razorpayResponse.razorpay_order_id,
+                razorpay_order_id: razorpayResponse.razorpay_subscription_id, // This is actually subscription_id
                 razorpay_payment_id: razorpayResponse.razorpay_payment_id,
                 razorpay_signature: razorpayResponse.razorpay_signature,
                 plan_id: plan.id,
+                billing_cycle: billingCycle
               },
               { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -74,25 +95,22 @@ const Pricing = () => {
             // Refresh user data to show updated plan and credits
             await refreshUser();
             
-            toast.success(`Payment successful! Upgraded to ${plan.name} plan with ${plan.credits_limit} credits.`);
+            toast.success(`🎉 Subscription activated! Welcome to ${plan.name} plan with ${plan.credits_limit} credits ${billingCycle === 'yearly' ? 'per month' : 'per month'}!`);
             navigate('/dashboard');
           } catch (error) {
-            console.error('Payment verification error:', error);
+            console.error('Subscription verification error:', error);
             
             // Show detailed error message
-            let errorMsg = 'Unable to verify payment';
+            let errorMsg = 'Unable to verify subscription';
             
             if (error.response?.data?.detail) {
-              // Handle both string and array formats
               if (typeof error.response.data.detail === 'string') {
                 errorMsg = error.response.data.detail;
               } else if (Array.isArray(error.response.data.detail)) {
-                // Extract messages from validation error array
                 errorMsg = error.response.data.detail
                   .map(err => err.msg || JSON.stringify(err))
                   .join(', ');
               } else if (typeof error.response.data.detail === 'object') {
-                // Handle object format
                 errorMsg = JSON.stringify(error.response.data.detail);
               }
             } else if (error.response?.data?.message) {
@@ -116,6 +134,11 @@ const Pricing = () => {
         theme: {
           color: '#3b82f6',
         },
+        modal: {
+          ondismiss: function () {
+            toast.info('Subscription cancelled. You can try again anytime.');
+          }
+        }
       };
 
       const rzp = new window.Razorpay(options);
@@ -128,8 +151,8 @@ const Pricing = () => {
       });
       rzp.open();
     } catch (error) {
-      console.error('Error creating order:', error);
-      let errorMsg = 'Failed to initialize payment';
+      console.error('Error creating subscription:', error);
+      let errorMsg = 'Failed to initialize subscription';
       
       if (error.response?.data?.detail) {
         if (typeof error.response.data.detail === 'string') {
@@ -159,8 +182,8 @@ const Pricing = () => {
     offers: plans.map(plan => ({
       '@type': 'Offer',
       name: plan.name,
-      price: plan.price,
-      priceCurrency: 'USD',
+      price: getPlanPrice(plan),
+      priceCurrency: 'INR',
       description: `${plan.credits_limit} email verifications per month`,
       seller: {
         '@type': 'Organization',
@@ -173,7 +196,7 @@ const Pricing = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
       <SEO
         title="Pricing Plans - Affordable Email Verification | MailGuard"
-        description="Flexible pricing plans for email verification. Start free with 100 verifications/month. Affordable paid plans from $4.99/month. No contracts, cancel anytime. Bulk discounts available."
+        description="Flexible pricing plans for email verification. Start free with 100 verifications/month. Affordable paid plans from ₹499/month. No contracts, cancel anytime. Bulk discounts available."
         keywords="email verification pricing, email validation cost, affordable email checker, free email verification, bulk email verification pricing, email verification plans"
         canonicalUrl="https://payment-secure-1.preview.emergentagent.com/pricing"
         structuredData={structuredData}
@@ -218,65 +241,177 @@ const Pricing = () => {
       </nav>
 
       {/* Pricing Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-        <div className="text-center mb-16">
-          <h1 className="text-5xl font-bold text-gray-900 mb-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
             Simple, Transparent Pricing
           </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto mb-8">
             Choose the perfect plan for your email verification needs. All plans include our core features.
           </p>
-        </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {plans.map((plan, index) => (
-            <div
-              key={plan.id}
-              className={`relative bg-white rounded-2xl shadow-xl overflow-hidden transition-transform hover:scale-105 ${
-                plan.type === 'professional' ? 'ring-2 ring-blue-600' : ''
+          {/* Billing Cycle Toggle */}
+          <div className="flex items-center justify-center gap-4 mb-4">
+            <span className={`text-lg font-medium ${billingCycle === 'monthly' ? 'text-gray-900' : 'text-gray-500'}`}>
+              Monthly
+            </span>
+            <button
+              onClick={() => setBillingCycle(billingCycle === 'monthly' ? 'yearly' : 'monthly')}
+              className={`relative inline-flex h-8 w-16 items-center rounded-full transition-colors ${
+                billingCycle === 'yearly' ? 'bg-green-600' : 'bg-gray-300'
               }`}
             >
-              {plan.type === 'professional' && (
-                <div className="absolute top-0 right-0 bg-blue-600 text-white px-4 py-1 text-sm font-semibold">
-                  POPULAR
-                </div>
-              )}
-              <div className="p-8">
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">{plan.name}</h3>
-                <div className="mb-6">
-                  <span className="text-4xl font-bold text-gray-900">
-                    {plan.price === 0 ? 'Free' : `₹${plan.price}`}
-                  </span>
-                  {plan.price > 0 && <span className="text-gray-600">/month</span>}
-                </div>
-                <p className="text-gray-600 mb-6">
-                  {plan.credits_limit === -1
-                    ? 'Unlimited verifications'
-                    : `${plan.credits_limit.toLocaleString()} verifications/month`}
-                </p>
-                <button
-                  onClick={() => handleSelectPlan(plan)}
-                  className={`w-full py-3 px-6 rounded-lg font-semibold transition ${
-                    plan.type === 'professional'
-                      ? 'bg-blue-600 text-white hover:bg-blue-700'
-                      : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
-                  }`}
-                >
-                  {plan.type === 'free' ? 'Get Started' : 'Subscribe Now'}
-                </button>
+              <span
+                className={`inline-block h-6 w-6 transform rounded-full bg-white transition-transform ${
+                  billingCycle === 'yearly' ? 'translate-x-9' : 'translate-x-1'
+                }`}
+              />
+            </button>
+            <span className={`text-lg font-medium ${billingCycle === 'yearly' ? 'text-gray-900' : 'text-gray-500'}`}>
+              Yearly
+            </span>
+          </div>
+          
+          {/* Savings Badge */}
+          {billingCycle === 'yearly' && (
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-100 text-green-700 text-sm font-semibold">
+              <TrendingDown className="w-4 h-4" />
+              Save up to 62% with yearly billing!
+            </div>
+          )}
+        </div>
 
-                <div className="mt-8 space-y-4">
-                  <p className="font-semibold text-gray-900">Features:</p>
-                  {plan.features.map((feature, idx) => (
-                    <div key={idx} className="flex items-start gap-3">
-                      <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span className="text-gray-600">{feature}</span>
-                    </div>
-                  ))}
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+          {plans.map((plan, index) => {
+            const price = getPlanPrice(plan);
+            const originalPrice = getOriginalPrice(plan);
+            const discount = getDiscountPercentage(plan);
+            const savings = getSavings(plan);
+            const monthlyEquivalent = billingCycle === 'yearly' ? (price / 12).toFixed(0) : null;
+
+            return (
+              <div
+                key={plan.id}
+                className={`relative bg-white rounded-2xl shadow-xl overflow-hidden transition-all duration-300 hover:scale-105 ${
+                  plan.type === 'professional' ? 'ring-2 ring-blue-600 lg:scale-105' : ''
+                }`}
+              >
+                {plan.type === 'professional' && (
+                  <div className="absolute top-0 right-0 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-1 text-sm font-semibold rounded-bl-lg">
+                    MOST POPULAR
+                  </div>
+                )}
+                
+                {discount > 0 && plan.type !== 'free' && (
+                  <div className="absolute top-0 left-0 bg-gradient-to-r from-green-500 to-green-600 text-white px-3 py-1 text-xs font-bold rounded-br-lg flex items-center gap-1">
+                    <Zap className="w-3 h-3" />
+                    SAVE {discount.toFixed(0)}%
+                  </div>
+                )}
+
+                <div className="p-6 sm:p-8">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-2">{plan.name}</h3>
+                  
+                  <div className="mb-6">
+                    {plan.type === 'free' ? (
+                      <div>
+                        <span className="text-4xl font-bold text-gray-900">Free</span>
+                        <p className="text-sm text-gray-500 mt-1">Forever</p>
+                      </div>
+                    ) : (
+                      <div>
+                        {/* Show original price crossed out */}
+                        {originalPrice && discount > 0 && (
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="text-xl text-gray-400 line-through">
+                              ₹{originalPrice.toLocaleString()}
+                            </span>
+                          </div>
+                        )}
+                        
+                        {/* Current price */}
+                        <div className="flex items-baseline gap-1">
+                          <span className="text-4xl font-bold text-gray-900">
+                            ₹{price.toLocaleString()}
+                          </span>
+                          <span className="text-gray-600">
+                            /{billingCycle === 'yearly' ? 'year' : 'month'}
+                          </span>
+                        </div>
+                        
+                        {/* Yearly monthly equivalent */}
+                        {billingCycle === 'yearly' && (
+                          <p className="text-sm text-green-600 font-semibold mt-1">
+                            ₹{monthlyEquivalent}/month effective
+                          </p>
+                        )}
+                        
+                        {/* Savings highlight */}
+                        {savings > 0 && (
+                          <div className="mt-2 inline-flex items-center gap-1 px-3 py-1 rounded-full bg-green-50 text-green-700 text-sm font-semibold">
+                            <TrendingDown className="w-4 h-4" />
+                            Save ₹{savings.toLocaleString()}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+
+                  <p className="text-gray-600 mb-6">
+                    {plan.credits_limit === -1
+                      ? 'Unlimited verifications'
+                      : `${plan.credits_limit.toLocaleString()} verifications/month`}
+                  </p>
+                  
+                  <button
+                    onClick={() => handleSelectPlan(plan)}
+                    className={`w-full py-3 px-6 rounded-lg font-semibold transition-all duration-200 ${
+                      plan.type === 'professional'
+                        ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl'
+                        : plan.type === 'free'
+                        ? 'bg-gray-100 text-gray-900 hover:bg-gray-200'
+                        : 'bg-blue-600 text-white hover:bg-blue-700'
+                    }`}
+                  >
+                    {plan.type === 'free' ? 'Get Started' : `Subscribe ${billingCycle === 'yearly' ? 'Yearly' : 'Monthly'}`}
+                  </button>
+
+                  <div className="mt-8 space-y-4">
+                    <p className="font-semibold text-gray-900">Features:</p>
+                    {plan.features.map((feature, idx) => (
+                      <div key={idx} className="flex items-start gap-3">
+                        <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                        <span className="text-gray-600 text-sm">{feature}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
+            );
+          })}
+        </div>
+
+        {/* Trust Badges */}
+        <div className="mt-16 text-center">
+          <p className="text-gray-600 mb-6">Trusted by 10,000+ businesses worldwide</p>
+          <div className="flex justify-center items-center gap-8 flex-wrap">
+            <div className="flex items-center gap-2 text-gray-700">
+              <Check className="w-5 h-5 text-green-500" />
+              <span className="font-medium">Cancel anytime</span>
             </div>
-          ))}
+            <div className="flex items-center gap-2 text-gray-700">
+              <Check className="w-5 h-5 text-green-500" />
+              <span className="font-medium">No hidden fees</span>
+            </div>
+            <div className="flex items-center gap-2 text-gray-700">
+              <Check className="w-5 h-5 text-green-500" />
+              <span className="font-medium">99.9% uptime</span>
+            </div>
+            <div className="flex items-center gap-2 text-gray-700">
+              <Check className="w-5 h-5 text-green-500" />
+              <span className="font-medium">24/7 support</span>
+            </div>
+          </div>
         </div>
 
         {/* FAQ Section */}
@@ -290,7 +425,7 @@ const Pricing = () => {
                 Can I switch plans anytime?
               </h3>
               <p className="text-gray-600">
-                Yes! You can upgrade or downgrade your plan at any time. Changes take effect immediately.
+                Yes! You can upgrade, downgrade, or cancel your subscription at any time. Changes take effect immediately.
               </p>
             </div>
             <div className="bg-white rounded-lg p-6 shadow-md">
@@ -307,6 +442,14 @@ const Pricing = () => {
               </h3>
               <p className="text-gray-600">
                 Credits reset monthly based on your plan. Consider upgrading to a higher plan if you consistently use all your credits.
+              </p>
+            </div>
+            <div className="bg-white rounded-lg p-6 shadow-md">
+              <h3 className="font-semibold text-lg text-gray-900 mb-2">
+                How does the yearly billing work?
+              </h3>
+              <p className="text-gray-600">
+                With yearly billing, you pay for 10 months upfront and get 2 months free, plus an additional 10% discount. Your subscription will automatically renew after one year.
               </p>
             </div>
           </div>

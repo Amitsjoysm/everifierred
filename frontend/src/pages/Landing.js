@@ -1,8 +1,9 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { CheckCircle, Shield, Zap, Users, TrendingUp, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import SEO from '../components/SEO';
+import MobileMenu from '../components/MobileMenu';
 
 const Landing = () => {
   const structuredData = {

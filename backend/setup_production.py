@@ -268,7 +268,7 @@ async def display_status():
     print("\n" + "="*70)
     print("NEXT STEPS:")
     print("="*70)
-    print("1. Login to admin panel: https://admin-payment-tool.preview.emergentagent.com/login")
+    print("1. Login to admin panel: https://payment-gateway-sync.preview.emergentagent.com/login")
     print("   Email: amits.joys@gmail.com")
     print("   Password: Admin@123")
     print("\n2. Go to Admin Panel to manage plans")

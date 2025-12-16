@@ -179,10 +179,10 @@ def generate_instructions():
     print("\n1. LOGIN AS SUPER ADMIN:")
     print("   Email: amits.joys@gmail.com")
     print("   Password: Admin@123")
-    print("   URL: https://admin-payment-tool.preview.emergentagent.com/login")
+    print("   URL: https://payment-gateway-sync.preview.emergentagent.com/login")
     
     print("\n2. ACCESS ADMIN PANEL:")
-    print("   URL: https://admin-payment-tool.preview.emergentagent.com/admin")
+    print("   URL: https://payment-gateway-sync.preview.emergentagent.com/admin")
     print("   - View all plans")
     print("   - Create/Edit/Delete plans")
     print("   - Link Razorpay subscription plans (optional)")

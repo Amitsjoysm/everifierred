@@ -641,7 +641,7 @@ agent_communication:
       - Workers: ✓ CONNECTED TO BROKER
       
       🌐 PREVIEW URL:
-      https://admin-payment-tool.preview.emergentagent.com
+      https://payment-gateway-sync.preview.emergentagent.com
       
       All systems operational and ready for use!
 
@@ -727,13 +727,13 @@ agent_communication:
       - Authentication: ✓ OTP Flow Working
       
       🌐 PREVIEW URL:
-      https://admin-payment-tool.preview.emergentagent.com
+      https://payment-gateway-sync.preview.emergentagent.com
       
       📧 LOGIN PAGE:
-      https://admin-payment-tool.preview.emergentagent.com/login
+      https://payment-gateway-sync.preview.emergentagent.com/login
       
       🛡️ ADMIN PANEL:
-      https://admin-payment-tool.preview.emergentagent.com/admin
+      https://payment-gateway-sync.preview.emergentagent.com/admin
       
       All systems operational and ready for use!
 
@@ -938,9 +938,9 @@ agent_communication:
       Password: Admin@123
       
       🌐 ACCESS:
-      - Login: https://admin-payment-tool.preview.emergentagent.com/login
-      - Admin Panel: https://admin-payment-tool.preview.emergentagent.com/admin
-      - Pricing: https://admin-payment-tool.preview.emergentagent.com/pricing
+      - Login: https://payment-gateway-sync.preview.emergentagent.com/login
+      - Admin Panel: https://payment-gateway-sync.preview.emergentagent.com/admin
+      - Pricing: https://payment-gateway-sync.preview.emergentagent.com/pricing
       
       ✅ READY FOR TESTING & DEPLOYMENT
 
@@ -1144,11 +1144,11 @@ agent_communication:
       Credits: 25,000
       
       🌐 ACCESS URLS:
-      - Main App: https://admin-payment-tool.preview.emergentagent.com
-      - Login: https://admin-payment-tool.preview.emergentagent.com/login
-      - Admin Panel: https://admin-payment-tool.preview.emergentagent.com/admin
-      - Blogs (HTML): https://admin-payment-tool.preview.emergentagent.com/html/blogs
-      - FAQs (HTML): https://admin-payment-tool.preview.emergentagent.com/html/faqs
+      - Main App: https://payment-gateway-sync.preview.emergentagent.com
+      - Login: https://payment-gateway-sync.preview.emergentagent.com/login
+      - Admin Panel: https://payment-gateway-sync.preview.emergentagent.com/admin
+      - Blogs (HTML): https://payment-gateway-sync.preview.emergentagent.com/html/blogs
+      - FAQs (HTML): https://payment-gateway-sync.preview.emergentagent.com/html/faqs
       
       📦 NEW FILES CREATED:
       1. /app/backend/routes_html.py - Static HTML routes for SEO

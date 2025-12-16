@@ -10,7 +10,7 @@ import sys
 import os
 sys.path.append('/app/backend')
 
-BASE_URL = "https://admin-payment-tool.preview.emergentagent.com/api"
+BASE_URL = "https://payment-gateway-sync.preview.emergentagent.com/api"
 ADMIN_EMAIL = "admin@mailguard.com"
 ADMIN_PASSWORD = "Admin@123456"
 

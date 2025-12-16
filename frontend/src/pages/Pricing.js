@@ -475,11 +475,11 @@ const Pricing = () => {
               </p>
             </div>
           </div>
-        </div>
-      </div>
+        </section>
+      </main>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12 mt-24">
+      <footer className="bg-gray-900 text-white py-12 mt-24" role="contentinfo">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-4 gap-8">
             <div>

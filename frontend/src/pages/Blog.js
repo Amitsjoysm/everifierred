@@ -178,6 +178,7 @@ const Blog = () => {
 
         {/* Blog Posts */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16" aria-labelledby="posts-heading">
+          <h2 id="posts-heading" className="sr-only">Blog Posts</h2>
           {filteredBlogs.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-gray-600 text-lg">No blog posts found</p>

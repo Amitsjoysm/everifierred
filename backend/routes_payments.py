@@ -8,7 +8,7 @@ import logging
 import json
 
 from database import get_db
-from models import Plan, PlanType, Payment, User, PaymentVerifyRequest
+from models import Plan, PlanType, Payment, User, PaymentVerifyRequest, Subscription
 from auth import get_current_user
 from config import settings
 from rate_limiter import rate_limiter

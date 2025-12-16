@@ -80,9 +80,9 @@ const Landing = () => {
       {/* Main Content */}
       <main>
         {/* Hero Section */}
-        <section className="pt-32 pb-20 px-6 bg-gradient-to-br from-blue-50 via-white to-cyan-50" aria-label="Hero section">
+        <section className="pt-32 pb-20 px-6 bg-gradient-to-br from-blue-50 via-white to-cyan-50" aria-labelledby="hero-heading">
           <div className="container mx-auto text-center max-w-4xl">
-            <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-gray-900 mb-6" style={{fontFamily: 'Space Grotesk, sans-serif'}}>
+            <h1 id="hero-heading" className="text-4xl sm:text-5xl md:text-7xl font-bold text-gray-900 mb-6" style={{fontFamily: 'Space Grotesk, sans-serif'}}>
               Free Email Verifier for B2B Teams
             </h1>
             <p className="text-lg md:text-xl text-gray-600 mb-8 max-w-2xl mx-auto" style={{fontFamily: 'Inter, sans-serif'}}>
@@ -106,16 +106,16 @@ const Landing = () => {
         </section>
 
         {/* Features Section */}
-        <section className="py-20 px-6 bg-white" aria-label="Features">
+        <section className="py-20 px-6 bg-white" aria-labelledby="features-heading">
           <div className="container mx-auto">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4" style={{fontFamily: 'Space Grotesk, sans-serif'}}>
+            <header className="text-center mb-16">
+              <h2 id="features-heading" className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4" style={{fontFamily: 'Space Grotesk, sans-serif'}}>
                 Everything You Need to Verify Emails
               </h2>
               <p className="text-base sm:text-lg text-gray-600" style={{fontFamily: 'Inter, sans-serif'}}>
                 Powerful features for email verification and list cleaning
               </p>
-            </div>
+            </header>
 
             <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
               <article className="p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-blue-50 to-cyan-50 border border-blue-100">
@@ -170,13 +170,13 @@ const Landing = () => {
         </section>
 
         {/* Use Cases */}
-        <section className="py-20 px-6 bg-gray-50" aria-label="Use cases">
+        <section className="py-20 px-6 bg-gray-50" aria-labelledby="usecases-heading">
           <div className="container mx-auto">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4" style={{fontFamily: 'Space Grotesk, sans-serif'}}>
+            <header className="text-center mb-16">
+              <h2 id="usecases-heading" className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4" style={{fontFamily: 'Space Grotesk, sans-serif'}}>
                 Perfect for Every Use Case
               </h2>
-            </div>
+            </header>
 
             <div className="grid sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {[
@@ -197,9 +197,9 @@ const Landing = () => {
         </section>
 
         {/* CTA Section */}
-        <section className="py-20 px-6 bg-gradient-to-br from-blue-600 to-cyan-600 text-white" aria-label="Call to action">
+        <section className="py-20 px-6 bg-gradient-to-br from-blue-600 to-cyan-600 text-white" aria-labelledby="cta-heading">
           <div className="container mx-auto text-center max-w-3xl">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6" style={{fontFamily: 'Space Grotesk, sans-serif'}}>
+            <h2 id="cta-heading" className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6" style={{fontFamily: 'Space Grotesk, sans-serif'}}>
               Start Verifying Emails Today
             </h2>
             <p className="text-lg sm:text-xl mb-8 text-blue-100" style={{fontFamily: 'Inter, sans-serif'}}>
@@ -225,27 +225,27 @@ const Landing = () => {
               </div>
               <p className="text-sm">Professional email verification for B2B teams</p>
             </div>
-            <div>
-              <h2 className="text-white font-semibold mb-4 text-base">Product</h2>
+            <nav aria-label="Product navigation">
+              <h3 className="text-white font-semibold mb-4 text-base">Product</h3>
               <ul className="space-y-2 text-sm">
                 <li><Link to="/pricing" className="hover:text-white transition-colors">Pricing</Link></li>
                 <li><Link to="/blog" className="hover:text-white transition-colors">Blog</Link></li>
               </ul>
-            </div>
-            <div>
-              <h2 className="text-white font-semibold mb-4 text-base">Resources</h2>
+            </nav>
+            <nav aria-label="Resources navigation">
+              <h3 className="text-white font-semibold mb-4 text-base">Resources</h3>
               <ul className="space-y-2 text-sm">
                 <li><Link to="/blog" className="hover:text-white transition-colors">Blog</Link></li>
                 <li><Link to="/faqs" className="hover:text-white transition-colors">FAQs</Link></li>
               </ul>
-            </div>
-            <div>
-              <h2 className="text-white font-semibold mb-4 text-base">Company</h2>
+            </nav>
+            <nav aria-label="Company navigation">
+              <h3 className="text-white font-semibold mb-4 text-base">Company</h3>
               <ul className="space-y-2 text-sm">
                 <li><Link to="/login" className="hover:text-white transition-colors">Login</Link></li>
                 <li><Link to="/register" className="hover:text-white transition-colors">Sign Up</Link></li>
               </ul>
-            </div>
+            </nav>
           </div>
           <div className="border-t border-gray-800 pt-8 text-center text-sm">
             <p>&copy; 2024 MailGuard. All rights reserved.</p>

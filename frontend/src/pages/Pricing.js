@@ -176,7 +176,7 @@ const Pricing = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600" role="status" aria-label="Loading"></div>
       </div>
     );
   }
@@ -259,9 +259,9 @@ const Pricing = () => {
       {/* Main Content */}
       <main>
         {/* Pricing Section */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-24" aria-label="Pricing plans">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-24" aria-labelledby="pricing-heading">
           <header className="text-center mb-12">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+            <h1 id="pricing-heading" className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">
               Simple, Transparent Pricing
             </h1>
             <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-2xl mx-auto mb-8">
@@ -437,43 +437,43 @@ const Pricing = () => {
         </section>
 
         {/* FAQ Section */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 sm:pb-24" aria-label="Frequently asked questions">
-          <h2 className="text-2xl sm:text-3xl font-bold text-center text-gray-900 mb-8 sm:mb-12">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 sm:pb-24" aria-labelledby="faq-heading">
+          <h2 id="faq-heading" className="text-2xl sm:text-3xl font-bold text-center text-gray-900 mb-8 sm:mb-12">
             Frequently Asked Questions
           </h2>
           <div className="max-w-3xl mx-auto space-y-6">
-            <div className="bg-white rounded-lg p-6 shadow-md">
+            <article className="bg-white rounded-lg p-6 shadow-md">
               <h3 className="font-semibold text-lg text-gray-900 mb-2">
                 Can I switch plans anytime?
               </h3>
               <p className="text-gray-600">
                 Yes! You can upgrade, downgrade, or cancel your subscription at any time. Changes take effect immediately.
               </p>
-            </div>
-            <div className="bg-white rounded-lg p-6 shadow-md">
+            </article>
+            <article className="bg-white rounded-lg p-6 shadow-md">
               <h3 className="font-semibold text-lg text-gray-900 mb-2">
                 What payment methods do you accept?
               </h3>
               <p className="text-gray-600">
                 We accept all major credit cards, debit cards, UPI, and net banking through Razorpay.
               </p>
-            </div>
-            <div className="bg-white rounded-lg p-6 shadow-md">
+            </article>
+            <article className="bg-white rounded-lg p-6 shadow-md">
               <h3 className="font-semibold text-lg text-gray-900 mb-2">
                 Do unused credits roll over?
               </h3>
               <p className="text-gray-600">
                 Credits reset monthly based on your plan. Consider upgrading to a higher plan if you consistently use all your credits.
               </p>
-            </div>
-            <div className="bg-white rounded-lg p-6 shadow-md">
+            </article>
+            <article className="bg-white rounded-lg p-6 shadow-md">
               <h3 className="font-semibold text-lg text-gray-900 mb-2">
                 How does the yearly billing work?
               </h3>
               <p className="text-gray-600">
                 With yearly billing, you pay for 10 months upfront and get 2 months free, plus an additional 10% discount. Your subscription will automatically renew after one year.
               </p>
-            </div>
+            </article>
           </div>
         </section>
       </main>
@@ -486,7 +486,7 @@ const Pricing = () => {
               <h3 className="text-xl font-bold mb-4">MailGuard</h3>
               <p className="text-gray-400">Professional email verification for businesses</p>
             </div>
-            <div>
+            <nav aria-label="Product navigation">
               <h4 className="font-semibold mb-4">Product</h4>
               <ul className="space-y-2 text-gray-400">
                 <li className="cursor-pointer hover:text-white" onClick={() => navigate('/')}>
@@ -499,8 +499,8 @@ const Pricing = () => {
                   Blog
                 </li>
               </ul>
-            </div>
-            <div>
+            </nav>
+            <nav aria-label="Support navigation">
               <h4 className="font-semibold mb-4">Support</h4>
               <ul className="space-y-2 text-gray-400">
                 <li className="cursor-pointer hover:text-white" onClick={() => navigate('/faqs')}>
@@ -508,14 +508,14 @@ const Pricing = () => {
                 </li>
                 <li className="cursor-pointer hover:text-white">Contact</li>
               </ul>
-            </div>
-            <div>
+            </nav>
+            <nav aria-label="Legal navigation">
               <h4 className="font-semibold mb-4">Legal</h4>
               <ul className="space-y-2 text-gray-400">
                 <li className="cursor-pointer hover:text-white">Privacy Policy</li>
                 <li className="cursor-pointer hover:text-white">Terms of Service</li>
               </ul>
-            </div>
+            </nav>
           </div>
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
             <p>&copy; 2025 MailGuard. All rights reserved.</p>

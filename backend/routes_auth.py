@@ -146,6 +146,16 @@ async def verify_login(verification: OTPVerification):
     """Login Step 2: Verify OTP and complete login"""
     db = await get_db()
     
+    # First, check if there's any OTP for this email and purpose
+    any_otp = await db.otp_store.find_one({
+        "email": verification.email,
+        "purpose": "login"
+    })
+    
+    if not any_otp:
+        raise HTTPException(status_code=400, detail="No OTP found. Please request a new OTP.")
+    
+    # Check if OTP matches
     otp_record = await db.otp_store.find_one({
         "email": verification.email,
         "otp": verification.otp,
@@ -154,11 +164,45 @@ async def verify_login(verification: OTPVerification):
     })
     
     if not otp_record:
-        raise HTTPException(status_code=400, detail="Invalid or expired OTP")
+        # Check if it was already used
+        used_otp = await db.otp_store.find_one({
+            "email": verification.email,
+            "otp": verification.otp,
+            "purpose": "login",
+            "is_used": True
+        })
+        if used_otp:
+            raise HTTPException(status_code=400, detail="OTP has already been used. Please request a new OTP.")
+        else:
+            raise HTTPException(status_code=400, detail="Invalid OTP. Please check and try again.")
     
-    expires_at = datetime.fromisoformat(otp_record['expires_at'])
-    if datetime.now(timezone.utc) > expires_at:
-        raise HTTPException(status_code=400, detail="OTP has expired")
+    # Check expiration with proper timezone handling
+    expires_at_str = otp_record['expires_at']
+    if isinstance(expires_at_str, str):
+        # Handle both ISO format with and without timezone
+        if expires_at_str.endswith('Z'):
+            expires_at_str = expires_at_str[:-1] + '+00:00'
+        elif '+' not in expires_at_str and expires_at_str.count(':') == 2:
+            expires_at_str += '+00:00'
+        
+        expires_at = datetime.fromisoformat(expires_at_str)
+    else:
+        expires_at = expires_at_str
+    
+    # Ensure both datetimes are timezone-aware for comparison
+    if expires_at.tzinfo is None:
+        expires_at = expires_at.replace(tzinfo=timezone.utc)
+    
+    current_time = datetime.now(timezone.utc)
+    
+    if current_time > expires_at:
+        # Delete expired OTP
+        await db.otp_store.delete_one({"id": otp_record['id']})
+        time_diff = (current_time - expires_at).total_seconds() / 60
+        raise HTTPException(
+            status_code=400, 
+            detail=f"OTP has expired {int(time_diff)} minutes ago. Please request a new OTP."
+        )
     
     user = await db.users.find_one({"email": verification.email})
     if not user:

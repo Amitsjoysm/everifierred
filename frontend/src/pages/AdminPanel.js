@@ -925,16 +925,93 @@ const PlansTab = ({ plans, fetchPlans, showModal, setShowModal, editing, setEdit
                 />
                 <p className="text-xs text-gray-500 mt-1">Use lowercase (e.g., free, starter, premium, business)</p>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Price (₹)</label>
-                <input
-                  type="number"
-                  required
-                  value={formData.price}
-                  onChange={(e) => setFormData({...formData, price: parseFloat(e.target.value)})}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
-                />
+              {/* Monthly Pricing Section */}
+              <div className="border rounded-lg p-4 bg-blue-50">
+                <h4 className="font-semibold text-gray-900 mb-3">💳 Monthly Pricing</h4>
+                <div className="space-y-3">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Current Monthly Price (₹)</label>
+                    <input
+                      type="number"
+                      required
+                      value={formData.price}
+                      onChange={(e) => setFormData({...formData, price: parseFloat(e.target.value)})}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                      placeholder="499"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">Actual price customers pay per month</p>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Original/Hyped Monthly Price (₹)</label>
+                    <input
+                      type="number"
+                      value={formData.original_price}
+                      onChange={(e) => setFormData({...formData, original_price: parseFloat(e.target.value) || 0})}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                      placeholder="999"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">Higher price to show as crossed out (for marketing)</p>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Monthly Discount %</label>
+                    <input
+                      type="number"
+                      step="0.1"
+                      value={formData.discount_percentage}
+                      onChange={(e) => setFormData({...formData, discount_percentage: parseFloat(e.target.value) || 0})}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                      placeholder="50"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">Discount percentage badge (e.g., SAVE 50%)</p>
+                  </div>
+                </div>
               </div>
+
+              {/* Yearly Pricing Section */}
+              <div className="border rounded-lg p-4 bg-green-50">
+                <h4 className="font-semibold text-gray-900 mb-3">🗓️ Yearly Pricing</h4>
+                <div className="space-y-3">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Current Yearly Price (₹)</label>
+                    <input
+                      type="number"
+                      value={formData.yearly_price}
+                      onChange={(e) => setFormData({...formData, yearly_price: parseFloat(e.target.value) || 0})}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                      placeholder="4491"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">Actual price for annual subscription</p>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Original/Hyped Yearly Price (₹)</label>
+                    <input
+                      type="number"
+                      value={formData.yearly_original_price}
+                      onChange={(e) => setFormData({...formData, yearly_original_price: parseFloat(e.target.value) || 0})}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                      placeholder="11988"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">Higher price to show as crossed out (for marketing)</p>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Yearly Discount %</label>
+                    <input
+                      type="number"
+                      step="0.1"
+                      value={formData.yearly_discount_percentage}
+                      onChange={(e) => setFormData({...formData, yearly_discount_percentage: parseFloat(e.target.value) || 0})}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                      placeholder="62.5"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">Discount percentage badge for yearly (e.g., SAVE 62%)</p>
+                  </div>
+                </div>
+              </div>
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Credits Limit</label>
                 <input

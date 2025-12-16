@@ -200,7 +200,7 @@ Before going live:
 1. Go to Settings → Webhooks
 2. Add webhook URL:
    ```
-   https://responsive-pages-4.preview.emergentagent.com/api/payments/webhook
+   https://page-structure-fix.preview.emergentagent.com/api/payments/webhook
    ```
 3. Select events:
    - payment.captured

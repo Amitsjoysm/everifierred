@@ -268,7 +268,7 @@ async def display_status():
     print("\n" + "="*70)
     print("NEXT STEPS:")
     print("="*70)
-    print("1. Login to admin panel: https://responsive-pages-4.preview.emergentagent.com/login")
+    print("1. Login to admin panel: https://page-structure-fix.preview.emergentagent.com/login")
     print("   Email: amits.joys@gmail.com")
     print("   Password: Admin@123")
     print("\n2. Go to Admin Panel to manage plans")

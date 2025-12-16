@@ -9,9 +9,9 @@ Password: Admin@123
 ```
 
 **URLs:**
-- Login: https://responsive-pages-4.preview.emergentagent.com/login
-- Admin Panel: https://responsive-pages-4.preview.emergentagent.com/admin
-- Pricing Page: https://responsive-pages-4.preview.emergentagent.com/pricing
+- Login: https://page-structure-fix.preview.emergentagent.com/login
+- Admin Panel: https://page-structure-fix.preview.emergentagent.com/admin
+- Pricing Page: https://page-structure-fix.preview.emergentagent.com/pricing
 
 ---
 

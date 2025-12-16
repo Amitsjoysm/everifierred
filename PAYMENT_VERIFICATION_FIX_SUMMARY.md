@@ -233,7 +233,7 @@ rzp.on('payment.failed', function (response) {
 
 #### 1. Successful Payment Flow
 1. Login with test account
-2. Navigate to pricing page: `https://responsive-pages-4.preview.emergentagent.com/pricing`
+2. Navigate to pricing page: `https://page-structure-fix.preview.emergentagent.com/pricing`
 3. Click "Subscribe Now" on Starter plan (₹499)
 4. Complete payment with test card
 5. **Verify**: Success toast appears
@@ -278,10 +278,10 @@ All services running and operational:
 
 ## Preview URL
 
-**Main App**: https://responsive-pages-4.preview.emergentagent.com
-**Login**: https://responsive-pages-4.preview.emergentagent.com/login
-**Pricing**: https://responsive-pages-4.preview.emergentagent.com/pricing
-**Admin Panel**: https://responsive-pages-4.preview.emergentagent.com/admin
+**Main App**: https://page-structure-fix.preview.emergentagent.com
+**Login**: https://page-structure-fix.preview.emergentagent.com/login
+**Pricing**: https://page-structure-fix.preview.emergentagent.com/pricing
+**Admin Panel**: https://page-structure-fix.preview.emergentagent.com/admin
 
 ## Razorpay Configuration
 

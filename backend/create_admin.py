@@ -81,9 +81,9 @@ async def create_admin_user():
     print(f"Plan:     Enterprise")
     print("\n" + "="*50)
     print("\nYou can now login at:")
-    print("https://responsive-pages-4.preview.emergentagent.com/login")
+    print("https://page-structure-fix.preview.emergentagent.com/login")
     print("\nAccess Admin Panel at:")
-    print("https://responsive-pages-4.preview.emergentagent.com/admin")
+    print("https://page-structure-fix.preview.emergentagent.com/admin")
     print("="*50 + "\n")
     
     client.close()

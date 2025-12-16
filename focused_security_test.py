@@ -13,7 +13,7 @@ from datetime import datetime
 from typing import Dict, Any, Optional
 
 # Configuration
-BASE_URL = "https://responsive-pages-4.preview.emergentagent.com/api"
+BASE_URL = "https://page-structure-fix.preview.emergentagent.com/api"
 
 class FocusedSecurityTester:
     def __init__(self):

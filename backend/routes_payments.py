@@ -134,10 +134,16 @@ async def create_payment_order(
     
     # Create Razorpay order
     try:
+        # Generate a short receipt ID (max 40 chars for Razorpay)
+        import uuid
+        short_id = str(uuid.uuid4())[:8]  # Use first 8 chars of UUID
+        timestamp = int(datetime.now(timezone.utc).timestamp())
+        receipt = f"rcpt_{short_id}_{timestamp}"[:40]  # Ensure max 40 chars
+        
         order_data = {
             'amount': int(plan['price'] * 100),  # Convert to paise
             'currency': 'INR',
-            'receipt': f"order_{current_user.id}_{int(datetime.now(timezone.utc).timestamp())}",
+            'receipt': receipt,
             'notes': {
                 'user_id': current_user.id,
                 'plan_id': plan_id,

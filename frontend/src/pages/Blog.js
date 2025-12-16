@@ -91,7 +91,7 @@ const Blog = () => {
       />
       
       {/* Navigation */}
-      <nav className="bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50">
+      <nav className="bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50" role="navigation" aria-label="Main navigation">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
@@ -99,21 +99,21 @@ const Blog = () => {
                 MailGuard
               </span>
             </div>
-            <div className="flex items-center gap-6">
+            <div className="hidden md:flex items-center gap-6">
               <span
-                className="text-gray-700 hover:text-gray-900 cursor-pointer"
+                className="text-gray-700 hover:text-gray-900 cursor-pointer transition-colors"
                 onClick={() => navigate('/')}
               >
                 Home
               </span>
               <span
-                className="text-gray-700 hover:text-gray-900 cursor-pointer"
+                className="text-gray-700 hover:text-gray-900 cursor-pointer transition-colors"
                 onClick={() => navigate('/pricing')}
               >
                 Pricing
               </span>
               <span
-                className="text-gray-700 hover:text-gray-900 cursor-pointer"
+                className="text-gray-700 hover:text-gray-900 cursor-pointer transition-colors"
                 onClick={() => navigate('/faqs')}
               >
                 FAQs
@@ -121,32 +121,43 @@ const Blog = () => {
               {isAuthenticated ? (
                 <button
                   onClick={() => navigate('/dashboard')}
-                  className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition"
+                  className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors"
                 >
                   Dashboard
                 </button>
               ) : (
                 <button
                   onClick={() => navigate('/login')}
-                  className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition"
+                  className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors"
                 >
                   Login
                 </button>
               )}
             </div>
+            
+            {/* Mobile Menu */}
+            <MobileMenu
+              links={mobileMenuLinks}
+              isAuthenticated={isAuthenticated}
+              onDashboardClick={() => navigate('/dashboard')}
+              onLoginClick={() => navigate('/login')}
+              onRegisterClick={() => navigate('/register')}
+            />
           </div>
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-5xl font-bold mb-4">Email Verification Blog</h1>
-          <p className="text-xl text-blue-100 max-w-2xl">
-            Expert insights, guides, and best practices for email verification and deliverability
-          </p>
-        </div>
-      </div>
+      {/* Main Content */}
+      <main>
+        {/* Hero Section */}
+        <header className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-16 sm:py-20">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h1 className="text-4xl sm:text-5xl font-bold mb-4">Email Verification Blog</h1>
+            <p className="text-lg sm:text-xl text-blue-100 max-w-2xl">
+              Expert insights, guides, and best practices for email verification and deliverability
+            </p>
+          </div>
+        </header>
 
       {/* Search */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8">

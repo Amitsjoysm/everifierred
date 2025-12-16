@@ -95,48 +95,59 @@ async def analyze_user_usage(db, user: User) -> Dict[str, Any]:
 
 
 async def recommend_plan(db, user: User, usage_data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
-    """Recommend best plan based on usage"""
+    """Recommend next higher plan or max plan based on current plan"""
     
-    monthly_projection = usage_data['monthly_projection']
     current_plan = user.plan
     
-    # Get all plans
+    # Get all plans sorted by price
     plans = await db.plans.find({"is_active": True}, {"_id": 0}).sort("price", 1).to_list(100)
     
-    # Find best plan
-    current_plan_obj = None
+    # Define plan hierarchy
+    plan_hierarchy = ['free', 'starter', 'professional', 'enterprise']
+    
+    # Find current plan index
+    try:
+        current_index = plan_hierarchy.index(current_plan)
+    except ValueError:
+        # If current plan not in hierarchy, recommend based on usage
+        current_index = -1
+    
+    # If user is on the max plan (enterprise), no recommendation
+    if current_index >= len(plan_hierarchy) - 1:
+        return None
+    
+    # Get next plan in hierarchy
+    next_plan_type = plan_hierarchy[current_index + 1]
+    
+    # Find the next plan object
     recommended_plan = None
-    
     for plan in plans:
-        if plan['type'] == current_plan:
-            current_plan_obj = plan
+        if plan['type'] == next_plan_type:
+            recommended_plan = plan
+            break
+    
+    if not recommended_plan:
+        # If next plan not found, recommend the highest plan
+        recommended_plan = plans[-1] if plans else None
+    
+    if recommended_plan:
+        # Calculate reason based on plan
+        if current_plan == 'free':
+            reason = f"Upgrade to {recommended_plan['name']} for {recommended_plan['credits_limit']:,} verifications/month and advanced features"
+        elif current_plan == 'starter':
+            reason = f"Upgrade to {recommended_plan['name']} for {recommended_plan['credits_limit']:,} verifications/month and priority support"
+        elif current_plan == 'professional':
+            reason = f"Upgrade to {recommended_plan['name']} for unlimited verifications and dedicated support"
+        else:
+            reason = f"Consider upgrading to {recommended_plan['name']} for more features"
         
-        # Find plan that fits projected usage
-        if plan['credits_limit'] >= monthly_projection or plan['credits_limit'] == -1:
-            if not recommended_plan:
-                recommended_plan = plan
-            elif plan['price'] < recommended_plan['price']:
-                recommended_plan = plan
-    
-    # Calculate savings
-    savings = None
-    if recommended_plan and current_plan_obj:
-        if recommended_plan['id'] != current_plan_obj['id']:
-            # Check if upgrade provides value
-            if monthly_projection > current_plan_obj['credits_limit']:
-                overage_cost = (monthly_projection - current_plan_obj['credits_limit']) * 0.01  # Assume ₹0.01 per overage
-                potential_savings = overage_cost - (recommended_plan['price'] - current_plan_obj['price'])
-                if potential_savings > 0:
-                    savings = potential_savings
-    
-    if recommended_plan and (not current_plan_obj or recommended_plan['id'] != current_plan_obj['id']):
         return {
             "plan_id": recommended_plan['id'],
             "plan_name": recommended_plan['name'],
             "plan_price": recommended_plan['price'],
             "credits_limit": recommended_plan['credits_limit'],
-            "reason": f"Based on your projected usage of {monthly_projection} verifications/month",
-            "savings": savings
+            "reason": reason,
+            "savings": None  # Can add savings calculation if needed
         }
     
     return None
@@ -291,14 +302,14 @@ async def get_usage_analysis(current_user: User = Depends(get_current_user)):
 
 @router.post("/recommend-plan", response_model=PlanRecommendation)
 async def get_plan_recommendation(current_user: User = Depends(get_current_user)):
-    """Get AI-powered plan recommendation"""
+    """Get AI-powered plan recommendation - returns next higher plan or max plan"""
     db = await get_db()
     
     try:
         # Analyze usage
         usage_data = await analyze_user_usage(db, current_user)
         
-        # Get recommendation
+        # Get recommendation (next plan in hierarchy)
         recommendation = await recommend_plan(db, current_user, usage_data)
         
         if not recommendation:

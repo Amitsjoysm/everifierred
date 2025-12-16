@@ -141,7 +141,7 @@ const FAQs = () => {
         {/* Hero Section */}
         <header className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-16 sm:py-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 className="text-4xl sm:text-5xl font-bold mb-4">Frequently Asked Questions</h1>
+            <h1 id="faq-heading" className="text-4xl sm:text-5xl font-bold mb-4">Frequently Asked Questions</h1>
             <p className="text-lg sm:text-xl text-blue-100 max-w-2xl mx-auto">
               Find answers to common questions about email verification and our services
             </p>
@@ -149,7 +149,7 @@ const FAQs = () => {
         </header>
 
         {/* FAQ Content */}
-        <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16" aria-label="FAQ content">
+        <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16" aria-labelledby="faq-content-heading">
           {/* Category Filter */}
           <div className="mb-8 flex flex-wrap gap-2" role="group" aria-label="FAQ category filter">
             {categories.map((category) => (

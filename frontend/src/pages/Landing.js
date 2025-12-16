@@ -50,13 +50,12 @@ const Landing = () => {
       />
       {/* Header */}
       <header className="fixed top-0 w-full bg-white/80 backdrop-blur-lg border-b border-gray-200 z-50">
-        <nav className="container mx-auto px-6 py-4 flex items-center justify-between">
+        <nav className="container mx-auto px-6 py-4 flex items-center justify-between" role="navigation" aria-label="Main navigation">
           <div className="flex items-center space-x-2">
-            <Mail className="h-8 w-8 text-blue-600" />
+            <Mail className="h-8 w-8 text-blue-600" aria-hidden="true" />
             <span className="text-2xl font-bold text-gray-900">MailGuard</span>
           </div>
           <div className="hidden md:flex items-center space-x-8">
-            <Link to="/features" className="text-gray-600 hover:text-gray-900">Features</Link>
             <Link to="/pricing" className="text-gray-600 hover:text-gray-900">Pricing</Link>
             <Link to="/blog" className="text-gray-600 hover:text-gray-900">Blog</Link>
             <Link to="/faqs" className="text-gray-600 hover:text-gray-900">FAQs</Link>
@@ -67,6 +66,14 @@ const Landing = () => {
               <Button data-testid="signup-btn">Get Started</Button>
             </Link>
           </div>
+          
+          {/* Mobile Menu */}
+          <MobileMenu
+            links={mobileMenuLinks}
+            isAuthenticated={false}
+            onLoginClick={() => navigate('/login')}
+            onRegisterClick={() => navigate('/register')}
+          />
         </nav>
       </header>
 

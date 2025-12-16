@@ -169,49 +169,50 @@ const Landing = () => {
           </div>
         </section>
 
-      {/* Use Cases */}
-      <section className="py-20 px-6 bg-gray-50">
-        <div className="container mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4" style={{fontFamily: 'Space Grotesk, sans-serif'}}>
-              Perfect for Every Use Case
+        {/* Use Cases */}
+        <section className="py-20 px-6 bg-gray-50" aria-label="Use cases">
+          <div className="container mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4" style={{fontFamily: 'Space Grotesk, sans-serif'}}>
+                Perfect for Every Use Case
+              </h2>
+            </div>
+
+            <div className="grid sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              {[
+                'Cold Email Outreach',
+                'Shopify Store Owners',
+                'Real Estate Leads',
+                'B2B SaaS Companies',
+                'Recruitment Agencies',
+                'Email Marketing Teams',
+              ].map((useCase) => (
+                <article key={useCase} className="p-4 sm:p-6 bg-white rounded-xl border border-gray-200 hover:border-blue-300 hover:shadow-lg transition-all">
+                  <CheckCircle className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600 mb-3" aria-hidden="true" />
+                  <h3 className="text-base sm:text-lg font-semibold text-gray-900">{useCase}</h3>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className="py-20 px-6 bg-gradient-to-br from-blue-600 to-cyan-600 text-white" aria-label="Call to action">
+          <div className="container mx-auto text-center max-w-3xl">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6" style={{fontFamily: 'Space Grotesk, sans-serif'}}>
+              Start Verifying Emails Today
             </h2>
+            <p className="text-lg sm:text-xl mb-8 text-blue-100" style={{fontFamily: 'Inter, sans-serif'}}>
+              Join thousands of businesses improving their email deliverability
+            </p>
+            <Link to="/register">
+              <Button size="lg" variant="secondary" className="text-lg px-8 py-6 bg-white text-blue-600 hover:bg-gray-100 w-full sm:w-auto">
+                Get Started Free
+              </Button>
+            </Link>
           </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              'Cold Email Outreach',
-              'Shopify Store Owners',
-              'Real Estate Leads',
-              'B2B SaaS Companies',
-              'Recruitment Agencies',
-              'Email Marketing Teams',
-            ].map((useCase) => (
-              <div key={useCase} className="p-6 bg-white rounded-xl border border-gray-200 hover:border-blue-300 hover:shadow-lg transition-all">
-                <CheckCircle className="h-6 w-6 text-blue-600 mb-3" />
-                <h3 className="font-semibold text-gray-900">{useCase}</h3>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 px-6 bg-gradient-to-br from-blue-600 to-cyan-600 text-white">
-        <div className="container mx-auto text-center max-w-3xl">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6" style={{fontFamily: 'Space Grotesk, sans-serif'}}>
-            Start Verifying Emails Today
-          </h2>
-          <p className="text-xl mb-8 text-blue-100" style={{fontFamily: 'Inter, sans-serif'}}>
-            Join thousands of businesses improving their email deliverability
-          </p>
-          <Link to="/register">
-            <Button size="lg" variant="secondary" className="text-lg px-8 py-6 bg-white text-blue-600 hover:bg-gray-100">
-              Get Started Free
-            </Button>
-          </Link>
-        </div>
-      </section>
+        </section>
+      </main>
 
       {/* Footer */}
       <footer className="py-12 px-6 bg-gray-900 text-gray-400">

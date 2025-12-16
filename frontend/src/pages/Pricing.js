@@ -109,6 +109,10 @@ const Pricing = () => {
       const rzp = new window.Razorpay(options);
       rzp.on('payment.failed', function (response) {
         toast.error('Payment failed: ' + response.error.description);
+        // Redirect back to pricing page after a delay to allow retry
+        setTimeout(() => {
+          navigate('/pricing');
+        }, 2000);
       });
       rzp.open();
     } catch (error) {

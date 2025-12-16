@@ -210,7 +210,7 @@ const Pricing = () => {
       />
       
       {/* Navigation */}
-      <nav className="bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50">
+      <nav className="bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50" role="navigation" aria-label="Main navigation">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
@@ -218,11 +218,11 @@ const Pricing = () => {
                 MailGuard
               </span>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="hidden md:flex items-center gap-4">
               {isAuthenticated ? (
                 <button
                   onClick={() => navigate('/dashboard')}
-                  className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition"
+                  className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors"
                 >
                   Dashboard
                 </button>
@@ -230,32 +230,43 @@ const Pricing = () => {
                 <>
                   <button
                     onClick={() => navigate('/login')}
-                    className="px-4 py-2 text-gray-700 hover:text-gray-900"
+                    className="px-4 py-2 text-gray-700 hover:text-gray-900 transition-colors"
                   >
                     Login
                   </button>
                   <button
                     onClick={() => navigate('/register')}
-                    className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition"
+                    className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors"
                   >
                     Sign Up
                   </button>
                 </>
               )}
             </div>
+            
+            {/* Mobile Menu */}
+            <MobileMenu
+              links={mobileMenuLinks}
+              isAuthenticated={isAuthenticated}
+              onDashboardClick={() => navigate('/dashboard')}
+              onLoginClick={() => navigate('/login')}
+              onRegisterClick={() => navigate('/register')}
+            />
           </div>
         </div>
       </nav>
 
-      {/* Pricing Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
-            Simple, Transparent Pricing
-          </h1>
-          <p className="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto mb-8">
-            Choose the perfect plan for your email verification needs. All plans include our core features.
-          </p>
+      {/* Main Content */}
+      <main>
+        {/* Pricing Section */}
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-24" aria-label="Pricing plans">
+          <header className="text-center mb-12">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+              Simple, Transparent Pricing
+            </h1>
+            <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-2xl mx-auto mb-8">
+              Choose the perfect plan for your email verification needs. All plans include our core features.
+            </p>
 
           {/* Billing Cycle Toggle */}
           <div className="flex items-center justify-center gap-4 mb-4">

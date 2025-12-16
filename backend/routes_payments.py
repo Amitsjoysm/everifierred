@@ -192,7 +192,7 @@ async def create_payment_order(
         raise HTTPException(status_code=500, detail=f"Failed to create order: {str(e)}")
 
 
-@router.post("/payments/verify")
+@router.post("/verify")
 async def verify_payment(
     razorpay_order_id: str,
     razorpay_payment_id: str,

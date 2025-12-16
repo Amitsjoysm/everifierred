@@ -232,11 +232,20 @@ class Payment(BaseModel):
     plan_id: str
     amount: float
     currency: str = "INR"
+    billing_cycle: str = "monthly"  # monthly or yearly
+    
+    # Razorpay IDs
     razorpay_order_id: Optional[str] = None
     razorpay_payment_id: Optional[str] = None
     razorpay_signature: Optional[str] = None
-    status: str = "pending"
+    razorpay_subscription_id: Optional[str] = None  # For recurring subscriptions
+    
+    status: str = "pending"  # pending, success, failed, cancelled, expired
+    is_recurring: bool = False  # True for subscription payments
+    
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    completed_at: Optional[datetime] = None
+    next_billing_date: Optional[datetime] = None  # For subscriptions
 
 
 

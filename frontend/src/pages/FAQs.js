@@ -242,8 +242,8 @@ const FAQs = () => {
                   Blog
                 </li>
               </ul>
-            </div>
-            <div>
+            </nav>
+            <nav aria-label="Support navigation">
               <h3 className="text-base font-semibold mb-4">Support</h3>
               <ul className="space-y-2 text-sm text-gray-400">
                 <li className="cursor-pointer hover:text-white transition-colors" onClick={() => navigate('/faqs')}>

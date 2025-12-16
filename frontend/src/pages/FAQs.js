@@ -229,7 +229,7 @@ const FAQs = () => {
               <h2 className="text-lg sm:text-xl font-bold mb-4">MailGuard</h2>
               <p className="text-sm sm:text-base text-gray-400">Professional email verification for businesses</p>
             </div>
-            <div>
+            <nav aria-label="Product navigation">
               <h3 className="text-base font-semibold mb-4">Product</h3>
               <ul className="space-y-2 text-sm text-gray-400">
                 <li className="cursor-pointer hover:text-white transition-colors" onClick={() => navigate('/')}>

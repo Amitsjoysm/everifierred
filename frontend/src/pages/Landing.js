@@ -77,31 +77,33 @@ const Landing = () => {
         </nav>
       </header>
 
-      {/* Hero Section */}
-      <section className="pt-32 pb-20 px-6 bg-gradient-to-br from-blue-50 via-white to-cyan-50">
-        <div className="container mx-auto text-center max-w-4xl">
-          <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6" style={{fontFamily: 'Space Grotesk, sans-serif'}}>
-            Free Email Verifier for B2B Teams
-          </h1>
-          <p className="text-lg md:text-xl text-gray-600 mb-8 max-w-2xl mx-auto" style={{fontFamily: 'Inter, sans-serif'}}>
-            Clean your email lists, reduce bounce rates, and improve deliverability. 
-            Verify emails in bulk with our powerful API and dashboard.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to="/register">
-              <Button size="lg" className="text-lg px-8 py-6" data-testid="hero-cta-btn">
-                Start Verifying Free
-              </Button>
-            </Link>
-            <Link to="/pricing">
-              <Button size="lg" variant="outline" className="text-lg px-8 py-6">
-                View Pricing
-              </Button>
-            </Link>
+      {/* Main Content */}
+      <main>
+        {/* Hero Section */}
+        <section className="pt-32 pb-20 px-6 bg-gradient-to-br from-blue-50 via-white to-cyan-50" aria-label="Hero section">
+          <div className="container mx-auto text-center max-w-4xl">
+            <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-gray-900 mb-6" style={{fontFamily: 'Space Grotesk, sans-serif'}}>
+              Free Email Verifier for B2B Teams
+            </h1>
+            <p className="text-lg md:text-xl text-gray-600 mb-8 max-w-2xl mx-auto" style={{fontFamily: 'Inter, sans-serif'}}>
+              Clean your email lists, reduce bounce rates, and improve deliverability. 
+              Verify emails in bulk with our powerful API and dashboard.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link to="/register">
+                <Button size="lg" className="text-lg px-8 py-6 w-full sm:w-auto" data-testid="hero-cta-btn">
+                  Start Verifying Free
+                </Button>
+              </Link>
+              <Link to="/pricing">
+                <Button size="lg" variant="outline" className="text-lg px-8 py-6 w-full sm:w-auto">
+                  View Pricing
+                </Button>
+              </Link>
+            </div>
+            <p className="text-sm text-gray-500 mt-4">No credit card required • 100 free verifications</p>
           </div>
-          <p className="text-sm text-gray-500 mt-4">No credit card required • 100 free verifications</p>
-        </div>
-      </section>
+        </section>
 
       {/* Features Section */}
       <section className="py-20 px-6 bg-white">

@@ -200,7 +200,7 @@ Before going live:
 1. Go to Settings → Webhooks
 2. Add webhook URL:
    ```
-   https://auth-debug-35.preview.emergentagent.com/api/payments/webhook
+   https://login-repair-82.preview.emergentagent.com/api/payments/webhook
    ```
 3. Select events:
    - payment.captured

@@ -96,7 +96,7 @@ CORS_ORIGINS="*"
 
 ```bash
 # ✅ Already configured for preview environment
-REACT_APP_BACKEND_URL=https://auth-debug-35.preview.emergentagent.com
+REACT_APP_BACKEND_URL=https://login-repair-82.preview.emergentagent.com
 
 # For production, update to:
 # REACT_APP_BACKEND_URL=https://api.yourdomain.com
@@ -173,9 +173,9 @@ Status:   Active & Email Verified
 ```
 
 ### Access URLs
-- **Login:** https://auth-debug-35.preview.emergentagent.com/login
-- **Admin Panel:** https://auth-debug-35.preview.emergentagent.com/admin
-- **Dashboard:** https://auth-debug-35.preview.emergentagent.com/dashboard
+- **Login:** https://login-repair-82.preview.emergentagent.com/login
+- **Admin Panel:** https://login-repair-82.preview.emergentagent.com/admin
+- **Dashboard:** https://login-repair-82.preview.emergentagent.com/dashboard
 
 ---
 

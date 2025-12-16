@@ -641,7 +641,7 @@ agent_communication:
       - Workers: ✓ CONNECTED TO BROKER
       
       🌐 PREVIEW URL:
-      https://auth-debug-35.preview.emergentagent.com
+      https://login-repair-82.preview.emergentagent.com
       
       All systems operational and ready for use!
 
@@ -798,13 +798,13 @@ agent_communication:
       - Authentication: ✓ OTP Flow Working
       
       🌐 PREVIEW URL:
-      https://auth-debug-35.preview.emergentagent.com
+      https://login-repair-82.preview.emergentagent.com
       
       📧 LOGIN PAGE:
-      https://auth-debug-35.preview.emergentagent.com/login
+      https://login-repair-82.preview.emergentagent.com/login
       
       🛡️ ADMIN PANEL:
-      https://auth-debug-35.preview.emergentagent.com/admin
+      https://login-repair-82.preview.emergentagent.com/admin
       
       All systems operational and ready for use!
 
@@ -1009,9 +1009,9 @@ agent_communication:
       Password: Admin@123
       
       🌐 ACCESS:
-      - Login: https://auth-debug-35.preview.emergentagent.com/login
-      - Admin Panel: https://auth-debug-35.preview.emergentagent.com/admin
-      - Pricing: https://auth-debug-35.preview.emergentagent.com/pricing
+      - Login: https://login-repair-82.preview.emergentagent.com/login
+      - Admin Panel: https://login-repair-82.preview.emergentagent.com/admin
+      - Pricing: https://login-repair-82.preview.emergentagent.com/pricing
       
       ✅ READY FOR TESTING & DEPLOYMENT
 
@@ -1143,10 +1143,10 @@ agent_communication:
       Status: ✓ VERIFIED & READY TO USE
       
       ✅ ACCESS URLS:
-      - Main App: https://auth-debug-35.preview.emergentagent.com
-      - Login: https://auth-debug-35.preview.emergentagent.com/login
-      - Admin Panel: https://auth-debug-35.preview.emergentagent.com/admin
-      - Pricing Page: https://auth-debug-35.preview.emergentagent.com/pricing
+      - Main App: https://login-repair-82.preview.emergentagent.com
+      - Login: https://login-repair-82.preview.emergentagent.com/login
+      - Admin Panel: https://login-repair-82.preview.emergentagent.com/admin
+      - Pricing Page: https://login-repair-82.preview.emergentagent.com/pricing
       
       ✅ PAYMENT TESTING:
       Use Razorpay test cards:
@@ -1374,11 +1374,11 @@ agent_communication:
       Credits: 25,000
       
       🌐 ACCESS URLS:
-      - Main App: https://auth-debug-35.preview.emergentagent.com
-      - Login: https://auth-debug-35.preview.emergentagent.com/login
-      - Admin Panel: https://auth-debug-35.preview.emergentagent.com/admin
-      - Blogs (HTML): https://auth-debug-35.preview.emergentagent.com/html/blogs
-      - FAQs (HTML): https://auth-debug-35.preview.emergentagent.com/html/faqs
+      - Main App: https://login-repair-82.preview.emergentagent.com
+      - Login: https://login-repair-82.preview.emergentagent.com/login
+      - Admin Panel: https://login-repair-82.preview.emergentagent.com/admin
+      - Blogs (HTML): https://login-repair-82.preview.emergentagent.com/html/blogs
+      - FAQs (HTML): https://login-repair-82.preview.emergentagent.com/html/faqs
       
       📦 NEW FILES CREATED:
       1. /app/backend/routes_html.py - Static HTML routes for SEO
@@ -1571,5 +1571,5 @@ agent_communication:
       - Email: amits.joys@gmail.com
       - Password: Admin@123
       
-      Preview URL: https://auth-debug-35.preview.emergentagent.com
+      Preview URL: https://login-repair-82.preview.emergentagent.com
 

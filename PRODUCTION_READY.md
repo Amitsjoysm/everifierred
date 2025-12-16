@@ -26,8 +26,8 @@ Plan:     Enterprise
 Credits:  25,000
 ```
 
-**Login URL**: https://auth-debug-35.preview.emergentagent.com/login  
-**Admin Panel**: https://auth-debug-35.preview.emergentagent.com/admin
+**Login URL**: https://login-repair-82.preview.emergentagent.com/login  
+**Admin Panel**: https://login-repair-82.preview.emergentagent.com/admin
 
 ---
 
@@ -194,7 +194,7 @@ Credits:  25,000
 
 ## 🌐 Deployment Information
 
-**Preview URL**: https://auth-debug-35.preview.emergentagent.com
+**Preview URL**: https://login-repair-82.preview.emergentagent.com
 
 **Environment**: Production-ready
 

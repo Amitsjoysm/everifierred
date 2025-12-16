@@ -384,22 +384,22 @@ async def get_blogs_html():
         "@graph": [
             {
                 "@type": "Blog",
-                "@id": "https://auth-debug-35.preview.emergentagent.com/html/blogs#blog",
+                "@id": "https://login-repair-82.preview.emergentagent.com/html/blogs#blog",
                 "name": "MailGuard Email Verification Blog",
                 "description": "Expert insights and guides on email verification best practices, deliverability optimization, and sender reputation management",
-                "url": "https://auth-debug-35.preview.emergentagent.com/html/blogs",
+                "url": "https://login-repair-82.preview.emergentagent.com/html/blogs",
                 "publisher": {
                     "@type": "Organization",
-                    "@id": "https://auth-debug-35.preview.emergentagent.com/#organization"
+                    "@id": "https://login-repair-82.preview.emergentagent.com/#organization"
                 },
                 "about": {
                     "@type": "SoftwareApplication",
-                    "@id": "https://auth-debug-35.preview.emergentagent.com/#product"
+                    "@id": "https://login-repair-82.preview.emergentagent.com/#product"
                 }
             },
             {
                 "@type": "SoftwareApplication",
-                "@id": "https://auth-debug-35.preview.emergentagent.com/#product",
+                "@id": "https://login-repair-82.preview.emergentagent.com/#product",
                 "name": "MailGuard",
                 "applicationCategory": "BusinessApplication",
                 "operatingSystem": "Web-based",
@@ -412,7 +412,7 @@ async def get_blogs_html():
                         "price": "0",
                         "priceCurrency": "INR",
                         "description": "100 email verifications per month",
-                        "url": "https://auth-debug-35.preview.emergentagent.com/pricing"
+                        "url": "https://login-repair-82.preview.emergentagent.com/pricing"
                     },
                     {
                         "@type": "Offer",
@@ -420,7 +420,7 @@ async def get_blogs_html():
                         "price": "499",
                         "priceCurrency": "INR",
                         "description": "1,000 email verifications per month",
-                        "url": "https://auth-debug-35.preview.emergentagent.com/pricing"
+                        "url": "https://login-repair-82.preview.emergentagent.com/pricing"
                     },
                     {
                         "@type": "Offer",
@@ -428,7 +428,7 @@ async def get_blogs_html():
                         "price": "1999",
                         "priceCurrency": "INR",
                         "description": "5,000 email verifications per month",
-                        "url": "https://auth-debug-35.preview.emergentagent.com/pricing"
+                        "url": "https://login-repair-82.preview.emergentagent.com/pricing"
                     },
                     {
                         "@type": "Offer",
@@ -436,7 +436,7 @@ async def get_blogs_html():
                         "price": "7999",
                         "priceCurrency": "INR",
                         "description": "25,000 email verifications per month",
-                        "url": "https://auth-debug-35.preview.emergentagent.com/pricing"
+                        "url": "https://login-repair-82.preview.emergentagent.com/pricing"
                     }
                 ],
                 "aggregateRating": {
@@ -462,17 +462,17 @@ async def get_blogs_html():
                 ],
                 "provider": {
                     "@type": "Organization",
-                    "@id": "https://auth-debug-35.preview.emergentagent.com/#organization"
+                    "@id": "https://login-repair-82.preview.emergentagent.com/#organization"
                 }
             },
             {
                 "@type": "Organization",
-                "@id": "https://auth-debug-35.preview.emergentagent.com/#organization",
+                "@id": "https://login-repair-82.preview.emergentagent.com/#organization",
                 "name": "MailGuard",
-                "url": "https://auth-debug-35.preview.emergentagent.com",
+                "url": "https://login-repair-82.preview.emergentagent.com",
                 "logo": {
                     "@type": "ImageObject",
-                    "url": "https://auth-debug-35.preview.emergentagent.com/logo.png"
+                    "url": "https://login-repair-82.preview.emergentagent.com/logo.png"
                 },
                 "description": "Leading email verification service provider helping businesses improve email deliverability and reduce bounce rates",
                 "contactPoint": {
@@ -490,7 +490,7 @@ async def get_blogs_html():
         title=page_title,
         description=page_description,
         content=content,
-        canonical_url="https://auth-debug-35.preview.emergentagent.com/html/blogs",
+        canonical_url="https://login-repair-82.preview.emergentagent.com/html/blogs",
         structured_data=structured_data
     )
 
@@ -564,7 +564,7 @@ async def get_blog_post_html(slug: str):
         "@graph": [
             {{
                 "@type": "BlogPosting",
-                "@id": "https://auth-debug-35.preview.emergentagent.com/html/blog/{slug}#article",
+                "@id": "https://login-repair-82.preview.emergentagent.com/html/blog/{slug}#article",
                 "headline": "{html.escape(blog.get('title', ''))}",
                 "description": "{html.escape(blog.get('excerpt', ''))}",
                 "author": {{
@@ -574,30 +574,30 @@ async def get_blog_post_html(slug: str):
                 "datePublished": "{blog_published_iso}",
                 "publisher": {{
                     "@type": "Organization",
-                    "@id": "https://auth-debug-35.preview.emergentagent.com/#organization",
+                    "@id": "https://login-repair-82.preview.emergentagent.com/#organization",
                     "name": "MailGuard",
                     "logo": {{
                         "@type": "ImageObject",
-                        "url": "https://auth-debug-35.preview.emergentagent.com/logo.png"
+                        "url": "https://login-repair-82.preview.emergentagent.com/logo.png"
                     }}
                 }},
                 "mainEntityOfPage": {{
                     "@type": "WebPage",
-                    "@id": "https://auth-debug-35.preview.emergentagent.com/html/blog/{slug}"
+                    "@id": "https://login-repair-82.preview.emergentagent.com/html/blog/{slug}"
                 }},
                 "about": {{
                     "@type": "SoftwareApplication",
-                    "@id": "https://auth-debug-35.preview.emergentagent.com/#product"
+                    "@id": "https://login-repair-82.preview.emergentagent.com/#product"
                 }}
             }},
             {{
                 "@type": "Organization",
-                "@id": "https://auth-debug-35.preview.emergentagent.com/#organization",
+                "@id": "https://login-repair-82.preview.emergentagent.com/#organization",
                 "name": "MailGuard",
-                "url": "https://auth-debug-35.preview.emergentagent.com",
+                "url": "https://login-repair-82.preview.emergentagent.com",
                 "logo": {{
                     "@type": "ImageObject",
-                    "url": "https://auth-debug-35.preview.emergentagent.com/logo.png"
+                    "url": "https://login-repair-82.preview.emergentagent.com/logo.png"
                 }},
                 "description": "Professional email verification service helping businesses validate email addresses, reduce bounce rates, and improve deliverability",
                 "contactPoint": {{
@@ -606,12 +606,12 @@ async def get_blog_post_html(slug: str):
                     "email": "support@mailguard.com"
                 }},
                 "sameAs": [
-                    "https://auth-debug-35.preview.emergentagent.com"
+                    "https://login-repair-82.preview.emergentagent.com"
                 ]
             }},
             {{
                 "@type": "SoftwareApplication",
-                "@id": "https://auth-debug-35.preview.emergentagent.com/#product",
+                "@id": "https://login-repair-82.preview.emergentagent.com/#product",
                 "name": "MailGuard",
                 "applicationCategory": "BusinessApplication",
                 "operatingSystem": "Web",
@@ -666,16 +666,16 @@ async def get_blog_post_html(slug: str):
                 ],
                 "provider": {{
                     "@type": "Organization",
-                    "@id": "https://auth-debug-35.preview.emergentagent.com/#organization"
+                    "@id": "https://login-repair-82.preview.emergentagent.com/#organization"
                 }}
             }},
             {{
                 "@type": "Service",
-                "@id": "https://auth-debug-35.preview.emergentagent.com/#service",
+                "@id": "https://login-repair-82.preview.emergentagent.com/#service",
                 "serviceType": "Email Verification Service",
                 "provider": {{
                     "@type": "Organization",
-                    "@id": "https://auth-debug-35.preview.emergentagent.com/#organization"
+                    "@id": "https://login-repair-82.preview.emergentagent.com/#organization"
                 }},
                 "areaServed": "Worldwide",
                 "description": "Validate email addresses in real-time with 98% accuracy. Perfect for cold email campaigns, user verification, and email list cleaning.",
@@ -714,9 +714,9 @@ async def get_blog_post_html(slug: str):
     
     # Add breadcrumb navigation
     breadcrumb_schema = generate_breadcrumb_schema([
-        {"name": "Home", "url": "https://auth-debug-35.preview.emergentagent.com"},
-        {"name": "Blog", "url": "https://auth-debug-35.preview.emergentagent.com/html/blogs"},
-        {"name": blog.get('title', ''), "url": f"https://auth-debug-35.preview.emergentagent.com/html/blog/{slug}"}
+        {"name": "Home", "url": "https://login-repair-82.preview.emergentagent.com"},
+        {"name": "Blog", "url": "https://login-repair-82.preview.emergentagent.com/html/blogs"},
+        {"name": blog.get('title', ''), "url": f"https://login-repair-82.preview.emergentagent.com/html/blog/{slug}"}
     ])
     
     # Combine structured data
@@ -731,7 +731,7 @@ async def get_blog_post_html(slug: str):
         title=f"{blog.get('title', '')} | MailGuard Blog",
         description=blog.get('excerpt', ''),
         content=content,
-        canonical_url=f"https://auth-debug-35.preview.emergentagent.com/html/blog/{slug}",
+        canonical_url=f"https://login-repair-82.preview.emergentagent.com/html/blog/{slug}",
         structured_data=all_structured_data
     )
 
@@ -823,16 +823,16 @@ async def get_faqs_html():
         "@graph": [
             {{
                 "@type": "FAQPage",
-                "@id": "https://auth-debug-35.preview.emergentagent.com/html/faqs#faqpage",
+                "@id": "https://login-repair-82.preview.emergentagent.com/html/faqs#faqpage",
                 "mainEntity": {json.dumps(faq_schema)},
                 "about": {{
                     "@type": "SoftwareApplication",
-                    "@id": "https://auth-debug-35.preview.emergentagent.com/#product"
+                    "@id": "https://login-repair-82.preview.emergentagent.com/#product"
                 }}
             }},
             {{
                 "@type": "SoftwareApplication",
-                "@id": "https://auth-debug-35.preview.emergentagent.com/#product",
+                "@id": "https://login-repair-82.preview.emergentagent.com/#product",
                 "name": "MailGuard",
                 "applicationCategory": "BusinessApplication",
                 "operatingSystem": "Web-based",
@@ -843,7 +843,7 @@ async def get_faqs_html():
                         "price": "0",
                         "priceCurrency": "INR",
                         "description": "100 email verifications/month - Perfect for testing and small projects",
-                        "url": "https://auth-debug-35.preview.emergentagent.com/pricing",
+                        "url": "https://login-repair-82.preview.emergentagent.com/pricing",
                         "availability": "https://schema.org/InStock"
                     }},
                     {{
@@ -852,7 +852,7 @@ async def get_faqs_html():
                         "price": "499",
                         "priceCurrency": "INR",
                         "description": "1,000 email verifications/month - For small businesses and startups",
-                        "url": "https://auth-debug-35.preview.emergentagent.com/pricing",
+                        "url": "https://login-repair-82.preview.emergentagent.com/pricing",
                         "availability": "https://schema.org/InStock"
                     }},
                     {{
@@ -861,7 +861,7 @@ async def get_faqs_html():
                         "price": "1999",
                         "priceCurrency": "INR",
                         "description": "5,000 email verifications/month - For growing teams and agencies",
-                        "url": "https://auth-debug-35.preview.emergentagent.com/pricing",
+                        "url": "https://login-repair-82.preview.emergentagent.com/pricing",
                         "availability": "https://schema.org/InStock"
                     }},
                     {{
@@ -870,7 +870,7 @@ async def get_faqs_html():
                         "price": "7999",
                         "priceCurrency": "INR",
                         "description": "25,000 email verifications/month - For large organizations",
-                        "url": "https://auth-debug-35.preview.emergentagent.com/pricing",
+                        "url": "https://login-repair-82.preview.emergentagent.com/pricing",
                         "availability": "https://schema.org/InStock"
                     }}
                 ],
@@ -900,7 +900,7 @@ async def get_faqs_html():
                 "applicationSubCategory": "Email Verification, Email Validation, Email List Cleaning",
                 "provider": {{
                     "@type": "Organization",
-                    "@id": "https://auth-debug-35.preview.emergentagent.com/#organization"
+                    "@id": "https://login-repair-82.preview.emergentagent.com/#organization"
                 }},
                 "potentialAction": [
                     {{
@@ -908,7 +908,7 @@ async def get_faqs_html():
                         "name": "Verify Email Address",
                         "target": {{
                             "@type": "EntryPoint",
-                            "urlTemplate": "https://auth-debug-35.preview.emergentagent.com/api/external/verify",
+                            "urlTemplate": "https://login-repair-82.preview.emergentagent.com/api/external/verify",
                             "httpMethod": "POST",
                             "description": "API endpoint for email verification"
                         }}
@@ -918,19 +918,19 @@ async def get_faqs_html():
                         "name": "Sign Up for Free",
                         "target": {{
                             "@type": "EntryPoint",
-                            "urlTemplate": "https://auth-debug-35.preview.emergentagent.com/register"
+                            "urlTemplate": "https://login-repair-82.preview.emergentagent.com/register"
                         }}
                     }}
                 ]
             }},
             {{
                 "@type": "Organization",
-                "@id": "https://auth-debug-35.preview.emergentagent.com/#organization",
+                "@id": "https://login-repair-82.preview.emergentagent.com/#organization",
                 "name": "MailGuard",
-                "url": "https://auth-debug-35.preview.emergentagent.com",
+                "url": "https://login-repair-82.preview.emergentagent.com",
                 "logo": {{
                     "@type": "ImageObject",
-                    "url": "https://auth-debug-35.preview.emergentagent.com/logo.png"
+                    "url": "https://login-repair-82.preview.emergentagent.com/logo.png"
                 }},
                 "description": "Professional email verification service helping businesses validate email addresses, reduce bounce rates by 98%, and improve email deliverability",
                 "foundingDate": "2024",
@@ -944,19 +944,19 @@ async def get_faqs_html():
             }},
             {{
                 "@type": "WebSite",
-                "@id": "https://auth-debug-35.preview.emergentagent.com/#website",
-                "url": "https://auth-debug-35.preview.emergentagent.com",
+                "@id": "https://login-repair-82.preview.emergentagent.com/#website",
+                "url": "https://login-repair-82.preview.emergentagent.com",
                 "name": "MailGuard - Professional Email Verification",
                 "description": "Validate email addresses with 98% accuracy. Real-time verification, bulk validation, and API access.",
                 "publisher": {{
                     "@type": "Organization",
-                    "@id": "https://auth-debug-35.preview.emergentagent.com/#organization"
+                    "@id": "https://login-repair-82.preview.emergentagent.com/#organization"
                 }},
                 "potentialAction": {{
                     "@type": "SearchAction",
                     "target": {{
                         "@type": "EntryPoint",
-                        "urlTemplate": "https://auth-debug-35.preview.emergentagent.com/blog?search={{search_term_string}}"
+                        "urlTemplate": "https://login-repair-82.preview.emergentagent.com/blog?search={{search_term_string}}"
                     }},
                     "query-input": "required name=search_term_string"
                 }}
@@ -968,8 +968,8 @@ async def get_faqs_html():
     
     # Add breadcrumb navigation  
     breadcrumb_schema = generate_breadcrumb_schema([
-        {"name": "Home", "url": "https://auth-debug-35.preview.emergentagent.com"},
-        {"name": "FAQs", "url": "https://auth-debug-35.preview.emergentagent.com/html/faqs"}
+        {"name": "Home", "url": "https://login-repair-82.preview.emergentagent.com"},
+        {"name": "FAQs", "url": "https://login-repair-82.preview.emergentagent.com/html/faqs"}
     ])
     
     # Combine all structured data
@@ -984,6 +984,6 @@ async def get_faqs_html():
         title=page_title,
         description=page_description,
         content=content,
-        canonical_url="https://auth-debug-35.preview.emergentagent.com/html/faqs",
+        canonical_url="https://login-repair-82.preview.emergentagent.com/html/faqs",
         structured_data=all_structured_data
     )

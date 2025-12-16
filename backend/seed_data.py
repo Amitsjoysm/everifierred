@@ -27,7 +27,15 @@ async def seed_database():
             "type": "free",
             "credits_limit": 100,
             "price": 0,
+            "original_price": 199,  # Hyped price for marketing
+            "discount_percentage": 100,  # 100% off
+            "yearly_price": 0,
+            "yearly_original_price": 2388,  # Hyped yearly price
+            "yearly_discount_percentage": 100,
+            "is_recurring": False,  # Free plan is not subscription
             "razorpay_plan_id": None,
+            "razorpay_plan_id_monthly": None,
+            "razorpay_plan_id_yearly": None,
             "features": [
                 "100 email verifications/month",
                 "Basic verification features",
@@ -42,14 +50,24 @@ async def seed_database():
             "name": "Starter",
             "type": "starter",
             "credits_limit": 1000,
+            # Monthly: ₹499
             "price": 499,
-            "razorpay_plan_id": None,
+            "original_price": 999,  # Hyped price (50% off)
+            "discount_percentage": 50,
+            # Yearly: (499 × 10) = 4990, with 10% extra discount = 4491
+            "yearly_price": 4491,  # ₹374/month effective
+            "yearly_original_price": 11988,  # Hyped: 999 × 12
+            "yearly_discount_percentage": 62.5,  # ~62.5% off hyped price
+            "is_recurring": True,
+            "razorpay_plan_id_monthly": None,  # Will be created
+            "razorpay_plan_id_yearly": None,
             "features": [
                 "1,000 email verifications/month",
                 "All basic features",
                 "Priority API access",
                 "Bulk verification",
-                "Priority email support"
+                "Priority email support",
+                "Cancel anytime"
             ],
             "is_active": True,
             "created_at": datetime.now(timezone.utc).isoformat()
@@ -59,15 +77,25 @@ async def seed_database():
             "name": "Professional",
             "type": "professional",
             "credits_limit": 5000,
+            # Monthly: ₹1999
             "price": 1999,
-            "razorpay_plan_id": None,
+            "original_price": 3999,  # Hyped price (50% off)
+            "discount_percentage": 50,
+            # Yearly: (1999 × 10) = 19990, with 10% extra discount = 17991
+            "yearly_price": 17991,  # ₹1499/month effective
+            "yearly_original_price": 47988,  # Hyped: 3999 × 12
+            "yearly_discount_percentage": 62.5,  # ~62.5% off hyped price
+            "is_recurring": True,
+            "razorpay_plan_id_monthly": None,
+            "razorpay_plan_id_yearly": None,
             "features": [
                 "5,000 email verifications/month",
                 "All starter features",
                 "Advanced verification",
                 "Confidence scoring",
                 "Webhook support",
-                "24/7 priority support"
+                "24/7 priority support",
+                "Cancel anytime"
             ],
             "is_active": True,
             "created_at": datetime.now(timezone.utc).isoformat()
@@ -77,15 +105,25 @@ async def seed_database():
             "name": "Enterprise",
             "type": "enterprise",
             "credits_limit": 25000,
+            # Monthly: ₹7999
             "price": 7999,
-            "razorpay_plan_id": None,
+            "original_price": 15999,  # Hyped price (50% off)
+            "discount_percentage": 50,
+            # Yearly: (7999 × 10) = 79990, with 10% extra discount = 71991
+            "yearly_price": 71991,  # ₹5999/month effective
+            "yearly_original_price": 191988,  # Hyped: 15999 × 12
+            "yearly_discount_percentage": 62.5,  # ~62.5% off hyped price
+            "is_recurring": True,
+            "razorpay_plan_id_monthly": None,
+            "razorpay_plan_id_yearly": None,
             "features": [
                 "25,000 email verifications/month",
                 "All professional features",
                 "Dedicated account manager",
                 "Custom integrations",
                 "SLA guarantee",
-                "White-label options"
+                "White-label options",
+                "Cancel anytime"
             ],
             "is_active": True,
             "created_at": datetime.now(timezone.utc).isoformat()

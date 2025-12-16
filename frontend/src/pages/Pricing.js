@@ -310,27 +310,27 @@ const Pricing = () => {
             const monthlyEquivalent = billingCycle === 'yearly' ? (price / 12).toFixed(0) : null;
 
             return (
-              <div
+              <article
                 key={plan.id}
                 className={`relative bg-white rounded-2xl shadow-xl overflow-hidden transition-all duration-300 hover:scale-105 ${
                   plan.type === 'professional' ? 'ring-2 ring-blue-600 lg:scale-105' : ''
                 }`}
               >
                 {plan.type === 'professional' && (
-                  <div className="absolute top-0 right-0 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-1 text-sm font-semibold rounded-bl-lg">
+                  <div className="absolute top-0 right-0 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-3 sm:px-4 py-1 text-xs sm:text-sm font-semibold rounded-bl-lg" aria-label="Most popular plan">
                     MOST POPULAR
                   </div>
                 )}
                 
                 {discount > 0 && plan.type !== 'free' && (
-                  <div className="absolute top-0 left-0 bg-gradient-to-r from-green-500 to-green-600 text-white px-3 py-1 text-xs font-bold rounded-br-lg flex items-center gap-1">
-                    <Zap className="w-3 h-3" />
+                  <div className="absolute top-0 left-0 bg-gradient-to-r from-green-500 to-green-600 text-white px-2 sm:px-3 py-1 text-xs font-bold rounded-br-lg flex items-center gap-1" aria-label={`Save ${discount.toFixed(0)} percent`}>
+                    <Zap className="w-3 h-3" aria-hidden="true" />
                     SAVE {discount.toFixed(0)}%
                   </div>
                 )}
 
                 <div className="p-6 sm:p-8">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2">{plan.name}</h3>
+                  <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">{plan.name}</h2>
                   
                   <div className="mb-6">
                     {plan.type === 'free' ? (

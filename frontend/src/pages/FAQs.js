@@ -150,6 +150,7 @@ const FAQs = () => {
 
         {/* FAQ Content */}
         <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16" aria-labelledby="faq-content-heading">
+          <h2 id="faq-content-heading" className="sr-only">FAQ Content</h2>
           {/* Category Filter */}
           <div className="mb-8 flex flex-wrap gap-2" role="group" aria-label="FAQ category filter">
             {categories.map((category) => (

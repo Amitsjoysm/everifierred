@@ -215,36 +215,35 @@ const Landing = () => {
       </main>
 
       {/* Footer */}
-      <footer className="py-12 px-6 bg-gray-900 text-gray-400">
+      <footer className="py-12 px-6 bg-gray-900 text-gray-400" role="contentinfo">
         <div className="container mx-auto">
-          <div className="grid md:grid-cols-4 gap-8 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 mb-8">
             <div>
               <div className="flex items-center space-x-2 mb-4">
-                <Mail className="h-6 w-6 text-blue-500" />
+                <Mail className="h-6 w-6 text-blue-500" aria-hidden="true" />
                 <span className="text-xl font-bold text-white">MailGuard</span>
               </div>
               <p className="text-sm">Professional email verification for B2B teams</p>
             </div>
             <div>
-              <h4 className="text-white font-semibold mb-4">Product</h4>
+              <h2 className="text-white font-semibold mb-4 text-base">Product</h2>
               <ul className="space-y-2 text-sm">
-                <li><Link to="/features" className="hover:text-white">Features</Link></li>
-                <li><Link to="/pricing" className="hover:text-white">Pricing</Link></li>
-                <li><Link to="/api-docs" className="hover:text-white">API Docs</Link></li>
+                <li><Link to="/pricing" className="hover:text-white transition-colors">Pricing</Link></li>
+                <li><Link to="/blog" className="hover:text-white transition-colors">Blog</Link></li>
               </ul>
             </div>
             <div>
-              <h4 className="text-white font-semibold mb-4">Resources</h4>
+              <h2 className="text-white font-semibold mb-4 text-base">Resources</h2>
               <ul className="space-y-2 text-sm">
-                <li><Link to="/blog" className="hover:text-white">Blog</Link></li>
-                <li><Link to="/faqs" className="hover:text-white">FAQs</Link></li>
+                <li><Link to="/blog" className="hover:text-white transition-colors">Blog</Link></li>
+                <li><Link to="/faqs" className="hover:text-white transition-colors">FAQs</Link></li>
               </ul>
             </div>
             <div>
-              <h4 className="text-white font-semibold mb-4">Company</h4>
+              <h2 className="text-white font-semibold mb-4 text-base">Company</h2>
               <ul className="space-y-2 text-sm">
-                <li><Link to="/about" className="hover:text-white">About</Link></li>
-                <li><Link to="/contact" className="hover:text-white">Contact</Link></li>
+                <li><Link to="/login" className="hover:text-white transition-colors">Login</Link></li>
+                <li><Link to="/register" className="hover:text-white transition-colors">Sign Up</Link></li>
               </ul>
             </div>
           </div>

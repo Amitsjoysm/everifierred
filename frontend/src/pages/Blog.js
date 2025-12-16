@@ -17,6 +17,12 @@ const Blog = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
 
+  const mobileMenuLinks = [
+    { to: '/', label: 'Home' },
+    { to: '/pricing', label: 'Pricing' },
+    { to: '/faqs', label: 'FAQs' },
+  ];
+
   useEffect(() => {
     fetchBlogs();
   }, []);

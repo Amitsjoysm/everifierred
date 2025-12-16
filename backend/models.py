@@ -193,14 +193,32 @@ class Plan(BaseModel):
     name: str
     type: str  # Changed from PlanType enum to str for flexibility
     credits_limit: int
-    price: float
+    
+    # Monthly pricing
+    price: float  # Current monthly price (after discount)
+    original_price: Optional[float] = None  # Hyped/original monthly price for marketing
+    discount_percentage: float = 0  # Discount percentage for monthly
+    
+    # Yearly pricing
+    yearly_price: Optional[float] = None  # Current yearly price (after discount)
+    yearly_original_price: Optional[float] = None  # Hyped/original yearly price
+    yearly_discount_percentage: float = 0  # Discount percentage for yearly
+    
+    # International pricing
     price_usd: Optional[float] = None  # USD price for international customers
     currency: str = "INR"  # Default currency
-    billing_cycle: str = "monthly"  # monthly, yearly
-    razorpay_plan_id: Optional[str] = None  # For one-time payments
-    razorpay_plan_id_inr: Optional[str] = None  # Razorpay subscription plan for INR
-    razorpay_plan_id_usd: Optional[str] = None  # Razorpay subscription plan for USD
-    is_recurring: bool = False  # True for subscription plans
+    
+    # Razorpay subscription IDs
+    razorpay_plan_id_monthly: Optional[str] = None  # Razorpay subscription plan ID for monthly
+    razorpay_plan_id_yearly: Optional[str] = None  # Razorpay subscription plan ID for yearly
+    
+    # Legacy fields for backward compatibility
+    billing_cycle: str = "monthly"  # monthly, yearly (default view)
+    razorpay_plan_id: Optional[str] = None  # Deprecated: for one-time payments
+    razorpay_plan_id_inr: Optional[str] = None  # Deprecated
+    razorpay_plan_id_usd: Optional[str] = None  # Deprecated
+    
+    is_recurring: bool = True  # True for subscription plans
     features: List[str] = []
     is_active: bool = True
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))

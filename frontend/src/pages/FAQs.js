@@ -17,6 +17,12 @@ const FAQs = () => {
   const [expandedId, setExpandedId] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('all');
 
+  const mobileMenuLinks = [
+    { to: '/', label: 'Home' },
+    { to: '/pricing', label: 'Pricing' },
+    { to: '/blog', label: 'Blog' },
+  ];
+
   useEffect(() => {
     fetchFAQs();
   }, []);

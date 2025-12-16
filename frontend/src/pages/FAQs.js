@@ -258,7 +258,7 @@ const FAQs = () => {
                 <li className="cursor-pointer hover:text-white transition-colors">Privacy Policy</li>
                 <li className="cursor-pointer hover:text-white transition-colors">Terms of Service</li>
               </ul>
-            </div>
+            </nav>
           </div>
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-400">
             <p>&copy; 2025 MailGuard. All rights reserved.</p>

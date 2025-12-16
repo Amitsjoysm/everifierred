@@ -105,69 +105,69 @@ const Landing = () => {
           </div>
         </section>
 
-      {/* Features Section */}
-      <section className="py-20 px-6 bg-white">
-        <div className="container mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4" style={{fontFamily: 'Space Grotesk, sans-serif'}}>
-              Everything You Need to Verify Emails
-            </h2>
-            <p className="text-lg text-gray-600" style={{fontFamily: 'Inter, sans-serif'}}>
-              Powerful features for email verification and list cleaning
-            </p>
+        {/* Features Section */}
+        <section className="py-20 px-6 bg-white" aria-label="Features">
+          <div className="container mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4" style={{fontFamily: 'Space Grotesk, sans-serif'}}>
+                Everything You Need to Verify Emails
+              </h2>
+              <p className="text-base sm:text-lg text-gray-600" style={{fontFamily: 'Inter, sans-serif'}}>
+                Powerful features for email verification and list cleaning
+              </p>
+            </div>
+
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
+              <article className="p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-blue-50 to-cyan-50 border border-blue-100">
+                <div className="bg-blue-600 w-12 h-12 rounded-xl flex items-center justify-center mb-4" aria-hidden="true">
+                  <CheckCircle className="h-6 w-6 text-white" />
+                </div>
+                <h3 className="text-lg sm:text-xl font-semibold mb-3 text-gray-900">Real-Time Verification</h3>
+                <p className="text-sm sm:text-base text-gray-600">Verify emails instantly with SMTP validation, MX record checks, and disposable email detection</p>
+              </article>
+
+              <article className="p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-purple-50 to-pink-50 border border-purple-100">
+                <div className="bg-purple-600 w-12 h-12 rounded-xl flex items-center justify-center mb-4" aria-hidden="true">
+                  <Zap className="h-6 w-6 text-white" />
+                </div>
+                <h3 className="text-lg sm:text-xl font-semibold mb-3 text-gray-900">Bulk Upload</h3>
+                <p className="text-sm sm:text-base text-gray-600">Upload CSV, Excel, or TXT files and verify thousands of emails in minutes with our async workers</p>
+              </article>
+
+              <article className="p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-green-50 to-emerald-50 border border-green-100">
+                <div className="bg-green-600 w-12 h-12 rounded-xl flex items-center justify-center mb-4" aria-hidden="true">
+                  <Shield className="h-6 w-6 text-white" />
+                </div>
+                <h3 className="text-lg sm:text-xl font-semibold mb-3 text-gray-900">Confidence Score</h3>
+                <p className="text-sm sm:text-base text-gray-600">Get detailed confidence scores (0-100) based on syntax, deliverability, and SMTP validation</p>
+              </article>
+
+              <article className="p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-orange-50 to-amber-50 border border-orange-100">
+                <div className="bg-orange-600 w-12 h-12 rounded-xl flex items-center justify-center mb-4" aria-hidden="true">
+                  <Users className="h-6 w-6 text-white" />
+                </div>
+                <h3 className="text-lg sm:text-xl font-semibold mb-3 text-gray-900">API Access</h3>
+                <p className="text-sm sm:text-base text-gray-600">RESTful API with authentication for seamless integration into your applications</p>
+              </article>
+
+              <article className="p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-rose-50 to-red-50 border border-rose-100">
+                <div className="bg-rose-600 w-12 h-12 rounded-xl flex items-center justify-center mb-4" aria-hidden="true">
+                  <TrendingUp className="h-6 w-6 text-white" />
+                </div>
+                <h3 className="text-lg sm:text-xl font-semibold mb-3 text-gray-900">Detailed Reports</h3>
+                <p className="text-sm sm:text-base text-gray-600">Export results to Excel with all verification fields including MX records and normalized emails</p>
+              </article>
+
+              <article className="p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-indigo-50 to-blue-50 border border-indigo-100">
+                <div className="bg-indigo-600 w-12 h-12 rounded-xl flex items-center justify-center mb-4" aria-hidden="true">
+                  <Mail className="h-6 w-6 text-white" />
+                </div>
+                <h3 className="text-lg sm:text-xl font-semibold mb-3 text-gray-900">MCP Integration</h3>
+                <p className="text-sm sm:text-base text-gray-600">LLM-friendly MCP server endpoint for AI agents and automation tools</p>
+              </article>
+            </div>
           </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="p-8 rounded-2xl bg-gradient-to-br from-blue-50 to-cyan-50 border border-blue-100">
-              <div className="bg-blue-600 w-12 h-12 rounded-xl flex items-center justify-center mb-4">
-                <CheckCircle className="h-6 w-6 text-white" />
-              </div>
-              <h3 className="text-xl font-semibold mb-3 text-gray-900">Real-Time Verification</h3>
-              <p className="text-gray-600">Verify emails instantly with SMTP validation, MX record checks, and disposable email detection</p>
-            </div>
-
-            <div className="p-8 rounded-2xl bg-gradient-to-br from-purple-50 to-pink-50 border border-purple-100">
-              <div className="bg-purple-600 w-12 h-12 rounded-xl flex items-center justify-center mb-4">
-                <Zap className="h-6 w-6 text-white" />
-              </div>
-              <h3 className="text-xl font-semibold mb-3 text-gray-900">Bulk Upload</h3>
-              <p className="text-gray-600">Upload CSV, Excel, or TXT files and verify thousands of emails in minutes with our async workers</p>
-            </div>
-
-            <div className="p-8 rounded-2xl bg-gradient-to-br from-green-50 to-emerald-50 border border-green-100">
-              <div className="bg-green-600 w-12 h-12 rounded-xl flex items-center justify-center mb-4">
-                <Shield className="h-6 w-6 text-white" />
-              </div>
-              <h3 className="text-xl font-semibold mb-3 text-gray-900">Confidence Score</h3>
-              <p className="text-gray-600">Get detailed confidence scores (0-100) based on syntax, deliverability, and SMTP validation</p>
-            </div>
-
-            <div className="p-8 rounded-2xl bg-gradient-to-br from-orange-50 to-amber-50 border border-orange-100">
-              <div className="bg-orange-600 w-12 h-12 rounded-xl flex items-center justify-center mb-4">
-                <Users className="h-6 w-6 text-white" />
-              </div>
-              <h3 className="text-xl font-semibold mb-3 text-gray-900">API Access</h3>
-              <p className="text-gray-600">RESTful API with authentication for seamless integration into your applications</p>
-            </div>
-
-            <div className="p-8 rounded-2xl bg-gradient-to-br from-rose-50 to-red-50 border border-rose-100">
-              <div className="bg-rose-600 w-12 h-12 rounded-xl flex items-center justify-center mb-4">
-                <TrendingUp className="h-6 w-6 text-white" />
-              </div>
-              <h3 className="text-xl font-semibold mb-3 text-gray-900">Detailed Reports</h3>
-              <p className="text-gray-600">Export results to Excel with all verification fields including MX records and normalized emails</p>
-            </div>
-
-            <div className="p-8 rounded-2xl bg-gradient-to-br from-indigo-50 to-blue-50 border border-indigo-100">
-              <div className="bg-indigo-600 w-12 h-12 rounded-xl flex items-center justify-center mb-4">
-                <Mail className="h-6 w-6 text-white" />
-              </div>
-              <h3 className="text-xl font-semibold mb-3 text-gray-900">MCP Integration</h3>
-              <p className="text-gray-600">LLM-friendly MCP server endpoint for AI agents and automation tools</p>
-            </div>
-          </div>
-        </div>
-      </section>
+        </section>
 
       {/* Use Cases */}
       <section className="py-20 px-6 bg-gray-50">

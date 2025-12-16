@@ -210,7 +210,7 @@ const FAQs = () => {
           {/* Contact CTA */}
           <aside className="mt-12 sm:mt-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-6 sm:p-8 text-white text-center">
             <h2 className="text-2xl sm:text-3xl font-bold mb-4">Still have questions?</h2>
-            <p className="text-sm sm:text-base text-blue-100 mb-6">We're here to help! Contact our support team for assistance.</p>
+            <p className="text-sm sm:text-base text-blue-100 mb-6">We&apos;re here to help! Contact our support team for assistance.</p>
             <button 
               className="px-6 py-3 bg-white text-blue-600 rounded-lg font-semibold hover:bg-gray-100 transition-colors text-sm sm:text-base"
               onClick={() => navigate('/login')}

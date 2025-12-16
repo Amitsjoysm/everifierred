@@ -200,14 +200,17 @@ async def create_payment_order(
 
 @router.post("/verify")
 async def verify_payment(
-    razorpay_order_id: str,
-    razorpay_payment_id: str,
-    razorpay_signature: str,
-    plan_id: str,
+    verify_request: PaymentVerifyRequest,
     request: Request,
     current_user: User = Depends(get_current_user)
 ):
     """Verify Razorpay payment with enhanced security"""
+    # Extract parameters from request body
+    razorpay_order_id = verify_request.razorpay_order_id
+    razorpay_payment_id = verify_request.razorpay_payment_id
+    razorpay_signature = verify_request.razorpay_signature
+    plan_id = verify_request.plan_id
+    
     logger.info(
         f"Payment verification started - User: {current_user.id}, "
         f"Order: {razorpay_order_id}, Payment: {razorpay_payment_id}, Plan: {plan_id}"

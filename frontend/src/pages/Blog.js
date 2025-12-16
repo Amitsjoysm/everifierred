@@ -152,7 +152,7 @@ const Blog = () => {
         {/* Hero Section */}
         <header className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-16 sm:py-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h1 className="text-4xl sm:text-5xl font-bold mb-4">Email Verification Blog</h1>
+            <h1 id="blog-heading" className="text-4xl sm:text-5xl font-bold mb-4">Email Verification Blog</h1>
             <p className="text-lg sm:text-xl text-blue-100 max-w-2xl">
               Expert insights, guides, and best practices for email verification and deliverability
             </p>
@@ -160,7 +160,7 @@ const Blog = () => {
         </header>
 
         {/* Search */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8" aria-label="Blog search">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8" aria-labelledby="search-heading">
           <div className="bg-white rounded-lg shadow-lg p-4">
             <label htmlFor="blog-search" className="sr-only">Search articles</label>
             <input
